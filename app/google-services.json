@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1094161499146",
+    "firebase_url": "https://coinly-1545671746670.firebaseio.com",
+    "project_id": "coinly-1545671746670",
+    "storage_bucket": "coinly-1545671746670.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1094161499146:android:6435260bd727f6cf44cbf3",
+        "android_client_info": {
+          "package_name": "com.eightnineapps.coinly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1094161499146-36v10ussf94fds72touv60ptnkkuji4b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eightnineapps.coinly",
+            "certificate_hash": "89494f913800a6658029075faef80574ebbff36f"
+          }
+        },
+        {
+          "client_id": "1094161499146-ji6u5iidtbdri29eidb2bgr0kk8etvfh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7gfdwE8zNA4X7djnbImlYzGYfDd0YABw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1094161499146-ji6u5iidtbdri29eidb2bgr0kk8etvfh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
