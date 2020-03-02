@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import com.eightnineapps.coinly.FirebaseAuthActivity.Companion.auth
+import com.eightnineapps.coinly.LoginActivity.Companion.auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         googleSignOutButton.setOnClickListener {
             auth.signOut() // Sign out of Firebase
             googleSignInClient.signOut().addOnCompleteListener{ // Sign out of the Google account
-                startActivity(Intent(applicationContext, FirebaseAuthActivity::class.java))
+                startActivity(Intent(applicationContext, LoginActivity::class.java))
                 this.finish()
             }
         }

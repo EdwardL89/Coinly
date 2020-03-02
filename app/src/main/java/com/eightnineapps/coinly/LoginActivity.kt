@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 
-class FirebaseAuthActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     /**
      * Provides access to this class's fields without an actual instance of this class
