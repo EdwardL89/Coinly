@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Coinly</string>
+    <string name="LoginPageTitle">Coinly</string>
+    <string name="ProfilePageTitle">Create your Profile</string>
+    <string name="Big">Big</string>
+    <string name="Little">Little</string>
+    <string name="real_name">Real Name</string>
+    <string name="display_name">Display Name</string>
+    <string name="done">Done</string>
 </resources>

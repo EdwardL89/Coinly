@@ -1,29 +1,30 @@
-package com.eightnineapps.coinly
+package com.eightnineapps.coinly.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import com.eightnineapps.coinly.LoginActivity.Companion.auth
+import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
+import com.eightnineapps.coinly.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
-class MainActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
 
     /**
      * Initializes required elements of the home page
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-       createSignOutButton()
+        setContentView(R.layout.activity_home)
+        setupSignOutButton()
     }
     
     /**
      * Creates the sign-out button and initiates the Firebase and Google sign-out process
      */
-    private fun createSignOutButton() {
+    private fun setupSignOutButton() {
         val googleSignInOption: GoogleSignInOptions = buildGoogleSignOutOption()
         val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOption)
         val googleSignOutButton = findViewById<Button>(R.id.sign_out_button)

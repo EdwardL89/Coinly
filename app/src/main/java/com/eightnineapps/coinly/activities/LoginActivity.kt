@@ -1,10 +1,11 @@
-package com.eightnineapps.coinly
+package com.eightnineapps.coinly.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import com.eightnineapps.coinly.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -34,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        createSignInButton()
+        setupSignInButton()
     }
 
     /**
@@ -72,12 +73,12 @@ class LoginActivity : AppCompatActivity() {
     }
 
     /**
-     * Sends the user to the home page upon successful Firebase authentication
+     * Sends the user to the profile creating page upon successful Firebase authentication
      */
     private fun handleFirebaseAuth(task: Task<AuthResult>) {
         if (task.isSuccessful) { // Sign in success, update UI with the signed-in user's information
             Log.d(TAG, "signInWithCredential:success")
-            updateUI(auth.currentUser)
+            updateUI(auth.currentUser, true)
         } else { // If sign in fails, display a message to the user.
             Log.w(TAG, "signInWithCredential:failure", task.exception)
             Toast.makeText(this, "Sign-in failed", Toast.LENGTH_SHORT).show()
@@ -98,12 +99,14 @@ class LoginActivity : AppCompatActivity() {
     /**
      * Creates the Google sign-in button and initiates the Firebase authentication process
      */
-    private fun createSignInButton() {
+    private fun setupSignInButton() {
         val googleSignInOption: GoogleSignInOptions = buildGoogleSignInOption()
         val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOption)
         val googleSignInButton = findViewById<SignInButton>(R.id.sign_in_button)
         googleSignInButton.setOnClickListener {
-            startActivityForResult(googleSignInClient.signInIntent, RC_SIGN_IN)
+            startActivityForResult(googleSignInClient.signInIntent,
+                RC_SIGN_IN
+            )
         }
     }
 
@@ -121,8 +124,12 @@ class LoginActivity : AppCompatActivity() {
     /**
      * Goes to the main activity page if sign in was successful
      */
-    private fun updateUI(user: FirebaseUser?) {
-        if (user != null) startActivity(Intent(this, MainActivity::class.java))
-        else Toast.makeText(this, "Sign-in failed", Toast.LENGTH_SHORT).show()
+    private fun updateUI(user: FirebaseUser?, isNewUser: Boolean = false) {
+        if (user != null) {
+            if (isNewUser) startActivity(Intent(this, ProfileActivity::class.java))
+            else startActivity(Intent(this, HomeActivity::class.java))
+        } else {
+            Log.d(TAG, "Failed to sign in, or new user")
+        }
     }
 }
