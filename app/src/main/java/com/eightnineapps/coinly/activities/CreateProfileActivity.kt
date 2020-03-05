@@ -6,14 +6,17 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
+import com.eightnineapps.coinly.activities.LoginActivity.Companion.database
 import com.eightnineapps.coinly.classes.User
 import com.google.firebase.database.FirebaseDatabase
 import kotlin.random.Random
+import kotlin.system.exitProcess
 
 /**
  * Creates a new user
  */
-class ProfileActivity : AppCompatActivity() {
+class CreateProfileActivity : AppCompatActivity() {
 
     /**
      * Must be late initialized because we haven't set the content view yet in the onCreate method
@@ -28,7 +31,6 @@ class ProfileActivity : AppCompatActivity() {
     companion object {
         private const val ID_LENGTH = 30
         private val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
-        val database = FirebaseDatabase.getInstance().reference
     }
 
     /**
@@ -36,11 +38,20 @@ class ProfileActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile)
+        setContentView(R.layout.activity_create_profile)
         doneButton = findViewById(R.id.done_button)
         realNameEditText = findViewById(R.id.real_name_editText)
         displayNameEditText = findViewById(R.id.display_name_editText)
         setupDoneButton()
+    }
+
+    /**
+     * Close the app when the user hits "back"
+     */
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
+        exitProcess(0)
     }
 
     /**
@@ -61,7 +72,8 @@ class ProfileActivity : AppCompatActivity() {
         val realName = realNameEditText.text.toString()
         val displayName = displayNameEditText.text.toString()
         val id = generateId()
-        return User(realName, displayName, id)
+        val email = auth.currentUser!!.email
+        return User(realName, displayName, id, email)
     }
 
     /**

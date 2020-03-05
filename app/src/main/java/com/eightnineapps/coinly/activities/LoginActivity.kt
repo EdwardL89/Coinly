@@ -17,6 +17,8 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.FirebaseDatabase
+import kotlin.system.exitProcess
 
 class LoginActivity : AppCompatActivity() {
 
@@ -27,6 +29,7 @@ class LoginActivity : AppCompatActivity() {
         private const val RC_SIGN_IN = 1
         private const val TAG = "INFO:"
         val auth = FirebaseAuth.getInstance()
+        val database = FirebaseDatabase.getInstance().reference
     }
 
     /**
@@ -39,12 +42,24 @@ class LoginActivity : AppCompatActivity() {
     }
 
     /**
+     * Close the app when the user hits "back"
+     */
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
+        exitProcess(0)
+    }
+
+    /**
      * Determine whether or not a user has already been signed in
      * Update the UI accordingly
      */
     override fun onStart() {
         super.onStart()
-        updateUI(auth.currentUser)
+        if (auth.currentUser != null) { // In case user signed in with Google, but exited during profile creation
+            var hasCreatedProfile = findUserProfile(auth.currentUser!!.email)
+            updateUI(auth.currentUser, !hasCreatedProfile)
+        }
     }
 
     /**
@@ -57,6 +72,11 @@ class LoginActivity : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleGoogleAuth(task)
         }
+    }
+
+    private fun findUserProfile(email: String?): Boolean {
+        //var query = database.child("child").orderByChild("email").equalTo(email).limitToFirst(1)
+        return false;
     }
 
     /**
@@ -78,7 +98,8 @@ class LoginActivity : AppCompatActivity() {
     private fun handleFirebaseAuth(task: Task<AuthResult>) {
         if (task.isSuccessful) { // Sign in success, update UI with the signed-in user's information
             Log.d(TAG, "signInWithCredential:success")
-            updateUI(auth.currentUser, true)
+            var isNewUser = task.result!!.additionalUserInfo!!.isNewUser // In case existing user has signed out
+            updateUI(auth.currentUser, isNewUser)
         } else { // If sign in fails, display a message to the user.
             Log.w(TAG, "signInWithCredential:failure", task.exception)
             Toast.makeText(this, "Sign-in failed", Toast.LENGTH_SHORT).show()
@@ -126,7 +147,7 @@ class LoginActivity : AppCompatActivity() {
      */
     private fun updateUI(user: FirebaseUser?, isNewUser: Boolean = false) {
         if (user != null) {
-            if (isNewUser) startActivity(Intent(this, ProfileActivity::class.java))
+            if (isNewUser) startActivity(Intent(this, CreateProfileActivity::class.java))
             else startActivity(Intent(this, HomeActivity::class.java))
         } else {
             Log.d(TAG, "Failed to sign in, or new user")
