@@ -3,17 +3,28 @@ package com.eightnineapps.coinly.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
+import com.eightnineapps.coinly.classes.User
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlin.system.exitProcess
 
 class HomeActivity : AppCompatActivity() {
+
+    companion object {
+        val database = FirebaseFirestore.getInstance()
+        var bigs:  MutableList<User> = mutableListOf()
+        var littles:  MutableList<User> = mutableListOf()
+    }
 
     /**
      * Initializes required elements of the home page
@@ -43,6 +54,12 @@ class HomeActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onStart() {
+        super.onStart()
+        val usersEmail = auth.currentUser?.email!!
+        handleWhetherUserHasCreatedProfile(usersEmail)
+    }
+
     /**
      * Close the app when the user hits "back"
      */
@@ -50,6 +67,24 @@ class HomeActivity : AppCompatActivity() {
         super.onBackPressed()
         finishAffinity()
         exitProcess(0)
+    }
+
+    private fun handleWhetherUserHasCreatedProfile(usersEmail: String) {
+        database.collection("users").document(usersEmail).get().addOnCompleteListener { task -> handleQueryTask(task) }
+    }
+
+    private fun handleQueryTask(task: Task<DocumentSnapshot>) {
+        if (task.isSuccessful) {
+            if (task.result?.exists()!!) populateBigsAndLittlesList(task.result!!)
+            else startActivity(Intent(this, CreateProfileActivity::class.java))
+        } else {
+            Log.w(TAG, task.exception)
+        }
+    }
+
+    private fun populateBigsAndLittlesList(document: DocumentSnapshot) {
+        Log.w(TAG, "CURRENT BIGS: ${document.data?.get("bigs")}")
+        //bigs.addAll(document.data?.get("bigs") )
     }
 
     /**

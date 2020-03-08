@@ -7,9 +7,8 @@ import android.widget.Button
 import android.widget.EditText
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
-import com.eightnineapps.coinly.activities.LoginActivity.Companion.database
+import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
 import com.eightnineapps.coinly.classes.User
-import com.google.firebase.database.FirebaseDatabase
 import kotlin.random.Random
 import kotlin.system.exitProcess
 
@@ -80,7 +79,7 @@ class CreateProfileActivity : AppCompatActivity() {
      * Writes a new user to the database
      */
     private fun addUserToFirebaseDatabase(user: User) {
-        database.child("users").child(user.id).setValue(user)
+        user.email?.let { database.collection("users").document(it).set(user) }
     }
 
     /**
