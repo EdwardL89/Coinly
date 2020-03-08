@@ -16,6 +16,4 @@ class User(_realName: String, _displayName: String, _id: String, _email: String?
     var littles: MutableList<String> = mutableListOf()
     var prizes: MutableList<String> = mutableListOf()
 
-    constructor() : this("", "", "", "") {}
-
 }

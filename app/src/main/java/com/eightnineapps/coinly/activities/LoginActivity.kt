@@ -17,6 +17,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import kotlinx.coroutines.runBlocking
 import kotlin.system.exitProcess
 
 class LoginActivity : AppCompatActivity() {
@@ -54,7 +55,9 @@ class LoginActivity : AppCompatActivity() {
      */
     override fun onStart() {
         super.onStart()
-        updateUI(auth.currentUser)
+        runBlocking { // (Temporary fix) Block the current thread to prevent setting the content view in onCreate
+            updateUI(auth.currentUser)
+        }
     }
 
     /**
