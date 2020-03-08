@@ -11,7 +11,6 @@ import androidx.viewpager.widget.ViewPager
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
-import com.eightnineapps.coinly.classes.User
 import com.eightnineapps.coinly.classes.ViewPagerAdapter
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -34,8 +33,6 @@ class HomeActivity : AppCompatActivity() {
      */
     companion object {
         val database = FirebaseFirestore.getInstance()
-        var bigs:  MutableList<User> = mutableListOf()
-        var littles:  MutableList<User> = mutableListOf()
     }
 
     /**

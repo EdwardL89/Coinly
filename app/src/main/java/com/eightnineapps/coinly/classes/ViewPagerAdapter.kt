@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.eightnineapps.coinly.fragments.HomeFragment
+import com.eightnineapps.coinly.fragments.HomeFragments
 
 /**
  * Gets and displays the fragments within the tab layout on the home activity
@@ -16,7 +16,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager): FragmentPagerAdapter(f
      * Passes identifying information to the arguments of the fragment instance to return the correct one
      */
     override fun getItem(position: Int): Fragment {
-        val homeFragment = HomeFragment()
+        val homeFragment = HomeFragments()
         return createCorrespondingFragment(homeFragment, position)
     }
 
@@ -42,7 +42,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager): FragmentPagerAdapter(f
      * Returns the corresponding fragment based on the current position number by passing that number
      * to the fragment class so it can create the right one
      */
-    private fun createCorrespondingFragment(fragment: HomeFragment, position: Int): Fragment {
+    private fun createCorrespondingFragment(fragment: HomeFragments, position: Int): Fragment {
         val bundle = Bundle()
         bundle.putInt("FRAGMENT_ID", position)
         fragment.arguments = bundle
