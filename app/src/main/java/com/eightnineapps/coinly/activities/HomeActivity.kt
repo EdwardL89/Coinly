@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.R
@@ -45,7 +45,7 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.home_toolbar)
+        val toolbar = findViewById<Toolbar>(R.id.home_toolbar)
         setSupportActionBar(toolbar)
 
         val viewPager = findViewById<ViewPager>(R.id.home_pager)

@@ -27,23 +27,6 @@
        app:tabTextColor="#ffffff"
        app:tabSelectedTextColor="#C1BFBF"
        app:tabIndicatorColor="#C1BFBF"
-       app:layout_anchorGravity="bottom">
-
-      <!--<com.google.android.material.tabs.TabItem
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="Monday" />
-
-      <com.google.android.material.tabs.TabItem
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="Tuesday" />
-
-      <com.google.android.material.tabs.TabItem
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="Wednesday" />-->
-
-   </com.google.android.material.tabs.TabLayout>
+       app:layout_anchorGravity="bottom" />
 
 </LinearLayout>
