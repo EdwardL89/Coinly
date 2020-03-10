@@ -26,11 +26,20 @@ class HomeFragments : Fragment() {
 
     private val BIGS_TAB = 0
     private val LITTLES_TAB = 1
-    private val LINKUP_TAB = 2
     private var currentTabPosition = 0
+
+    private lateinit var allBigsRecyclerViewList: RecyclerView
     private lateinit var allUsersRecyclerViewList: RecyclerView
+    private lateinit var allLittlesRecyclerViewList: RecyclerView
+
+    private var allBigNames: MutableList<String> = ArrayList()
     private var allUserNames: MutableList<String> = ArrayList()
-    private var allUserNamesOnToDisplay: MutableList<String> = ArrayList()
+    private var allLittleNames: MutableList<String> = ArrayList()
+
+    private var allBigNamesToDisplay: MutableList<String> = ArrayList()
+    private var allUserNamesToDisplay: MutableList<String> = ArrayList()
+    private var allLittleNamesToDisplay: MutableList<String> = ArrayList()
+
     private lateinit var searchItem: MenuItem
 
     /**
@@ -58,31 +67,11 @@ class HomeFragments : Fragment() {
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_search) { // Programs the search button for the recycler view
-            if (currentTabPosition == LINKUP_TAB) { // Search different lists for the 3 tabs
-                val searchView = searchItem.actionView as SearchView
-                searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return true
-                    }
-
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        if (newText!!.isNotEmpty()) {
-                            allUserNamesOnToDisplay.clear()
-                            val search = newText.toLowerCase(Locale.ROOT)
-                            allUserNames.forEach {
-                                if (it.toLowerCase(Locale.ROOT).contains(search)) {
-                                    allUserNamesOnToDisplay.add(it)
-                                }
-                            }
-                            allUsersRecyclerViewList.adapter?.notifyDataSetChanged()
-                        } else {
-                            allUserNamesOnToDisplay.clear()
-                            allUserNamesOnToDisplay.addAll(allUserNames)
-                            allUsersRecyclerViewList.adapter?.notifyDataSetChanged()
-                        }
-                        return true
-                    }
-                })
+            val searchView = searchItem.actionView as SearchView
+            when (currentTabPosition) { // Temporarily comment the big/little tabs out because their tabs have not been created yet
+                BIGS_TAB -> print("temp") //setUpSearchView(searchView, allBigNames, allBigNamesToDisplay, allBigsRecyclerViewList)
+                LITTLES_TAB -> print("temp") //setUpSearchView(searchView, allLittleNames, allLittleNamesToDisplay, allLittlesRecyclerViewList)
+                else -> setUpSearchView(searchView, allUserNames, allUserNamesToDisplay, allUsersRecyclerViewList)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -94,6 +83,54 @@ class HomeFragments : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
+    }
+
+    /**
+     * Sets up the search action bar item to filter the raw data list and place matching items
+     * into a displayed list to show in the recycler view
+     */
+    private fun setUpSearchView(searchView: SearchView,
+                                rawDataList: MutableList<String>,
+                                displayedList: MutableList<String>,
+                                recyclerViewList: RecyclerView) {
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText!!.isNotEmpty()) {
+                    populateDisplayedListBasedOnSearchText(rawDataList, displayedList, newText)
+                } else {
+                    resetDisplayedList(displayedList, rawDataList)
+                }
+                recyclerViewList.adapter?.notifyDataSetChanged()
+                return true
+            }
+        })
+    }
+
+    /**
+     * Adds to the displayed list the matching raw data items based on the search bar text
+     */
+    private fun populateDisplayedListBasedOnSearchText(rawDataList: MutableList<String>,
+                                                       displayedList: MutableList<String>,
+                                                       newText: String) {
+        displayedList.clear()
+        val search = newText.toLowerCase(Locale.ROOT)
+        rawDataList.forEach {
+            if (it.toLowerCase(Locale.ROOT).contains(search)) {
+                displayedList.add(it)
+            }
+        }
+    }
+
+    /**
+     * Clears the displayed list and adds back in all the original data
+     */
+    private fun resetDisplayedList(displayedList: MutableList<String>, rawDataList: MutableList<String>) {
+        displayedList.clear()
+        displayedList.addAll(rawDataList)
     }
 
     /**
@@ -138,11 +175,11 @@ class HomeFragments : Fragment() {
     private fun createLinkupTab(view: View): View {
         allUsersRecyclerViewList = view.findViewById(R.id.allUsersRecyclerView)
         allUserNames.clear()
-        allUserNamesOnToDisplay.clear()
+        allUserNamesToDisplay.clear()
         getAllUserNames(allUserNames, database, object: CallBack {
             override fun onCallBack(usernames: MutableList<String>) {
                 allUsersRecyclerViewList.layoutManager = LinearLayoutManager(context)
-                allUsersRecyclerViewList.adapter = AllUserNamesAdapter(allUserNamesOnToDisplay, context!!)
+                allUsersRecyclerViewList.adapter = AllUserNamesAdapter(allUserNamesToDisplay, context!!)
             }
         })
         return view
@@ -166,7 +203,7 @@ class HomeFragments : Fragment() {
                 val name = users.data["displayName"].toString()
                 allUserNames.add(name)
             }
-            allUserNamesOnToDisplay.addAll(allUserNames)
+            allUserNamesToDisplay.addAll(allUserNames)
             callBack.onCallBack(allUserNames)
         }
     }

@@ -89,19 +89,10 @@ class HomeActivity : AppCompatActivity() {
      */
     private fun handleQueryTask(task: Task<DocumentSnapshot>) {
         if (task.isSuccessful) {
-            if (task.result?.exists()!!) populateBigsAndLittlesList(task.result!!)
-            else startActivity(Intent(this, CreateProfileActivity::class.java))
+            if (!task.result?.exists()!!) startActivity(Intent(this, CreateProfileActivity::class.java))
         } else {
             Log.w(TAG, task.exception)
         }
-    }
-
-    /**
-     * Populates the Bigs and Littles recycler list views
-     */
-    private fun populateBigsAndLittlesList(document: DocumentSnapshot) {
-        Log.w(TAG, "CURRENT BIGS: ${document.data?.get("bigs")}")
-        //bigs.addAll(document.data?.get("bigs") )
     }
 
     /**
