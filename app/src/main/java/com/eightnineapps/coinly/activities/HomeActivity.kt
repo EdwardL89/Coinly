@@ -4,9 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.R
@@ -42,35 +40,12 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        val toolbar = findViewById<Toolbar>(R.id.home_toolbar)
-        setSupportActionBar(toolbar)
-
         val viewPager = findViewById<ViewPager>(R.id.home_pager)
         val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
         viewPager.adapter = viewPagerAdapter
 
         val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
         tabLayout.setupWithViewPager(viewPager)
-    }
-
-    /**
-     * Create the triple dots on the action bar to give options to the user, like signing out
-     */
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.home_action_bar_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    /**
-     * Assign actions to when the menu items in the action bar are tapped
-     */
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_sign_out -> signOut()
-            else -> print("Action unknown")
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     /**
@@ -91,6 +66,14 @@ class HomeActivity : AppCompatActivity() {
         super.onBackPressed()
         finishAffinity()
         exitProcess(0)
+    }
+
+    /**
+     * Set up the sign out option in the action bar menu item
+     */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_sign_out) signOut()
+        return super.onOptionsItemSelected(item)
     }
 
     /**
