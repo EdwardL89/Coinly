@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.user_list_view_layout.view.*
 /**
  * An adapter class to populate the recycler view
  */
-class AllLittleNamesAdapter(_items: List<String>, _context: Context): RecyclerView.Adapter<AllLittleNamesAdapter.ViewHolder>() {
+class AllNamesAdapter(_items: List<String>, _context: Context): RecyclerView.Adapter<AllNamesAdapter.ViewHolder>() {
 
     private var list = _items
     private var context = _context

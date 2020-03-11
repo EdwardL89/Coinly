@@ -1,26 +1,19 @@
 package com.eightnineapps.coinly.fragments
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
-import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
-import com.eightnineapps.coinly.activities.LoginActivity
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
-import com.eightnineapps.coinly.adapters.AllLittleNamesAdapter
-import com.eightnineapps.coinly.adapters.AllUserNamesAdapter
+import com.eightnineapps.coinly.adapters.AllNamesAdapter
 import com.eightnineapps.coinly.interfaces.CallBack
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import kotlinx.android.synthetic.main.user_list_view_layout.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -29,6 +22,9 @@ import kotlin.collections.ArrayList
  * Can represent the Big, Little, or Linkup tab
  */
 class HomeFragments : Fragment() {
+
+    private var limit = 1
+    private var counter = 1
 
     private val BIGS_TAB = 0
     private val LITTLES_TAB = 1
@@ -97,10 +93,8 @@ class HomeFragments : Fragment() {
      * Sets up the search action bar item to filter the raw data list and place matching items
      * into a displayed list to show in the recycler view
      */
-    private fun setUpSearchView(searchView: SearchView,
-                                rawDataList: MutableList<String>,
-                                displayedList: MutableList<String>,
-                                recyclerViewList: RecyclerView) {
+    private fun setUpSearchView(searchView: SearchView, rawDataList: MutableList<String>,
+                                displayedList: MutableList<String>, recyclerViewList: RecyclerView) {
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
@@ -175,48 +169,25 @@ class HomeFragments : Fragment() {
      */
     private fun createLittleTab(view: View): View {
         allLittlesRecyclerViewList = view.findViewById(R.id.allLittlesRecyclerView)
-        allLittlesRecyclerViewList.layoutManager = LinearLayoutManager(context)
-        allLittlesRecyclerViewList.adapter = AllLittleNamesAdapter(allLittleNamesToDisplay, context!!)
         allLittleNames.clear()
         allLittleNamesToDisplay.clear()
         getAllLittleNames(object: CallBack {
-            override fun onCallBack() {
-                allLittlesRecyclerViewList.layoutManager = LinearLayoutManager(context)
-                allLittlesRecyclerViewList.adapter = AllLittleNamesAdapter(allLittleNamesToDisplay, context!!)
-                (allLittlesRecyclerViewList.adapter as AllLittleNamesAdapter).notifyDataSetChanged()
-            }
-
-            private var counter = 0
-            private var limit = 0
-
             override fun secondQueryCallBack(userEmails: MutableList<*>) {
                 counter = 1
                 limit = userEmails.size
                 for (email in userEmails) {
-                    database.collection("users").document(email.toString()).get().addOnCompleteListener { subtask ->
-                        if (subtask.isSuccessful) {
-                            val currentUsersDisplayName = subtask.result!!.data?.get("displayName") as String
-                            Log.w(LoginActivity.TAG, currentUsersDisplayName.toString())
-                            allLittleNames.add(currentUsersDisplayName)
-                            allLittleNamesToDisplay.add(currentUsersDisplayName)
-                            if (counter == limit) {
-                                Log.w(LoginActivity.TAG, "CALLING CALLBACK!!!")
-                                onCallBack()
-                            } else {
-                                Log.w(LoginActivity.TAG, "COUNTER:$counter LIMIT:$limit")
-                                counter += 1
-                            }
-                        }
+                    database.collection("users").document(email.toString()).get().addOnCompleteListener {
+                            subtask -> addObservedUserDisplayNameToList(subtask, allLittleNames)
                     }
                 }
-                //Log.w(LoginActivity.TAG, allLittleNames.toString())
-                //allLittleNamesToDisplay.addAll(allLittleNames)
-                //onCallBack()
             }
         })
         return view
     }
 
+    /**
+     * Queries the Firestore to retrieve all Littles the current user has
+     */
     private fun getAllLittleNames(callback: CallBack) {
         val currentUserEmail = auth.currentUser?.email!!
         database.collection("users").document(currentUserEmail).get().addOnCompleteListener {
@@ -224,6 +195,10 @@ class HomeFragments : Fragment() {
         }
     }
 
+    /**
+     * Begin the callback for the second query (upon successful completion of the first query) that
+     * gets the display names belonging to the users with the matching emails
+     */
     private fun addLittleNamesToList(task: Task<DocumentSnapshot>, callBack: CallBack) {
         if (task.isSuccessful) {
             currentLittlesEmails = task.result!!.data?.get("littles") as MutableList<*>
@@ -231,15 +206,17 @@ class HomeFragments : Fragment() {
         }
     }
 
-    private fun addObservedUserDisplayNameToList(task: Task<DocumentSnapshot>, allLittleNames: MutableList<String>, counter: Int, limit: Int) {
+    /**
+     * Upon successful completion of the second query, add the retrieved display names to the list to be displayed
+     * and update the recycler view once this has been done for all emails of the current user's Littles.
+     */
+    private fun addObservedUserDisplayNameToList(task: Task<DocumentSnapshot>, allLittleNames: MutableList<String>) {
         if (task.isSuccessful) {
             val currentUsersDisplayName = task.result!!.data?.get("displayName") as String
-            Log.w(LoginActivity.TAG, currentUsersDisplayName.toString())
             allLittleNames.add(currentUsersDisplayName)
             allLittleNamesToDisplay.add(currentUsersDisplayName)
-            if (counter == limit) {
-
-            }
+            if (counter == limit) updateRecyclerViewAdapterAndLayoutManager(allLittlesRecyclerViewList, allLittleNamesToDisplay)
+            else counter += 1
         }
     }
 
@@ -248,44 +225,40 @@ class HomeFragments : Fragment() {
      */
     private fun createLinkupTab(view: View): View {
         allUsersRecyclerViewList = view.findViewById(R.id.allUsersRecyclerView)
-        allUsersRecyclerViewList.layoutManager = LinearLayoutManager(context)
-        allUsersRecyclerViewList.adapter = AllUserNamesAdapter(allUserNamesToDisplay, context!!)
         allUserNames.clear()
         allUserNamesToDisplay.clear()
-        getAllUserNames(allUserNames, object: CallBack {
-            override fun onCallBack() {
-                allUsersRecyclerViewList.layoutManager = LinearLayoutManager(context)
-                allUsersRecyclerViewList.adapter = AllUserNamesAdapter(allUserNamesToDisplay, context!!)
-                (allUsersRecyclerViewList.adapter as AllUserNamesAdapter).notifyDataSetChanged()
-            }
-
-            override fun secondQueryCallBack(userEmails: MutableList<*>) {
-                //Unused for the linkup tab
-            }
-        })
+        getAllUserNames(allUserNames)
         return view
     }
 
     /**
      * Queries the Firestore for all user names
      */
-    private fun getAllUserNames(allUserNames: MutableList<String>, callback: CallBack) {
+    private fun getAllUserNames(allUserNames: MutableList<String>) {
         database.collection("users").get().addOnCompleteListener{
-                task -> addUserNamesToList(task, allUserNames, callback)
+                task -> addUserNamesToList(task, allUserNames)
         }
     }
 
     /**
      * Adds the retrieved user names to the allUserNames list upon successful task completion
      */
-    private fun addUserNamesToList(task: Task<QuerySnapshot>, allUserNames: MutableList<String>, callBack: CallBack) {
+    private fun addUserNamesToList(task: Task<QuerySnapshot>, allUserNames: MutableList<String>) {
         if (task.isSuccessful) {
             for (users in task.result!!) {
                 val name = users.data["displayName"].toString()
                 allUserNames.add(name)
             }
             allUserNamesToDisplay.addAll(allUserNames)
-            callBack.onCallBack()
+            updateRecyclerViewAdapterAndLayoutManager(allUsersRecyclerViewList, allUserNamesToDisplay)
         }
+    }
+
+    /**
+     * Assigns the given recycler view's layout manager and adapter using the list whose data is being displayed
+     */
+    private fun updateRecyclerViewAdapterAndLayoutManager(recyclerViewList: RecyclerView, listToDisplay: MutableList<String>) {
+        recyclerViewList.layoutManager = LinearLayoutManager(context)
+        recyclerViewList.adapter = AllNamesAdapter(listToDisplay, context!!)
     }
 }

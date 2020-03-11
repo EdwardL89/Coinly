@@ -6,9 +6,8 @@ package com.eightnineapps.coinly.interfaces
 interface CallBack {
 
     /**
-     * The method that gets call to handle the data queried from the Firestore at a different location
+     * Call back helper method to allow a double/two-layered Firestore query for the Big and Little tabs.
+     * Queries the Firestore for the display name of a user, given their email.
      */
-    fun onCallBack()
-
     fun secondQueryCallBack(userEmails: MutableList<*>)
 }
