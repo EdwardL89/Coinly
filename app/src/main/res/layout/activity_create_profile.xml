@@ -12,10 +12,27 @@
         android:layout_height="wrap_content"
         android:text="@string/ProfilePageTitle"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@id/real_name_editText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:cardCornerRadius="100dp"
+        app:layout_constraintBottom_toTopOf="@+id/real_name_editText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_page_title_textView">
+
+        <ImageView
+            android:id="@+id/user_starting_profile_picture"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/user_profile_picture"
+            android:scaleType="centerCrop" />
+    </androidx.cardview.widget.CardView>
 
     <EditText
         android:id="@+id/real_name_editText"
@@ -23,32 +40,41 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/real_name"
-        app:layout_constraintBottom_toTopOf="@id/display_name_editText"
+        android:autofillHints="@string/real_name"
+        app:layout_constraintBottom_toTopOf="@+id/display_name_editText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile_page_title_textView" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <EditText
         android:id="@+id/display_name_editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="81dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/display_name"
-        app:layout_constraintBottom_toTopOf="@id/done_button"
+        android:autofillHints="@string/display_name"
+        app:layout_constraintBottom_toTopOf="@+id/done_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/real_name_editText" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/done_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="144dp"
         android:text="@string/done"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/add_profile_picture_button"
+        android:layout_width="86dp"
+        android:layout_height="37dp"
+        android:text="@string/add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/display_name_editText"/>
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

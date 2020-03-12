@@ -75,7 +75,7 @@ class HomeFragments : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_search) { // Programs the search button for the recycler view
             val searchView = searchItem.actionView as SearchView
-            when (currentTabPosition) { 
+            when (currentTabPosition) {
                 BIGS_TAB -> setUpSearchView(searchView, allBigNames, allBigNamesToDisplay, allBigsRecyclerViewList)
                 LITTLES_TAB -> setUpSearchView(searchView, allLittleNames, allLittleNamesToDisplay, allLittlesRecyclerViewList)
                 else -> setUpSearchView(searchView, allUserNames, allUserNamesToDisplay, allUsersRecyclerViewList)

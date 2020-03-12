@@ -4,13 +4,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import kotlinx.android.synthetic.main.user_list_view_layout.view.*
 
 /**
- * An adapter class to populate the recycler view
+ * An adapter class to populate the recycler view within a tab in the home tab layout
  */
 class AllNamesAdapter(_items: List<String>, _context: Context): RecyclerView.Adapter<AllNamesAdapter.ViewHolder>() {
 
@@ -22,6 +24,7 @@ class AllNamesAdapter(_items: List<String>, _context: Context): RecyclerView.Ada
      */
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val singleUserName: TextView = view.user_name_text_view
+        val singleUserProfilePicture: ImageView = view.user_profile_picture
     }
 
     /**
@@ -46,5 +49,6 @@ class AllNamesAdapter(_items: List<String>, _context: Context): RecyclerView.Ada
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.singleUserName.text = list[position]
+        Glide.with(context).load("").into(holder.singleUserProfilePicture)
     }
 }
