@@ -23,28 +23,31 @@ import kotlin.collections.ArrayList
  */
 class HomeFragments : Fragment() {
 
-    private var limit = 1
-    private var counter = 1
-
     private val BIGS_TAB = 0
     private val LITTLES_TAB = 1
     private var currentTabPosition = 0
 
-    private lateinit var allBigsRecyclerViewList: RecyclerView
-    private lateinit var allUsersRecyclerViewList: RecyclerView
-    private lateinit var allLittlesRecyclerViewList: RecyclerView
+    private var numOfBigEmails = 1
+    private var bigEmailsCounter = 1
+    private var numOfLittleEmails = 1
+    private var littleEmailsCounter = 1
+
+    private lateinit var searchItem: MenuItem
+
+    private lateinit var currentBigsEmails: MutableList<*>
+    private lateinit var currentLittlesEmails: MutableList<*>
 
     private var allBigNames: MutableList<String> = ArrayList()
     private var allUserNames: MutableList<String> = ArrayList()
     private var allLittleNames: MutableList<String> = ArrayList()
 
+    private lateinit var allBigsRecyclerViewList: RecyclerView
+    private lateinit var allUsersRecyclerViewList: RecyclerView
+    private lateinit var allLittlesRecyclerViewList: RecyclerView
+
     private var allBigNamesToDisplay: MutableList<String> = ArrayList()
     private var allUserNamesToDisplay: MutableList<String> = ArrayList()
     private var allLittleNamesToDisplay: MutableList<String> = ArrayList()
-
-    private lateinit var currentLittlesEmails: MutableList<*>
-
-    private lateinit var searchItem: MenuItem
 
     /**
      * Use the passed in position Int from the ViewPagerAdapter class to determine the correct
@@ -72,8 +75,8 @@ class HomeFragments : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_search) { // Programs the search button for the recycler view
             val searchView = searchItem.actionView as SearchView
-            when (currentTabPosition) { // Temporarily comment the big/little tabs out because their tabs have not been created yet
-                BIGS_TAB -> print("temp") //setUpSearchView(searchView, allBigNames, allBigNamesToDisplay, allBigsRecyclerViewList)
+            when (currentTabPosition) { 
+                BIGS_TAB -> setUpSearchView(searchView, allBigNames, allBigNamesToDisplay, allBigsRecyclerViewList)
                 LITTLES_TAB -> setUpSearchView(searchView, allLittleNames, allLittleNamesToDisplay, allLittlesRecyclerViewList)
                 else -> setUpSearchView(searchView, allUserNames, allUserNamesToDisplay, allUsersRecyclerViewList)
             }
@@ -161,6 +164,16 @@ class HomeFragments : Fragment() {
      * Sets up the big tab fragment for the user
      */
     private fun createBigTab(view: View): View {
+        allBigsRecyclerViewList = view.findViewById(R.id.allBigsRecyclerView)
+        allBigNames.clear()
+        allBigNamesToDisplay.clear()
+        getAllAssociatesNames(true, object: CallBack {
+            override fun secondQueryCallBack(userEmails: MutableList<*>) {
+                bigEmailsCounter = 1
+                numOfBigEmails = userEmails.size
+                for (email in userEmails) queryFirestoreForSingleProfile(true, email)
+            }
+        })
         return view
     }
 
@@ -171,27 +184,33 @@ class HomeFragments : Fragment() {
         allLittlesRecyclerViewList = view.findViewById(R.id.allLittlesRecyclerView)
         allLittleNames.clear()
         allLittleNamesToDisplay.clear()
-        getAllLittleNames(object: CallBack {
+        getAllAssociatesNames(false, object: CallBack {
             override fun secondQueryCallBack(userEmails: MutableList<*>) {
-                counter = 1
-                limit = userEmails.size
-                for (email in userEmails) {
-                    database.collection("users").document(email.toString()).get().addOnCompleteListener {
-                            subtask -> addObservedUserDisplayNameToList(subtask, allLittleNames)
-                    }
-                }
+                littleEmailsCounter = 1
+                numOfLittleEmails = userEmails.size
+                for (email in userEmails) queryFirestoreForSingleProfile(false, email)
             }
         })
         return view
     }
 
     /**
-     * Queries the Firestore to retrieve all Littles the current user has
+     * Queries the firestore for a user profile by email and adds their name to respective list
+     * in the involved helper methods
      */
-    private fun getAllLittleNames(callback: CallBack) {
+    private fun queryFirestoreForSingleProfile(queryForBigs: Boolean, email: Any?) {
+        database.collection("users").document(email.toString()).get().addOnCompleteListener {
+                subtask -> addObservedUserDisplayNameToList(queryForBigs, subtask)
+        }
+    }
+
+    /**
+     * Queries the Firestore to retrieve all Bigs or Littles (associates) the current user has
+     */
+    private fun getAllAssociatesNames(queryForBigs: Boolean, callback: CallBack) {
         val currentUserEmail = auth.currentUser?.email!!
         database.collection("users").document(currentUserEmail).get().addOnCompleteListener {
-            task -> addLittleNamesToList(task, callback)
+            task -> addAssociateNamesToList(queryForBigs, task, callback)
         }
     }
 
@@ -199,10 +218,15 @@ class HomeFragments : Fragment() {
      * Begin the callback for the second query (upon successful completion of the first query) that
      * gets the display names belonging to the users with the matching emails
      */
-    private fun addLittleNamesToList(task: Task<DocumentSnapshot>, callBack: CallBack) {
+    private fun addAssociateNamesToList(queryForBigs: Boolean, task: Task<DocumentSnapshot>, callBack: CallBack) {
         if (task.isSuccessful) {
-            currentLittlesEmails = task.result!!.data?.get("littles") as MutableList<*>
-            callBack.secondQueryCallBack(currentLittlesEmails)
+            if (queryForBigs) {
+                currentBigsEmails = task.result!!.data?.get("bigs") as MutableList<*>
+                callBack.secondQueryCallBack(currentBigsEmails)
+            } else {
+                currentLittlesEmails = task.result!!.data?.get("littles") as MutableList<*>
+                callBack.secondQueryCallBack(currentLittlesEmails)
+            }
         }
     }
 
@@ -210,13 +234,20 @@ class HomeFragments : Fragment() {
      * Upon successful completion of the second query, add the retrieved display names to the list to be displayed
      * and update the recycler view once this has been done for all emails of the current user's Littles.
      */
-    private fun addObservedUserDisplayNameToList(task: Task<DocumentSnapshot>, allLittleNames: MutableList<String>) {
+    private fun addObservedUserDisplayNameToList(queryForBigs: Boolean, task: Task<DocumentSnapshot>) {
         if (task.isSuccessful) {
             val currentUsersDisplayName = task.result!!.data?.get("displayName") as String
-            allLittleNames.add(currentUsersDisplayName)
-            allLittleNamesToDisplay.add(currentUsersDisplayName)
-            if (counter == limit) updateRecyclerViewAdapterAndLayoutManager(allLittlesRecyclerViewList, allLittleNamesToDisplay)
-            else counter += 1
+            if (queryForBigs) {
+                allBigNames.add(currentUsersDisplayName)
+                allBigNamesToDisplay.add(currentUsersDisplayName)
+                if (bigEmailsCounter == numOfBigEmails) updateRecyclerViewAdapterAndLayoutManager(allBigsRecyclerViewList, allBigNamesToDisplay)
+                else bigEmailsCounter += 1
+            } else {
+                allLittleNames.add(currentUsersDisplayName)
+                allLittleNamesToDisplay.add(currentUsersDisplayName)
+                if (littleEmailsCounter == numOfLittleEmails) updateRecyclerViewAdapterAndLayoutManager(allLittlesRecyclerViewList, allLittleNamesToDisplay)
+                else littleEmailsCounter += 1
+            }
         }
     }
 
@@ -227,23 +258,23 @@ class HomeFragments : Fragment() {
         allUsersRecyclerViewList = view.findViewById(R.id.allUsersRecyclerView)
         allUserNames.clear()
         allUserNamesToDisplay.clear()
-        getAllUserNames(allUserNames)
+        getAllUserNames()
         return view
     }
 
     /**
      * Queries the Firestore for all user names
      */
-    private fun getAllUserNames(allUserNames: MutableList<String>) {
+    private fun getAllUserNames() {
         database.collection("users").get().addOnCompleteListener{
-                task -> addUserNamesToList(task, allUserNames)
+                task -> addUserNamesToList(task)
         }
     }
 
     /**
      * Adds the retrieved user names to the allUserNames list upon successful task completion
      */
-    private fun addUserNamesToList(task: Task<QuerySnapshot>, allUserNames: MutableList<String>) {
+    private fun addUserNamesToList(task: Task<QuerySnapshot>) {
         if (task.isSuccessful) {
             for (users in task.result!!) {
                 val name = users.data["displayName"].toString()
