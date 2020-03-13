@@ -40,10 +40,11 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:autofillHints="@string/real_name"
+        android:hint="@string/real_name"
         app:layout_constraintBottom_toTopOf="@+id/display_name_editText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        android:autofillHints="Real name" />
 
     <EditText
         android:id="@+id/display_name_editText"
@@ -52,10 +53,11 @@
         android:layout_marginBottom="81dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:autofillHints="@string/display_name"
+        android:hint="@string/display_name"
         app:layout_constraintBottom_toTopOf="@+id/done_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:autofillHints="Display name" />
 
     <Button
         android:id="@+id/done_button"

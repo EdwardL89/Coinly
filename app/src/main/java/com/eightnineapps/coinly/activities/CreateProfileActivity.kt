@@ -1,26 +1,33 @@
 package com.eightnineapps.coinly.activities
 
+import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
+import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.classes.User
 import kotlin.random.Random
 import kotlin.system.exitProcess
+
 
 /**
  * Creates a new user
  */
 class CreateProfileActivity : AppCompatActivity() {
 
+    private var IMAGE_SELECTION_SUCCESS = 1
+
     /**
      * Must be late initialized because we haven't set the content view yet in the onCreate method
      */
     private lateinit var doneButton: Button
+    private lateinit var addProfilePictureButton: Button
+
     private lateinit var realNameEditText: EditText
     private lateinit var displayNameEditText: EditText
 
@@ -39,9 +46,13 @@ class CreateProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_profile)
         doneButton = findViewById(R.id.done_button)
+        addProfilePictureButton = findViewById(R.id.add_profile_picture_button)
+
         realNameEditText = findViewById(R.id.real_name_editText)
         displayNameEditText = findViewById(R.id.display_name_editText)
+
         setupDoneButton()
+        setupAddProfilePictureButton()
     }
 
     /**
@@ -54,13 +65,35 @@ class CreateProfileActivity : AppCompatActivity() {
     }
 
     /**
+     * Catches the result of the intent that opens the gallery to select a profile picture image
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == IMAGE_SELECTION_SUCCESS && resultCode == Activity.RESULT_OK) {
+            val bitmap: Bitmap? = data!!.extras!!.getParcelable("data")
+        }
+    }
+
+    /**
+     * Opens the gallery to select a profile picture image
+     */
+    private fun setupAddProfilePictureButton() {
+        addProfilePictureButton.setOnClickListener {
+            val openGalleryIntent = Intent()
+            openGalleryIntent.type = "image/*"
+            intent.action = Intent.ACTION_GET_CONTENT;
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), IMAGE_SELECTION_SUCCESS);
+        }
+    }
+
+    /**
      * Creates a new user, writes it to the database, then navigates to the home page
      */
-    private fun setupDoneButton() {
+    private fun setupDoneButton() { //TODO: Don't let the user hit done if there are empty fields
         doneButton.setOnClickListener {
             val newUser = createNewUser()
             addUserToFirebaseDatabase(newUser)
-            goToHomePage(newUser)
+            goToHomePage()
         }
     }
 
@@ -85,8 +118,8 @@ class CreateProfileActivity : AppCompatActivity() {
     /**
      * Launches an intent to go to the home page activity
      */
-    private fun goToHomePage(user: User) {
-        startActivity(Intent(this, HomeActivity::class.java).putExtra("currentUser", user.id))
+    private fun goToHomePage() {
+        startActivity(Intent(this, HomeActivity::class.java))
     }
 
     /**
