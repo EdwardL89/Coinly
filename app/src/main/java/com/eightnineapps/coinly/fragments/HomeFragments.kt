@@ -1,6 +1,7 @@
 package com.eightnineapps.coinly.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.appcompat.widget.SearchView
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
+import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
 import com.eightnineapps.coinly.interfaces.CallBack
@@ -101,6 +103,7 @@ class HomeFragments : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+
     /**
      * Sets up the search action bar item to filter the raw data list and place matching items
      * into a displayed list to show in the recycler view
@@ -115,6 +118,7 @@ class HomeFragments : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                Log.w(TAG, "CALLED!!!!")
                 if (newText!!.isNotEmpty()) {
                     populateDisplayedListBasedOnSearchText(rawDataList, displayedList, newText)
                 } else {
@@ -178,7 +182,7 @@ class HomeFragments : Fragment() {
         allBigsRecyclerViewList = view.findViewById(R.id.allBigsRecyclerView)
         allBigs.clear()
         allBigsToDisplay.clear()
-        getAllAssociates(true, object: CallBack {
+        queryFirestoreForAllAssociates(true, object: CallBack {
             override fun secondQueryCallBack(userEmails: MutableList<*>) {
                 bigEmailsCounter = 1
                 numOfBigEmails = userEmails.size
@@ -195,7 +199,7 @@ class HomeFragments : Fragment() {
         allLittlesRecyclerViewList = view.findViewById(R.id.allLittlesRecyclerView)
         allLittles.clear()
         allLittlesToDisplay.clear()
-        getAllAssociates(false, object: CallBack {
+        queryFirestoreForAllAssociates(false, object: CallBack {
             override fun secondQueryCallBack(userEmails: MutableList<*>) {
                 littleEmailsCounter = 1
                 numOfLittleEmails = userEmails.size
@@ -218,7 +222,7 @@ class HomeFragments : Fragment() {
     /**
      * Queries the Firestore to retrieve all Bigs or Littles (associates) the current user has
      */
-    private fun getAllAssociates(queryForBigs: Boolean, callback: CallBack) {
+    private fun queryFirestoreForAllAssociates(queryForBigs: Boolean, callback: CallBack) {
         val currentUserEmail = auth.currentUser?.email!!
         database.collection("users").document(currentUserEmail).get().addOnCompleteListener {
             task -> addAssociatesToList(queryForBigs, task, callback)
@@ -288,7 +292,9 @@ class HomeFragments : Fragment() {
     private fun addUsersToList(task: Task<QuerySnapshot>) {
         if (task.isSuccessful) {
             for (users in task.result!!) {
-                allUsers.add(users)
+                if (users.data["email"] != auth.currentUser!!.email) {
+                    allUsers.add(users)
+                }
             }
             allUsersToDisplay.addAll(allUsers)
             updateRecyclerViewAdapterAndLayoutManager(allUsersRecyclerViewList, allUsersToDisplay)

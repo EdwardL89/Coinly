@@ -17,7 +17,6 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.runBlocking
 import kotlin.system.exitProcess
 
 /**
