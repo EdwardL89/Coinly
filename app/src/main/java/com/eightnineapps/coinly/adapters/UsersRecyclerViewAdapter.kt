@@ -54,8 +54,6 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentUser = userList[position]
 
-        holder.singleUserName.text = currentUser.data?.get("displayName").toString()
-
         val profilePicture = imageStorage.reference
             .child("profile_pictures")
             .child(currentUser["id"].toString()).downloadUrl
@@ -67,5 +65,7 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
             .addOnFailureListener {
             Log.w(TAG, "Could not retrieve profile picture")
         }
+
+        holder.singleUserName.text = currentUser.data?.get("displayName").toString()
     }
 }

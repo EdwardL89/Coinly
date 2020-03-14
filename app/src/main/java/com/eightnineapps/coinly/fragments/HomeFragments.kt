@@ -77,16 +77,16 @@ class HomeFragments : Fragment() {
             val searchView = searchItem.actionView as SearchView
             when (currentTabPosition) {
                 BIGS_TAB -> setUpSearchView(searchView,
-                    allBigs.map{ user -> user.data?.get("displayName").toString() },
-                    allBigsToDisplay.map{ user -> user.data?.get("displayName").toString() }.toMutableList(),
+                    allBigs,
+                    allBigsToDisplay,
                     allBigsRecyclerViewList)
                 LITTLES_TAB -> setUpSearchView(searchView,
-                    allLittles.map{ user -> user.data?.get("displayName").toString() },
-                    allLittlesToDisplay.map{ user -> user.data?.get("displayName").toString() }.toMutableList(),
+                    allLittles,
+                    allLittlesToDisplay,
                     allLittlesRecyclerViewList)
                 else -> setUpSearchView(searchView,
-                    allUsers.map{ user -> user.data?.get("displayName").toString() },
-                    allUsersToDisplay.map{ user -> user.data?.get("displayName").toString() }.toMutableList(),
+                    allUsers,
+                    allUsersToDisplay,
                     allUsersRecyclerViewList)
             }
         }
@@ -105,8 +105,10 @@ class HomeFragments : Fragment() {
      * Sets up the search action bar item to filter the raw data list and place matching items
      * into a displayed list to show in the recycler view
      */
-    private fun setUpSearchView(searchView: SearchView, rawDataList: List<String>,
-                                displayedList: MutableList<String>, recyclerViewList: RecyclerView) {
+    private fun setUpSearchView(searchView: SearchView,
+                                rawDataList: MutableList<DocumentSnapshot>,
+                                displayedList: MutableList<DocumentSnapshot>,
+                                recyclerViewList: RecyclerView) {
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
@@ -127,13 +129,13 @@ class HomeFragments : Fragment() {
     /**
      * Adds to the displayed list the matching raw data items based on the search bar text
      */
-    private fun populateDisplayedListBasedOnSearchText(rawDataList: List<String>,
-                                                       displayedList: MutableList<String>,
+    private fun populateDisplayedListBasedOnSearchText(rawDataList: MutableList<DocumentSnapshot>,
+                                                       displayedList: MutableList<DocumentSnapshot>,
                                                        newText: String) {
         displayedList.clear()
         val search = newText.toLowerCase(Locale.ROOT)
         rawDataList.forEach {
-            if (it.toLowerCase(Locale.ROOT).contains(search)) {
+            if (it["displayName"].toString().toLowerCase(Locale.ROOT).contains(search)) {
                 displayedList.add(it)
             }
         }
@@ -142,7 +144,7 @@ class HomeFragments : Fragment() {
     /**
      * Clears the displayed list and adds back in all the original data
      */
-    private fun resetDisplayedList(rawDataList: List<String>, displayedList: MutableList<String>) {
+    private fun resetDisplayedList(rawDataList: MutableList<DocumentSnapshot>, displayedList: MutableList<DocumentSnapshot>) {
         displayedList.clear()
         displayedList.addAll(rawDataList)
     }
