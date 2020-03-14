@@ -27,7 +27,7 @@
         app:layout_constraintTop_toBottomOf="@id/profile_page_title_textView">
 
         <ImageView
-            android:id="@+id/user_starting_profile_picture"
+            android:id="@+id/user_profile_picture"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/user_profile_picture"

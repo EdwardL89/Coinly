@@ -1,6 +1,8 @@
 package com.eightnineapps.coinly.adapters
 
 import android.content.Context
+import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,14 +11,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.activities.CreateProfileActivity.Companion.imageStorage
+import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.android.synthetic.main.user_list_view_layout.view.*
 
 /**
  * An adapter class to populate the recycler view within a tab in the home tab layout
  */
-class AllNamesAdapter(_items: List<String>, _context: Context): RecyclerView.Adapter<AllNamesAdapter.ViewHolder>() {
+class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context): RecyclerView.Adapter<UsersRecyclerViewAdapter.ViewHolder>() {
 
-    private var list = _items
+    private var userList = _items
     private var context = _context
 
     /**
@@ -41,14 +47,32 @@ class AllNamesAdapter(_items: List<String>, _context: Context): RecyclerView.Ada
      * Returns the number of items in the recycler view
      */
     override fun getItemCount(): Int {
-        return list.size
+        return userList.size
     }
 
     /**
      * Defines what each UI element (defined in the ViewHolder class above) maps to
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.singleUserName.text = list[position]
-        Glide.with(context).load("").into(holder.singleUserProfilePicture)
+        val currentUser = userList[position]
+
+        getProfilePicture(currentUser)
+            .addOnSuccessListener {
+                Glide.with(context).load(it).into(holder.singleUserProfilePicture)
+            }
+            .addOnFailureListener {
+                Log.w(TAG, "Could not retrieve profile picture")
+            }
+
+        holder.singleUserName.text = currentUser.data?.get("displayName").toString()
+    }
+
+    /**
+     * Queries the Firebase Storage reference for the user's profile pictures
+     */
+    private fun getProfilePicture(currentUser: DocumentSnapshot): Task<Uri> {
+        return imageStorage.reference
+            .child("profile_pictures")
+            .child(currentUser["id"].toString()).downloadUrl
     }
 }

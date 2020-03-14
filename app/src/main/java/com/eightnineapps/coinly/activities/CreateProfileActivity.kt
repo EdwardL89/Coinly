@@ -1,16 +1,26 @@
 package com.eightnineapps.coinly.activities
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.classes.User
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import java.io.ByteArrayOutputStream
 import kotlin.random.Random
 import kotlin.system.exitProcess
 
@@ -31,12 +41,17 @@ class CreateProfileActivity : AppCompatActivity() {
     private lateinit var realNameEditText: EditText
     private lateinit var displayNameEditText: EditText
 
+    private lateinit var userProfilePicture: ImageView
+
+    private lateinit var userProfilePictureByteData: ByteArray
+
     /**
      * Placed in a companion object to allow access to a single instance to all other activities
      */
     companion object {
         private const val ID_LENGTH = 30
         private val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        val imageStorage = Firebase.storage
     }
 
     /**
@@ -50,6 +65,10 @@ class CreateProfileActivity : AppCompatActivity() {
 
         realNameEditText = findViewById(R.id.real_name_editText)
         displayNameEditText = findViewById(R.id.display_name_editText)
+
+        userProfilePicture = findViewById(R.id.user_profile_picture)
+
+        userProfilePictureByteData = ByteArrayOutputStream().toByteArray()
 
         setupDoneButton()
         setupAddProfilePictureButton()
@@ -69,8 +88,47 @@ class CreateProfileActivity : AppCompatActivity() {
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == IMAGE_SELECTION_SUCCESS && resultCode == Activity.RESULT_OK) {
-            val bitmap: Bitmap? = data!!.extras!!.getParcelable("data")
+        if (requestCode == IMAGE_SELECTION_SUCCESS && resultCode == RESULT_OK) {
+            Glide.with(applicationContext).load(data!!.data).into(userProfilePicture)
+            prepareForFirebaseStorageUpload(data)
+        }
+    }
+
+    /**
+     * Begins the process to upload the selected image to the Firebase storage reference.
+     * Does not upload yet because we need to make sure a new user has been created (hitting the
+     * "done" button) so we can name the image file the user's unique ID.
+     */
+    private fun prepareForFirebaseStorageUpload(data: Intent?) {
+        val selectedImageUri = data!!.data
+        val selectedImageBitmap = convertUriToBitmap(selectedImageUri)
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        selectedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+        userProfilePictureByteData = byteArrayOutputStream.toByteArray()
+    }
+
+    /**
+     * Uploads an image's byte data to the Firebase Storage reference
+     */
+    private fun uploadToImageStorage(imageByteData: ByteArray, fileName: String) {
+        imageStorage.reference.child("profile_pictures").child(fileName).putBytes(imageByteData)
+            .addOnFailureListener {
+                Log.w(LoginActivity.TAG, "UPLOAD TASK TO FIREBASE STORAGE FAILED")
+            }
+            .addOnSuccessListener {
+                Log.w(LoginActivity.TAG, "UPLOAD TASK TO FIREBASE STORAGE SUCCEEDED")
+            }
+    }
+
+    /**
+     * Converts a Uri to a Bitmap
+     */
+    private fun convertUriToBitmap(selectedImageUri: Uri?): Bitmap {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val imageSource = ImageDecoder.createSource(this.contentResolver, selectedImageUri!!)
+            ImageDecoder.decodeBitmap(imageSource)
+        } else {
+            MediaStore.Images.Media.getBitmap(this.contentResolver, selectedImageUri)
         }
     }
 
@@ -79,22 +137,32 @@ class CreateProfileActivity : AppCompatActivity() {
      */
     private fun setupAddProfilePictureButton() {
         addProfilePictureButton.setOnClickListener {
-            val openGalleryIntent = Intent()
-            openGalleryIntent.type = "image/*"
-            intent.action = Intent.ACTION_GET_CONTENT;
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), IMAGE_SELECTION_SUCCESS);
+            val openGallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            startActivityForResult(openGallery, IMAGE_SELECTION_SUCCESS)
         }
     }
 
     /**
      * Creates a new user, writes it to the database, then navigates to the home page
      */
-    private fun setupDoneButton() { //TODO: Don't let the user hit done if there are empty fields
+    private fun setupDoneButton() {
         doneButton.setOnClickListener {
-            val newUser = createNewUser()
-            addUserToFirebaseDatabase(newUser)
-            goToHomePage()
+            if (noFieldsEmpty()) {
+                val newUser = createNewUser()
+                addUserToFirebaseDatabase(newUser)
+                uploadToImageStorage(userProfilePictureByteData, newUser.id)
+                goToHomePage()
+            } else {
+                Toast.makeText(this, "Info missing!", Toast.LENGTH_SHORT).show()
+            }
         }
+    }
+
+    /**
+     * Determines whether or not all fields are empty
+     */
+    private fun noFieldsEmpty(): Boolean {
+        return userProfilePictureByteData.isNotEmpty() && realNameEditText.text.toString() != "" && displayNameEditText.text.toString() != ""
     }
 
     /**

@@ -17,7 +17,6 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.runBlocking
 import kotlin.system.exitProcess
 
 /**
@@ -53,9 +52,11 @@ class HomeActivity : AppCompatActivity() {
      */
     override fun onStart() {
         super.onStart()
-        runBlocking { // (Temporary fix) Block the current thread to prevent setting the content view in onCreate
+        try { // (Temporary fix)
             val usersEmail = auth.currentUser?.email!!
             handleWhetherUserHasCreatedProfile(usersEmail)
+        } catch (e: Exception) {
+            Log.w(TAG, "Navigating to createProfile activity..?")
         }
     }
 
