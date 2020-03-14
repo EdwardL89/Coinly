@@ -111,7 +111,7 @@ class CreateProfileActivity : AppCompatActivity() {
      * Uploads an image's byte data to the Firebase Storage reference
      */
     private fun uploadToImageStorage(imageByteData: ByteArray, fileName: String) {
-        imageStorage.getReference(fileName).putBytes(imageByteData)
+        imageStorage.reference.child("profile_pictures").child(fileName).putBytes(imageByteData)
             .addOnFailureListener {
                 Log.w(LoginActivity.TAG, "UPLOAD TASK TO FIREBASE STORAGE FAILED")
             }
