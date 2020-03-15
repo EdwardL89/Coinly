@@ -16,9 +16,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
+import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.classes.User
+import com.google.android.gms.tasks.Task
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
 import kotlin.random.Random
@@ -108,19 +111,6 @@ class CreateProfileActivity : AppCompatActivity() {
     }
 
     /**
-     * Uploads an image's byte data to the Firebase Storage reference
-     */
-    private fun uploadToImageStorage(imageByteData: ByteArray, fileName: String) {
-        imageStorage.reference.child("profile_pictures").child(fileName).putBytes(imageByteData)
-            .addOnFailureListener {
-                Log.w(LoginActivity.TAG, "UPLOAD TASK TO FIREBASE STORAGE FAILED")
-            }
-            .addOnSuccessListener {
-                Log.w(LoginActivity.TAG, "UPLOAD TASK TO FIREBASE STORAGE SUCCEEDED")
-            }
-    }
-
-    /**
      * Converts a Uri to a Bitmap
      */
     private fun convertUriToBitmap(selectedImageUri: Uri?): Bitmap {
@@ -149,13 +139,61 @@ class CreateProfileActivity : AppCompatActivity() {
         doneButton.setOnClickListener {
             if (noFieldsEmpty()) {
                 val newUser = createNewUser()
-                addUserToFirebaseDatabase(newUser)
-                uploadToImageStorage(userProfilePictureByteData, newUser.id)
-                goToHomePage()
+                uploadUserAndGoToHome(newUser)
             } else {
                 Toast.makeText(this, "Info missing!", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    /**
+     * Uploads the profile picture to Storage, downloads and saves the image's Uri for reuse, then
+     * uploads the user to the Firestore
+     */
+    private fun uploadUserAndGoToHome(newUser: User) {
+        uploadToImageStorage(userProfilePictureByteData, newUser)
+            .addOnSuccessListener {
+                downloadProfilePicture(newUser)
+                    .addOnSuccessListener { uri -> newUser.profilePictureUri = uri.toString()
+                        uploadToFirestore(newUser)
+                            .addOnSuccessListener {
+                                goToHomePage() // Go to home page after we are guaranteed all tasks have completed
+                            }
+                            .addOnFailureListener { Log.w(TAG, "Could not upload user to Firestore") }
+                    }
+                    .addOnFailureListener { Log.w(TAG, "Could not download from Storage") }
+            }
+            .addOnFailureListener { Log.w(TAG, "Could not upload to Firebase storage") }
+    }
+
+    /**
+     * Uploads an image's byte data to the Firebase Storage reference
+     */
+    private fun uploadToImageStorage(imageByteData: ByteArray, currentUser: User): UploadTask {
+        return imageStorage.reference.child("profile_pictures").child(currentUser.id).putBytes(imageByteData)
+    }
+
+    /**
+     * Queries the Firebase Storage reference for the user's profile picture
+     */
+    private fun downloadProfilePicture(newUser: User): Task<Uri> {
+        return imageStorage.reference
+            .child("profile_pictures")
+            .child(newUser.id).downloadUrl
+    }
+
+    /**
+     * Writes a new user to the database
+     */
+    private fun uploadToFirestore(newUser: User): Task<Void> {
+        return database.collection("users").document(newUser.email.toString()).set(newUser)
+    }
+
+    /**
+     * Launches an intent to go to the home page activity
+     */
+    private fun goToHomePage() {
+        startActivity(Intent(this, HomeActivity::class.java))
     }
 
     /**
@@ -174,20 +212,6 @@ class CreateProfileActivity : AppCompatActivity() {
         val id = generateId()
         val email = auth.currentUser!!.email
         return User(realName, displayName, id, email)
-    }
-
-    /**
-     * Writes a new user to the database
-     */
-    private fun addUserToFirebaseDatabase(user: User) {
-        user.email?.let { database.collection("users").document(it).set(user) }
-    }
-
-    /**
-     * Launches an intent to go to the home page activity
-     */
-    private fun goToHomePage() {
-        startActivity(Intent(this, HomeActivity::class.java))
     }
 
     /**

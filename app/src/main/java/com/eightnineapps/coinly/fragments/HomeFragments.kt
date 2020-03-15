@@ -16,6 +16,7 @@ import com.eightnineapps.coinly.interfaces.CallBack
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
+import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -234,14 +235,18 @@ class HomeFragments : Fragment() {
      * gets the users with the matching emails
      */
     private fun addAssociatesToList(queryForBigs: Boolean, task: Task<DocumentSnapshot>, callBack: CallBack) {
-        if (task.isSuccessful) {
-            if (queryForBigs) {
-                currentBigsEmails = task.result!!.data?.get("bigs") as MutableList<*>
-                callBack.secondQueryCallBack(currentBigsEmails)
-            } else {
-                currentLittlesEmails = task.result!!.data?.get("littles") as MutableList<*>
-                callBack.secondQueryCallBack(currentLittlesEmails)
+        try {
+            if (task.isSuccessful) {
+                if (queryForBigs) {
+                    currentBigsEmails = task.result!!.data?.get("bigs") as MutableList<*>
+                    callBack.secondQueryCallBack(currentBigsEmails)
+                } else {
+                    currentLittlesEmails = task.result!!.data?.get("littles") as MutableList<*>
+                    callBack.secondQueryCallBack(currentLittlesEmails)
+                }
             }
+        } catch (e: Exception) {
+            Log.w(TAG, e.message.toString())
         }
     }
 

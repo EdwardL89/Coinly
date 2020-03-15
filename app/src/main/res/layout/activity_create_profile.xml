@@ -7,7 +7,7 @@
     tools:context=".activities.CreateProfileActivity">
 
     <TextView
-        android:id="@+id/profile_page_title_textView"
+        android:id="@+id/profile_creation_page_title_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/ProfilePageTitle"
@@ -24,7 +24,7 @@
         app:layout_constraintBottom_toTopOf="@+id/real_name_editText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile_page_title_textView">
+        app:layout_constraintTop_toBottomOf="@id/profile_creation_page_title_textView">
 
         <ImageView
             android:id="@+id/user_profile_picture"

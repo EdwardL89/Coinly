@@ -1,8 +1,7 @@
 package com.eightnineapps.coinly.adapters
 
 import android.content.Context
-import android.net.Uri
-import android.util.Log
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,9 +10,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.activities.CreateProfileActivity.Companion.imageStorage
-import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
-import com.google.android.gms.tasks.Task
+import com.eightnineapps.coinly.activities.UserProfileActivity
+import com.eightnineapps.coinly.classes.User
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.android.synthetic.main.user_list_view_layout.view.*
 
@@ -28,9 +26,28 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
     /**
      * Explicitly defines the UI elements belonging to a single list element in the recycler view
      */
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        val singleUserName: TextView = view.user_name_text_view
+    class ViewHolder(view: View, _items: List<DocumentSnapshot>): RecyclerView.ViewHolder(view), View.OnClickListener {
+        private var context: Context = view.context
+        private var ViewHolderUserList = _items
+        val singleUserName: TextView = view.display_name_text_view
         val singleUserProfilePicture: ImageView = view.user_profile_picture
+
+        init {
+            view.isClickable = true
+            view.setOnClickListener(this)
+        }
+
+        /**
+         * Retrieves the DocumentSnapshot of the user that was tapped on and sends it with the intent
+         * to the UserProfileActivity
+         */
+        override fun onClick(view: View?) {
+            val displayName = view!!.display_name_text_view!!.text.toString()
+            val userDocument = ViewHolderUserList.first { it.data?.get("displayName") == displayName }
+            val intentWithUserDocument = Intent(context, UserProfileActivity::class.java)
+                .putExtra("user_object", userDocument.toObject(User::class.java))
+            context.startActivity(intentWithUserDocument)
+        }
     }
 
     /**
@@ -40,7 +57,7 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
         return ViewHolder(
             LayoutInflater
                 .from(context)
-                .inflate(R.layout.user_list_view_layout, parent, false))
+                .inflate(R.layout.user_list_view_layout, parent, false), userList)
     }
 
     /**
@@ -55,24 +72,7 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentUser = userList[position]
-
-        getProfilePicture(currentUser)
-            .addOnSuccessListener {
-                Glide.with(context).load(it).into(holder.singleUserProfilePicture)
-            }
-            .addOnFailureListener {
-                Log.w(TAG, "Could not retrieve profile picture")
-            }
-
+        Glide.with(context).load(currentUser.data!!["profilePictureUri"]).into(holder.singleUserProfilePicture)
         holder.singleUserName.text = currentUser.data?.get("displayName").toString()
-    }
-
-    /**
-     * Queries the Firebase Storage reference for the user's profile pictures
-     */
-    private fun getProfilePicture(currentUser: DocumentSnapshot): Task<Uri> {
-        return imageStorage.reference
-            .child("profile_pictures")
-            .child(currentUser["id"].toString()).downloadUrl
     }
 }
