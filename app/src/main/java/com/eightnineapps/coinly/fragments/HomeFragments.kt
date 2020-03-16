@@ -44,13 +44,16 @@ class HomeFragments : Fragment() {
     private lateinit var allUsersRecyclerViewList: RecyclerView
     private lateinit var allLittlesRecyclerViewList: RecyclerView
 
-    private var allBigs: MutableList<DocumentSnapshot> = ArrayList()
     private var allUsers: MutableList<DocumentSnapshot> = ArrayList()
-    private var allLittles: MutableList<DocumentSnapshot> = ArrayList()
 
     private var allBigsToDisplay: MutableList<DocumentSnapshot> = ArrayList()
     private var allUsersToDisplay: MutableList<DocumentSnapshot> = ArrayList()
     private var allLittlesToDisplay: MutableList<DocumentSnapshot> = ArrayList()
+
+    companion object {
+        var allLittles: MutableList<DocumentSnapshot> = ArrayList()
+        var allBigs: MutableList<DocumentSnapshot> = ArrayList()
+    }
 
     /**
      * Use the passed in position Int from the ViewPagerAdapter class to determine the correct
