@@ -14,6 +14,7 @@ import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
+import com.eightnineapps.coinly.adapters.NotificationsRecyclerViewAdapter
 import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.User
 import com.eightnineapps.coinly.interfaces.CallBack
@@ -48,6 +49,7 @@ class HomeFragments : Fragment() {
 
     private lateinit var allBigsRecyclerViewList: RecyclerView
     private lateinit var allUsersRecyclerViewList: RecyclerView
+    private lateinit var notificationsRecyclerView: RecyclerView
     private lateinit var allLittlesRecyclerViewList: RecyclerView
 
     private var allUsers: MutableList<DocumentSnapshot> = ArrayList()
@@ -333,10 +335,28 @@ class HomeFragments : Fragment() {
      */
     private fun createMyProfileTab(view: View): View {
         showSearchIcon(false)
+        notificationsRecyclerView = view.findViewById(R.id.notificationsRecyclerView)
         database.collection("users").document(auth.currentUser?.email!!).get().addOnCompleteListener {
                 task -> populateMyProfileUI(task, view)
         }
         return view
+    }
+
+    /**
+     * Retrieves all current notifications of the user
+     */
+    private fun getMyNotifications(currentUser: DocumentSnapshot): MutableList<String> {
+        val currentUserObject = currentUser.toObject(User::class.java)
+        return currentUserObject!!.notifications
+    }
+
+    /**
+     * Assigns the given recycler view's layout manager and adapter using the list whose data is being displayed,
+     * but for notifications, where String is the type
+     */
+    private fun updateNotifications(recyclerViewList: RecyclerView, listToDisplay: MutableList<String>) {
+        recyclerViewList.layoutManager = LinearLayoutManager(context)
+        recyclerViewList.adapter = NotificationsRecyclerViewAdapter(listToDisplay, context!!)
     }
 
     /**
@@ -347,7 +367,8 @@ class HomeFragments : Fragment() {
         val myProfilePicture = view.findViewById<ImageView>(R.id.my_profile_picture)
         val myDisplayName = view.findViewById<TextView>(R.id.my_display_name_textView)
         Glide.with(activity!!).load(currentUserDocument?.data!!["profilePictureUri"]).into(myProfilePicture)
-        myDisplayName.text = currentUserDocument?.data!!["displayName"].toString()
+        myDisplayName.text = currentUserDocument.data!!["displayName"].toString()
+        updateNotifications(notificationsRecyclerView, getMyNotifications(currentUserDocument))
     }
 
     /**

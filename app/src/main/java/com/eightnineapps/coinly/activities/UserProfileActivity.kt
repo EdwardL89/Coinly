@@ -1,6 +1,5 @@
 package com.eightnineapps.coinly.activities
 
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -20,8 +19,8 @@ class UserProfileActivity : AppCompatActivity() {
 
     private lateinit var displayName: TextView
     private lateinit var addAsBigButton: Button
-    private lateinit var profilePicture: ImageView
     private lateinit var addAsLittleButton: Button
+    private lateinit var profilePicture: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

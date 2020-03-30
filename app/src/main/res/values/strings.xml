@@ -17,4 +17,5 @@
     <string name="display_name_holder">DisplayName</string>
     <string name="add_as_big">Add as Big</string>
     <string name="add_as_little">add as Little</string>
+    <string name="notifications_title">Notifications</string>
 </resources>

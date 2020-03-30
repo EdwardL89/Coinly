@@ -9,7 +9,7 @@ import androidx.viewpager.widget.ViewPager
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
-import com.eightnineapps.coinly.classes.ViewPagerAdapter
+import com.eightnineapps.coinly.adapters.ViewPagerAdapter
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -40,7 +40,10 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         val viewPager = findViewById<ViewPager>(R.id.home_pager)
-        val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
+        val viewPagerAdapter =
+            ViewPagerAdapter(
+                supportFragmentManager
+            )
         viewPager.adapter = viewPagerAdapter
 
         val tabLayout = findViewById<TabLayout>(R.id.tab_layout)

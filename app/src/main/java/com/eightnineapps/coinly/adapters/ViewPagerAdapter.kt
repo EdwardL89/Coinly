@@ -1,4 +1,4 @@
-package com.eightnineapps.coinly.classes
+package com.eightnineapps.coinly.adapters
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
