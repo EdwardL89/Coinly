@@ -38,6 +38,7 @@ class CreateProfileActivity : AppCompatActivity() {
     /**
      * Must be late initialized because we haven't set the content view yet in the onCreate method
      */
+    private lateinit var thisUser: User
     private lateinit var doneButton: Button
     private lateinit var addProfilePictureButton: Button
 
@@ -138,8 +139,8 @@ class CreateProfileActivity : AppCompatActivity() {
     private fun setupDoneButton() {
         doneButton.setOnClickListener {
             if (noFieldsEmpty()) {
-                val newUser = createNewUser()
-                uploadUserAndGoToHome(newUser)
+                thisUser = createNewUser()
+                uploadUserAndGoToHome(thisUser)
             } else {
                 Toast.makeText(this, "Info missing!", Toast.LENGTH_SHORT).show()
             }

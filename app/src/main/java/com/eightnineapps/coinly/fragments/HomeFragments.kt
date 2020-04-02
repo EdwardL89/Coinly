@@ -52,15 +52,15 @@ class HomeFragments : Fragment() {
     private lateinit var notificationsRecyclerView: RecyclerView
     private lateinit var allLittlesRecyclerViewList: RecyclerView
 
-    private var allUsers: MutableList<DocumentSnapshot> = ArrayList()
-
     private var allBigsToDisplay: MutableList<DocumentSnapshot> = ArrayList()
     private var allUsersToDisplay: MutableList<DocumentSnapshot> = ArrayList()
     private var allLittlesToDisplay: MutableList<DocumentSnapshot> = ArrayList()
 
     companion object {
-        var allLittles: MutableList<DocumentSnapshot> = ArrayList()
+        lateinit var currentUserSnapshot: DocumentSnapshot
         var allBigs: MutableList<DocumentSnapshot> = ArrayList()
+        var allUsers: MutableList<DocumentSnapshot> = ArrayList()
+        var allLittles: MutableList<DocumentSnapshot> = ArrayList()
     }
 
     /**
@@ -252,6 +252,7 @@ class HomeFragments : Fragment() {
     private fun addAssociatesToList(queryForBigs: Boolean, task: Task<DocumentSnapshot>, callBack: CallBack) {
         try {
             if (task.isSuccessful) {
+                currentUserSnapshot = task.result!!
                 if (queryForBigs) {
                     currentBigsEmails = task.result!!.data?.get("bigs") as MutableList<*>
                     callBack.secondQueryCallBack(currentBigsEmails)

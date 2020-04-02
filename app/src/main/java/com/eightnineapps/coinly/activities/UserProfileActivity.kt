@@ -2,15 +2,22 @@ package com.eightnineapps.coinly.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
+import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.classes.User
 import com.eightnineapps.coinly.fragments.HomeFragments.Companion.allBigs
 import com.eightnineapps.coinly.fragments.HomeFragments.Companion.allLittles
+import com.eightnineapps.coinly.fragments.HomeFragments.Companion.currentUserSnapshot
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.QueryDocumentSnapshot
 
 /**
  * Represents a single user of the app
@@ -21,6 +28,7 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var addAsBigButton: Button
     private lateinit var addAsLittleButton: Button
     private lateinit var profilePicture: ImageView
+    private lateinit var ObservedUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +39,68 @@ class UserProfileActivity : AppCompatActivity() {
         setupButtons()
     }
 
+    /**
+     * Set the onClick listeners for the "Add as" button
+     */
     private fun setupButtons() {
-        addAsBigButton.setOnClickListener {
+        setUpAddAsBig()
+        setUpAddAsLittle()
+    }
 
+    /**
+     * Sets up the "add as little" button and determines whether it should be enabled
+     */
+    private fun setUpAddAsLittle() {
+        if (!alreadyRequested(false)) {
+            addAsLittleButton.setOnClickListener {
+                sendAddNotification(false)
+                addAsLittleButton.isEnabled = false
+            }
+        } else {
+            addAsLittleButton.isEnabled = false
         }
-        addAsLittleButton.setOnClickListener {
+    }
 
+    /**
+     * Sets up the "add as big" button and determines whether it should be enabled
+     */
+    private fun setUpAddAsBig() {
+        if (!alreadyRequested(true)) {
+            addAsBigButton.setOnClickListener {
+                sendAddNotification(true)
+                addAsBigButton.isEnabled = false
+            }
+        } else {
+            addAsBigButton.isEnabled = false
         }
+    }
+
+    /**
+     * Determines if the current user as already request the observed user to be added as a big/little
+     */
+    private fun alreadyRequested(asBig: Boolean): Boolean {
+        val currentUserDisplayName=  currentUserSnapshot.get("displayName") as String
+        return ObservedUser.notifications.contains("$currentUserDisplayName wants to add you as a ${if (asBig) "big" else "little"}!")
+    }
+
+    /**
+     * Initiates the notification sending process by querying for the current user's name to place
+     * in the string message
+     */
+    private fun sendAddNotification(sendingToBig: Boolean) {
+        database.collection("users").document(auth.currentUser?.email!!).get().addOnCompleteListener{
+            task -> constructAndUpdateNotification(sendingToBig, task)
+        }
+    }
+
+    /**
+     * Using the current user's name, constructs the notification message and updates the observed
+     * user's notifications in the Firestore
+     */
+    private fun constructAndUpdateNotification(sendingToBig: Boolean, task: Task<DocumentSnapshot>) {
+        val thisUserName = task.result!!.data?.get("displayName") as String
+        ObservedUser.notifications.add("$thisUserName wants to add you as a ${if (sendingToBig) "big" else "little"}!")
+        database.collection("users").document(ObservedUser.email!!).update("notifications", ObservedUser.notifications)
     }
 
     /**
@@ -45,9 +108,8 @@ class UserProfileActivity : AppCompatActivity() {
      * observed user
      */
     private fun filterButtons() {
-        val observedUserDisplayName = displayName.text.toString()
-        hideOrShowAddBigButton(observedUserDisplayName)
-        hideOrShowAddLittleButton(observedUserDisplayName)
+        hideOrShowAddBigButton(ObservedUser.displayName)
+        hideOrShowAddLittleButton(ObservedUser.displayName)
     }
 
     /**
@@ -82,8 +144,8 @@ class UserProfileActivity : AppCompatActivity() {
      * Populates the visible UI elements of this activity to their respective data for the user
      */
     private fun populateUIElements() {
-        val currentUser = intent.getSerializableExtra("user_object") as User
-        displayName.text = currentUser.displayName
-        Glide.with(this).load(currentUser.profilePictureUri).into(profilePicture)
+        ObservedUser = intent.getSerializableExtra("user_object") as User
+        displayName.text = ObservedUser.displayName
+        Glide.with(this).load(ObservedUser.profilePictureUri).into(profilePicture)
     }
 }
