@@ -1,4 +1,4 @@
-package com.eightnineapps.coinly.classes
+package com.eightnineapps.coinly.adapters
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -24,7 +24,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager): FragmentPagerAdapter(f
      * Returns the number of fragments in this adapter if responsible for
      */
     override fun getCount(): Int {
-        return 3
+        return 4
     }
 
     /**
@@ -34,7 +34,8 @@ class ViewPagerAdapter(fragmentManager: FragmentManager): FragmentPagerAdapter(f
         return when (position) {
             0 -> "Bigs"
             1 -> "Littles"
-            else -> "Linkup"
+            2 -> "Linkup"
+            else -> "Profile"
         }
     }
 

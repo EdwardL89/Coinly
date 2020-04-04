@@ -15,8 +15,9 @@ data class User(var _realName: String = "", var _displayName: String = "", var _
     var realName = _realName
     var displayName = _displayName
     var bigs: MutableList<String> = mutableListOf()
-    var littles: MutableList<String> = mutableListOf()
     var prizes: MutableList<String> = mutableListOf()
+    var littles: MutableList<String> = mutableListOf()
+    var notifications: MutableList<String> = mutableListOf()
     var profilePictureUri: String = ""
 
 }

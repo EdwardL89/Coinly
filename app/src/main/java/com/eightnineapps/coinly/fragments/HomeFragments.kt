@@ -3,15 +3,20 @@ package com.eightnineapps.coinly.fragments
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
+import com.eightnineapps.coinly.adapters.NotificationsRecyclerViewAdapter
 import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
+import com.eightnineapps.coinly.classes.User
 import com.eightnineapps.coinly.interfaces.CallBack
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
@@ -27,6 +32,7 @@ import kotlin.collections.ArrayList
 class HomeFragments : Fragment() {
 
     private val BIGS_TAB = 0
+    private val LINKUP_TAB = 2
     private val LITTLES_TAB = 1
     private var currentTabPosition = 0
 
@@ -35,22 +41,27 @@ class HomeFragments : Fragment() {
     private var numOfLittleEmails = 1
     private var littleEmailsCounter = 1
 
-    private lateinit var searchItem: MenuItem
+    private var SHOW_SEARCH_ICON = true
+    private lateinit var searchIcon: MenuItem
 
     private lateinit var currentBigsEmails: MutableList<*>
     private lateinit var currentLittlesEmails: MutableList<*>
 
     private lateinit var allBigsRecyclerViewList: RecyclerView
     private lateinit var allUsersRecyclerViewList: RecyclerView
+    private lateinit var notificationsRecyclerView: RecyclerView
     private lateinit var allLittlesRecyclerViewList: RecyclerView
-
-    private var allBigs: MutableList<DocumentSnapshot> = ArrayList()
-    private var allUsers: MutableList<DocumentSnapshot> = ArrayList()
-    private var allLittles: MutableList<DocumentSnapshot> = ArrayList()
 
     private var allBigsToDisplay: MutableList<DocumentSnapshot> = ArrayList()
     private var allUsersToDisplay: MutableList<DocumentSnapshot> = ArrayList()
     private var allLittlesToDisplay: MutableList<DocumentSnapshot> = ArrayList()
+
+    companion object {
+        lateinit var currentUserSnapshot: DocumentSnapshot
+        var allBigs: MutableList<DocumentSnapshot> = ArrayList()
+        var allUsers: MutableList<DocumentSnapshot> = ArrayList()
+        var allLittles: MutableList<DocumentSnapshot> = ArrayList()
+    }
 
     /**
      * Use the passed in position Int from the ViewPagerAdapter class to determine the correct
@@ -68,7 +79,8 @@ class HomeFragments : Fragment() {
      */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.home_fragments_app_bar_menu, menu)
-        searchItem = menu.findItem(R.id.menu_search)
+        searchIcon = menu.findItem(R.id.menu_search)
+        searchIcon.isVisible = SHOW_SEARCH_ICON
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -77,7 +89,7 @@ class HomeFragments : Fragment() {
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_search) { // Programs the search button for the recycler view
-            val searchView = searchItem.actionView as SearchView
+            val searchView = searchIcon.actionView as SearchView
             when (currentTabPosition) {
                 BIGS_TAB -> setUpSearchView(searchView,
                     allBigs,
@@ -104,6 +116,29 @@ class HomeFragments : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    /**
+     * Returns the resource Id of the fragment layout that needs to be created based on the position
+     */
+    private fun getCurrentFragmentResourceId(position: Int): Int {
+        return when (position) {
+            BIGS_TAB -> R.layout.fragment_bigs
+            LITTLES_TAB -> R.layout.fragment_littles
+            LINKUP_TAB -> R.layout.fragment_linkup
+            else -> R.layout.fragment_my_profile
+        }
+    }
+
+    /**
+     * Determines which tab fragment's UI we need to set up
+     */
+    private fun createFragmentLayout(view: View, currentTabPosition: Int): View {
+        return when (currentTabPosition) {
+            BIGS_TAB -> createBigTab(view)
+            LITTLES_TAB -> createLittleTab(view)
+            LINKUP_TAB -> createLinkupTab(view)
+            else -> createMyProfileTab(view)
+        }
+    }
 
     /**
      * Sets up the search action bar item to filter the raw data list and place matching items
@@ -155,31 +190,10 @@ class HomeFragments : Fragment() {
     }
 
     /**
-     * Returns the resource Id of the fragment layout that needs to be created based on the position
-     */
-    private fun getCurrentFragmentResourceId(position: Int): Int {
-        return when (position) {
-            BIGS_TAB -> R.layout.fragment_bigs
-            LITTLES_TAB -> R.layout.fragment_littles
-            else -> R.layout.fragment_linkup
-        }
-    }
-
-    /**
-     * Determines which tab fragment's UI we need to set up
-     */
-    private fun createFragmentLayout(view: View, currentTabPosition: Int): View {
-        return when (currentTabPosition) {
-            BIGS_TAB -> createBigTab(view)
-            LITTLES_TAB -> createLittleTab(view)
-            else -> createLinkupTab(view)
-        }
-    }
-
-    /**
      * Sets up the big tab fragment for the user
      */
     private fun createBigTab(view: View): View {
+        showSearchIcon(true)
         allBigsRecyclerViewList = view.findViewById(R.id.allBigsRecyclerView)
         allBigs.clear()
         allBigsToDisplay.clear()
@@ -197,6 +211,7 @@ class HomeFragments : Fragment() {
      * Sets up the little tab fragment for the user
      */
     private fun createLittleTab(view: View): View {
+        showSearchIcon(true)
         allLittlesRecyclerViewList = view.findViewById(R.id.allLittlesRecyclerView)
         allLittles.clear()
         allLittlesToDisplay.clear()
@@ -226,8 +241,8 @@ class HomeFragments : Fragment() {
     private fun queryFirestoreForAllAssociates(queryForBigs: Boolean, callback: CallBack) {
         val currentUserEmail = auth.currentUser?.email!!
         database.collection("users").document(currentUserEmail).get().addOnCompleteListener {
-            task -> addAssociatesToList(queryForBigs, task, callback)
-        }
+                task -> addAssociatesToList(queryForBigs, task, callback)
+            }
     }
 
     /**
@@ -237,6 +252,7 @@ class HomeFragments : Fragment() {
     private fun addAssociatesToList(queryForBigs: Boolean, task: Task<DocumentSnapshot>, callBack: CallBack) {
         try {
             if (task.isSuccessful) {
+                currentUserSnapshot = task.result!!
                 if (queryForBigs) {
                     currentBigsEmails = task.result!!.data?.get("bigs") as MutableList<*>
                     callBack.secondQueryCallBack(currentBigsEmails)
@@ -275,6 +291,7 @@ class HomeFragments : Fragment() {
      * Sets up the linkup tab fragment for the user
      */
     private fun createLinkupTab(view: View): View {
+        showSearchIcon(true)
         allUsersRecyclerViewList = view.findViewById(R.id.allUsersRecyclerView)
         allUsers.clear()
         allUsersToDisplay.clear()
@@ -312,5 +329,54 @@ class HomeFragments : Fragment() {
     private fun updateRecyclerViewAdapterAndLayoutManager(recyclerViewList: RecyclerView, listToDisplay: MutableList<DocumentSnapshot>) {
         recyclerViewList.layoutManager = LinearLayoutManager(context)
         recyclerViewList.adapter = UsersRecyclerViewAdapter(listToDisplay, context!!)
+    }
+
+    /**
+     * Sets up the My Profile tab fragment for the user
+     */
+    private fun createMyProfileTab(view: View): View {
+        showSearchIcon(false)
+        notificationsRecyclerView = view.findViewById(R.id.notificationsRecyclerView)
+        database.collection("users").document(auth.currentUser?.email!!).get().addOnCompleteListener {
+                task -> populateMyProfileUI(task, view)
+        }
+        return view
+    }
+
+    /**
+     * Retrieves all current notifications of the user
+     */
+    private fun getMyNotifications(currentUser: DocumentSnapshot): MutableList<String> {
+        val currentUserObject = currentUser.toObject(User::class.java)
+        return currentUserObject!!.notifications
+    }
+
+    /**
+     * Assigns the given recycler view's layout manager and adapter using the list whose data is being displayed,
+     * but for notifications, where String is the type
+     */
+    private fun updateNotifications(recyclerViewList: RecyclerView, listToDisplay: MutableList<String>) {
+        recyclerViewList.layoutManager = LinearLayoutManager(context)
+        recyclerViewList.adapter = NotificationsRecyclerViewAdapter(listToDisplay, context!!)
+    }
+
+    /**
+     * Populates the current User's profile activity tab
+     */
+    private fun populateMyProfileUI(task: Task<DocumentSnapshot>, view: View) {
+        val currentUserDocument = task.result
+        val myProfilePicture = view.findViewById<ImageView>(R.id.my_profile_picture)
+        val myDisplayName = view.findViewById<TextView>(R.id.my_display_name_textView)
+        Glide.with(activity!!).load(currentUserDocument?.data!!["profilePictureUri"]).into(myProfilePicture)
+        myDisplayName.text = currentUserDocument.data!!["displayName"].toString()
+        updateNotifications(notificationsRecyclerView, getMyNotifications(currentUserDocument))
+    }
+
+    /**
+     * Toggle the search bar icon
+     */
+    private fun showSearchIcon(show: Boolean) {
+        SHOW_SEARCH_ICON = show
+        activity?.invalidateOptionsMenu()
     }
 }
