@@ -111,8 +111,7 @@ class UserProfileActivity : AppCompatActivity() {
      */
     private fun hideOrShowAddBigButton(observedUserDisplayName: String) {
         val searchResult = allBigs.find { it.data?.get("displayName") == observedUserDisplayName }
-        if (searchResult != null) addAsBigButton.visibility =  View.INVISIBLE
-        else  addAsBigButton.visibility =  View.VISIBLE
+        addAsBigButton.isEnabled = searchResult == null
     }
 
     /**
@@ -120,8 +119,7 @@ class UserProfileActivity : AppCompatActivity() {
      */
     private fun hideOrShowAddLittleButton(observedUserDisplayName: String) {
         val searchResult = allLittles.find { it.data?.get("displayName") == observedUserDisplayName }
-        if (searchResult != null) addAsLittleButton.visibility =  View.INVISIBLE
-        else  addAsLittleButton.visibility =  View.VISIBLE
+        addAsLittleButton.isEnabled = searchResult == null
     }
 
     /**

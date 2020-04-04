@@ -78,6 +78,7 @@ class NotificationsRecyclerViewAdapter(_notifications: List<String>, _context: C
         notificationList.removeAt(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, notificationList.size)
+        database.collection("users").document(auth.currentUser?.email!!).update("notifications", notificationList)
     }
 
     /**
