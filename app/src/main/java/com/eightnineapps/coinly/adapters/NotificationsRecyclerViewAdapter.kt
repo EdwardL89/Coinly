@@ -109,15 +109,19 @@ class NotificationsRecyclerViewAdapter(_notifications: List<String>, _context: C
         val toAddUser = toAddUserTask.result?.toObjects(User::class.java)?.get(0)!!
         val addingToUser = addingToUserTask.result?.toObject(User::class.java)!!
         if (addingAs == "bigs") {
-            toAddUser.bigs.add(addingToUser.email!!)
-            database.collection("users").document(toAddUser.email!!).update(addingAs, toAddUser.bigs)
-            addingToUser.littles.add(toAddUser.email!!)
-            database.collection("users").document(addingToUser.email!!).update("littles", addingToUser.littles)
+            if (!toAddUser.bigs.contains(addingToUser.email!!)) { // For when both users request and accept eachother
+                toAddUser.bigs.add(addingToUser.email!!)
+                database.collection("users").document(toAddUser.email!!).update(addingAs, toAddUser.bigs)
+                addingToUser.littles.add(toAddUser.email!!)
+                database.collection("users").document(addingToUser.email!!).update("littles", addingToUser.littles)
+            }
         } else {
-            toAddUser.littles.add(addingToUser.email!!)
-            database.collection("users").document(toAddUser.email!!).update(addingAs, toAddUser.littles)
-            addingToUser.bigs.add(toAddUser.email!!)
-            database.collection("users").document(addingToUser.email!!).update("bigs", addingToUser.bigs)
+            if (!toAddUser.littles.contains(addingToUser.email!!)) {
+                toAddUser.littles.add(addingToUser.email!!)
+                database.collection("users").document(toAddUser.email!!).update(addingAs, toAddUser.littles)
+                addingToUser.bigs.add(toAddUser.email!!)
+                database.collection("users").document(addingToUser.email!!).update("bigs", addingToUser.bigs)
+            }
         }
     }
 
