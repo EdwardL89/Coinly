@@ -4,10 +4,17 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
+import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
+import com.eightnineapps.coinly.classes.User
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.notification_layout.view.*
 
 /**
@@ -15,7 +22,7 @@ import kotlinx.android.synthetic.main.notification_layout.view.*
  */
 class NotificationsRecyclerViewAdapter(_notifications: List<String>, _context: Context): RecyclerView.Adapter<NotificationsRecyclerViewAdapter.ViewHolder>() {
 
-    private var notificationList = _notifications
+    private var notificationList = _notifications as MutableList<String>
     private var context = _context
 
     /**
@@ -24,6 +31,7 @@ class NotificationsRecyclerViewAdapter(_notifications: List<String>, _context: C
     class ViewHolder(view: View): RecyclerView.ViewHolder(view), View.OnClickListener {
         private var context: Context = view.context
         val notificationContent: TextView = view.notificationInfoTextView
+        val acceptButton: Button = view.accept_button
 
         init {
             view.isClickable = true
@@ -33,8 +41,8 @@ class NotificationsRecyclerViewAdapter(_notifications: List<String>, _context: C
         /**
          * Goes to a notification review activity where further action can be taken
          */
-        override fun onClick(view: View?) {
-            Toast.makeText(context, "Hello", Toast.LENGTH_SHORT).show()
+        override fun onClick(view: View?) { //Go to review page when a notification is clicked on
+            Toast.makeText(context, "Go to review page", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -57,6 +65,59 @@ class NotificationsRecyclerViewAdapter(_notifications: List<String>, _context: C
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.notificationContent.text = notificationList[position]
+        holder.acceptButton.setOnClickListener {
+            acceptAddRequest(notificationList[position].split(" "))
+            removeNotification(position)
+        }
+    }
+
+    /**
+     * Removes the notification at the given position
+     */
+    private fun removeNotification(position: Int) {
+        notificationList.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, notificationList.size)
+    }
+
+    /**
+     * Adds the requesting user to the receiving user's big or little list
+     */
+    private fun acceptAddRequest(info: List<String>) {
+        val toAddUserDisplayName = info[0]
+        val addingToUserEmail = auth.currentUser?.email!!
+        val addingAs = info[info.size - 1].dropLast(1)
+        database.collection("users").whereEqualTo("displayName", toAddUserDisplayName).limit(1).get().addOnCompleteListener {
+            toAddUserTask -> fulfilMutualAdd(toAddUserTask, addingToUserEmail, addingAs + "s")
+        }
+    }
+
+    /**
+     * Initializes the sequence of events needed to add the two users to eachother's respective bigs and littles list
+     */
+    private fun fulfilMutualAdd(toAddUserTask: Task<QuerySnapshot>, addingToUserEmail: String, addingAs: String) {
+        database.collection("users").document(addingToUserEmail).get().addOnCompleteListener {
+            addingToUserTask -> addToEachother(toAddUserTask, addingToUserTask, addingAs)
+        }
+    }
+
+    /**
+     * Update the two user's bigs and littles list in the firestore with the new addition
+     */
+    private fun addToEachother(toAddUserTask: Task<QuerySnapshot>, addingToUserTask: Task<DocumentSnapshot>, addingAs: String) {
+        val toAddUser = toAddUserTask.result?.toObjects(User::class.java)?.get(0)!!
+        val addingToUser = addingToUserTask.result?.toObject(User::class.java)!!
+        if (addingAs == "bigs") {
+            toAddUser.bigs.add(addingToUser.email!!)
+            database.collection("users").document(toAddUser.email!!).update(addingAs, toAddUser.bigs)
+            addingToUser.littles.add(toAddUser.email!!)
+            database.collection("users").document(addingToUser.email!!).update("littles", addingToUser.littles)
+        } else {
+            toAddUser.littles.add(addingToUser.email!!)
+            database.collection("users").document(toAddUser.email!!).update(addingAs, toAddUser.littles)
+            addingToUser.bigs.add(toAddUser.email!!)
+            database.collection("users").document(addingToUser.email!!).update("bigs", addingToUser.bigs)
+        }
     }
 
 }

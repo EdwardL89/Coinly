@@ -18,4 +18,5 @@
     <string name="add_as_big">Add as Big</string>
     <string name="add_as_little">add as Little</string>
     <string name="notifications_title">Notifications</string>
+    <string name="accept_button_text">Accept</string>
 </resources>
