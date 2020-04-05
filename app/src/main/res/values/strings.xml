@@ -19,4 +19,7 @@
     <string name="add_as_little">add as Little</string>
     <string name="notifications_title">Notifications</string>
     <string name="accept_button_text">Accept</string>
+    <string name="accept_request">Accept Request</string>
+    <string name="requested">Requested</string>
+    <string name="added_as_big">Added as big</string>
 </resources>
