@@ -5,7 +5,7 @@ import java.io.Serializable
 /**
  * Represents a user of the app
  */
-data class User(var _realName: String = "", var _displayName: String = "", var _id: String = "", var _email: String? = ""): Serializable {
+class User(_realName: String = "", _displayName: String = "", _id: String = "", _email: String? = ""): Serializable {
 
     //Properties
     var coins = 0
@@ -17,7 +17,7 @@ data class User(var _realName: String = "", var _displayName: String = "", var _
     var bigs: MutableList<String> = mutableListOf()
     var prizes: MutableList<String> = mutableListOf()
     var littles: MutableList<String> = mutableListOf()
-    var notifications: MutableList<String> = mutableListOf()
+    var notifications: MutableList<Notification> = mutableListOf()
     var profilePictureUri: String = ""
 
 }

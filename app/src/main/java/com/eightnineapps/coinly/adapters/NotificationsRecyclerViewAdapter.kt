@@ -11,18 +11,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
-import com.eightnineapps.coinly.classes.User
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot
+import com.eightnineapps.coinly.classes.Notification
 import kotlinx.android.synthetic.main.notification_layout.view.*
 
 /**
  * An adapter class to populate the user's notification recycler view
  */
-class NotificationsRecyclerViewAdapter(_notifications: List<String>, _context: Context): RecyclerView.Adapter<NotificationsRecyclerViewAdapter.ViewHolder>() {
+class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _context: Context): RecyclerView.Adapter<NotificationsRecyclerViewAdapter.ViewHolder>() {
 
-    private var notificationList = _notifications as MutableList<String>
+    private var notificationList = _notifications as MutableList<Notification>
     private var context = _context
 
     /**
@@ -64,9 +61,9 @@ class NotificationsRecyclerViewAdapter(_notifications: List<String>, _context: C
      * Defines what each UI element (defined in the ViewHolder class above) maps to
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.notificationContent.text = notificationList[position]
+        holder.notificationContent.text = notificationList[position].message
         holder.acceptButton.setOnClickListener {
-            acceptAddRequest(notificationList[position].split(" "))
+            notificationList[position].execute()
             removeNotification(position)
         }
     }
@@ -80,49 +77,4 @@ class NotificationsRecyclerViewAdapter(_notifications: List<String>, _context: C
         notifyItemRangeChanged(position, notificationList.size)
         database.collection("users").document(auth.currentUser?.email!!).update("notifications", notificationList)
     }
-
-    /**
-     * Adds the requesting user to the receiving user's big or little list
-     */
-    private fun acceptAddRequest(info: List<String>) {
-        val toAddUserDisplayName = info[0]
-        val addingToUserEmail = auth.currentUser?.email!!
-        val addingAs = info[info.size - 1].dropLast(1)
-        database.collection("users").whereEqualTo("displayName", toAddUserDisplayName).limit(1).get().addOnCompleteListener {
-            toAddUserTask -> fulfilMutualAdd(toAddUserTask, addingToUserEmail, addingAs + "s")
-        }
-    }
-
-    /**
-     * Initializes the sequence of events needed to add the two users to eachother's respective bigs and littles list
-     */
-    private fun fulfilMutualAdd(toAddUserTask: Task<QuerySnapshot>, addingToUserEmail: String, addingAs: String) {
-        database.collection("users").document(addingToUserEmail).get().addOnCompleteListener {
-            addingToUserTask -> addToEachother(toAddUserTask, addingToUserTask, addingAs)
-        }
-    }
-
-    /**
-     * Update the two user's bigs and littles list in the firestore with the new addition
-     */
-    private fun addToEachother(toAddUserTask: Task<QuerySnapshot>, addingToUserTask: Task<DocumentSnapshot>, addingAs: String) {
-        val toAddUser = toAddUserTask.result?.toObjects(User::class.java)?.get(0)!!
-        val addingToUser = addingToUserTask.result?.toObject(User::class.java)!!
-        if (addingAs == "bigs") {
-            if (!toAddUser.bigs.contains(addingToUser.email!!)) { // For when both users request and accept eachother
-                toAddUser.bigs.add(addingToUser.email!!)
-                database.collection("users").document(toAddUser.email!!).update(addingAs, toAddUser.bigs)
-                addingToUser.littles.add(toAddUser.email!!)
-                database.collection("users").document(addingToUser.email!!).update("littles", addingToUser.littles)
-            }
-        } else {
-            if (!toAddUser.littles.contains(addingToUser.email!!)) {
-                toAddUser.littles.add(addingToUser.email!!)
-                database.collection("users").document(toAddUser.email!!).update(addingAs, toAddUser.littles)
-                addingToUser.bigs.add(toAddUser.email!!)
-                database.collection("users").document(addingToUser.email!!).update("bigs", addingToUser.bigs)
-            }
-        }
-    }
-
 }

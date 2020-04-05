@@ -16,6 +16,7 @@ import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.adapters.NotificationsRecyclerViewAdapter
 import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
+import com.eightnineapps.coinly.classes.Notification
 import com.eightnineapps.coinly.classes.User
 import com.eightnineapps.coinly.interfaces.CallBack
 import com.google.android.gms.tasks.Task
@@ -346,7 +347,7 @@ class HomeFragments : Fragment() {
     /**
      * Retrieves all current notifications of the user
      */
-    private fun getMyNotifications(currentUser: DocumentSnapshot): MutableList<String> {
+    private fun getMyNotifications(currentUser: DocumentSnapshot): MutableList<Notification> {
         val currentUserObject = currentUser.toObject(User::class.java)
         return currentUserObject!!.notifications
     }
@@ -355,7 +356,7 @@ class HomeFragments : Fragment() {
      * Assigns the given recycler view's layout manager and adapter using the list whose data is being displayed,
      * but for notifications, where String is the type
      */
-    private fun updateNotifications(recyclerViewList: RecyclerView, listToDisplay: MutableList<String>) {
+    private fun updateNotifications(recyclerViewList: RecyclerView, listToDisplay: MutableList<Notification>) {
         recyclerViewList.layoutManager = LinearLayoutManager(context)
         recyclerViewList.adapter = NotificationsRecyclerViewAdapter(listToDisplay, context!!)
     }
