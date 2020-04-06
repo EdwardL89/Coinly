@@ -22,4 +22,5 @@
     <string name="accept_request">Accept Request</string>
     <string name="requested">Requested</string>
     <string name="added_as_big">Added as big</string>
+    <string name="added_as_little">Added as little</string>
 </resources>

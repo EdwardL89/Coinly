@@ -66,13 +66,23 @@ class UserProfileActivity : AppCompatActivity() {
      * Sets up the "add as little" button and determines whether it should be enabled
      */
     private fun setUpAddAsLittle(observedUser: User, currentUser: User) {
-        if (!alreadyRequested(false, observedUser) && !alreadyAdded(false, observedUser)) {
+        val alreadyRequested = alreadyRequested(false, observedUser)
+        val alreadyAdded = alreadyAdded(false, observedUser)
+        val alreadyReceivedRequest = alreadyReceivedRequest(false, currentUser)
+        if (!alreadyRequested && !alreadyAdded && !alreadyReceivedRequest) {
             addAsLittleButton.setOnClickListener {
                 sendAddNotification(false, observedUser)
+                addAsLittleButton.text = getString(R.string.requested)
                 addAsLittleButton.isEnabled = false
             }
-        } else {
+        } else if (alreadyRequested) { //YOU requested THEM
+            addAsLittleButton.text = getString(R.string.requested)
             addAsLittleButton.isEnabled = false
+        } else if (alreadyAdded) {
+            addAsLittleButton.text = getString(R.string.added_as_little)
+            addAsLittleButton.isEnabled = false
+        } else { //THEY requested YOU
+            checkForPendingRequest(currentUser, observedUser, ADDING_AS_BIG)
         }
     }
 
@@ -96,21 +106,28 @@ class UserProfileActivity : AppCompatActivity() {
             addAsBigButton.text = getString(R.string.added_as_big)
             addAsBigButton.isEnabled = false
         } else { //THEY requested YOU
-            queryForPendingRequest(observedUser, ADDING_AS_LITTLE)
+            checkForPendingRequest(currentUser, observedUser, ADDING_AS_LITTLE)
         }
     }
 
-    private fun queryForPendingRequest(observedUser: User, type: NotificationType) {
-        database.collection("users").document(currentUser.email!!).get().addOnCompleteListener {
-            updatedCurrentUserTask -> checkForPendingRequest(updatedCurrentUserTask, observedUser, type)
-        }
+    private fun checkForPendingRequest(currentUser: User, observedUser: User, type: NotificationType) {
+        val notification = currentUser.notifications.find {
+            it.type == type && it.toAddUserEmail == currentUser.email && it.addingToUserEmail == observedUser.email }!!
+        if (type == ADDING_AS_LITTLE)  setUpAddAsLittleAsAcceptRequest(notification, currentUser) else setUpAddAsBigAsAcceptRequest(notification, currentUser)
     }
 
-    private fun checkForPendingRequest(updatedCurrentUserTask: Task<DocumentSnapshot>, observedUser: User, type: NotificationType) {
-        val updatedCurrentUser = updatedCurrentUserTask.result!!.toObject(User::class.java)!!
-        val notification = updatedCurrentUser.notifications.find {
-            it.type == type && it.toAddUserEmail == updatedCurrentUser.email && it.addingToUserEmail == observedUser.email }!!
-        setUpAddAsBigAsAcceptRequest(notification, updatedCurrentUser)
+    private fun setUpAddAsLittleAsAcceptRequest(notification: Notification, updatedCurrentUser: User) {
+        addAsLittleButton.text = getString(R.string.accept_request)
+        addAsLittleButton.isEnabled = true
+        addAsLittleButton.setOnClickListener {
+            notification.execute()
+
+            updatedCurrentUser.notifications.remove(notification)
+            database.collection("users").document(currentUser.email!!).update("notifications", updatedCurrentUser.notifications)
+
+            addAsLittleButton.text = getString(R.string.added_as_big)
+            addAsLittleButton.isEnabled = false
+        }
     }
 
     private fun setUpAddAsBigAsAcceptRequest(notification: Notification, updatedCurrentUser: User) {
@@ -119,8 +136,7 @@ class UserProfileActivity : AppCompatActivity() {
         addAsBigButton.setOnClickListener {
             notification.execute()
 
-            val position = updatedCurrentUser.notifications.indexOf(notification)
-            updatedCurrentUser.notifications.removeAt(position)
+            updatedCurrentUser.notifications.remove(notification)
             database.collection("users").document(currentUser.email!!).update("notifications", updatedCurrentUser.notifications)
 
             addAsBigButton.text = getString(R.string.added_as_big)
