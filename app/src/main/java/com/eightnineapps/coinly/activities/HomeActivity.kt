@@ -1,7 +1,6 @@
 package com.eightnineapps.coinly.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -10,6 +9,7 @@ import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
 import com.eightnineapps.coinly.adapters.ViewPagerAdapter
+import com.eightnineapps.coinly.classes.FragmentBehaviors
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -23,7 +23,7 @@ import kotlin.system.exitProcess
  * Represents the home page the user lands on after logging in. Provides access to Bigs, Littles,
  * and the search bar for link ups
  */
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : FragmentBehaviors() {
 
     /**
      * Provides access to data structures for all the below methods

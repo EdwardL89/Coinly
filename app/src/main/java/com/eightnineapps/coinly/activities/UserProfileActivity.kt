@@ -14,7 +14,6 @@ import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_BIG
 import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_LITTLE
 import com.eightnineapps.coinly.classes.User
 import com.eightnineapps.coinly.enums.NotificationType
-import com.eightnineapps.coinly.fragments.AllBigsFragment.Companion.currentUserSnapshot
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 
@@ -27,7 +26,7 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var addAsBigButton: Button
     private lateinit var addAsLittleButton: Button
     private lateinit var profilePicture: ImageView
-    private lateinit var ObservedUser: User
+    private lateinit var observedUser: User
     private lateinit var currentUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +48,7 @@ class UserProfileActivity : AppCompatActivity() {
      * Set the onClick listeners for the "Add as" button
      */
     private fun setupButtons() {
-        database.collection("users").document(ObservedUser.email!!).get().addOnCompleteListener{
+        database.collection("users").document(observedUser.email!!).get().addOnCompleteListener{
                 observedUserTask ->
                 database.collection("users").document(currentUser.email!!).get().addOnCompleteListener {
                     currentUserTask ->
@@ -124,10 +123,6 @@ class UserProfileActivity : AppCompatActivity() {
             updatedCurrentUser.notifications.removeAt(position)
             database.collection("users").document(currentUser.email!!).update("notifications", updatedCurrentUser.notifications)
 
-/*            notificationsRecyclerView.removeViewAt(position)
-            notificationsRecyclerView.adapter!!.notifyItemRemoved(position)*/
-            //val adapter = notificationsRecyclerView.adapter
-
             addAsBigButton.text = getString(R.string.added_as_big)
             addAsBigButton.isEnabled = false
         }
@@ -137,7 +132,7 @@ class UserProfileActivity : AppCompatActivity() {
            return mostUpdatedCurrentUser.notifications.find {
                     it.type == (if (asBig) ADDING_AS_LITTLE else ADDING_AS_BIG)  &&
                     it.toAddUserEmail == currentUser.email &&
-                    it.addingToUserEmail == ObservedUser.email } != null
+                    it.addingToUserEmail == observedUser.email } != null
     }
 
     /**
@@ -189,15 +184,15 @@ class UserProfileActivity : AppCompatActivity() {
         profilePicture = findViewById(R.id.user_profile_picture)
         addAsLittleButton = findViewById(R.id.add_as_little_button)
         displayName = findViewById(R.id.profile_page_display_name_textView)
-        currentUser = currentUserSnapshot.toObject(User::class.java)!!
     }
 
     /**
      * Populates the visible UI elements of this activity to their respective data for the user
      */
     private fun populateUIElements() {
-        ObservedUser = intent.getSerializableExtra("user_object") as User
-        displayName.text = ObservedUser.displayName
-        Glide.with(this).load(ObservedUser.profilePictureUri).into(profilePicture)
+        observedUser = intent.getSerializableExtra("observed_user") as User
+        currentUser = intent.getSerializableExtra("current_user") as User
+        displayName.text = observedUser.displayName
+        Glide.with(this).load(observedUser.profilePictureUri).into(profilePicture)
     }
 }

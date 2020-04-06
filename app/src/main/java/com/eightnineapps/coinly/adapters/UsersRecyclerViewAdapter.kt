@@ -10,6 +10,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
+import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.activities.UserProfileActivity
 import com.eightnineapps.coinly.classes.User
 import com.google.firebase.firestore.DocumentSnapshot
@@ -39,14 +41,20 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
 
         /**
          * Retrieves the DocumentSnapshot of the user that was tapped on and sends it with the intent
-         * to the UserProfileActivity
+         * to the UserProfileActivity along with the current user as an object
          */
         override fun onClick(view: View?) {
             val displayName = view!!.display_name_text_view!!.text.toString()
             val userDocument = ViewHolderUserList.first { it.data?.get("displayName") == displayName }
-            val intentWithUserDocument = Intent(context, UserProfileActivity::class.java)
-                .putExtra("user_object", userDocument.toObject(User::class.java))
-            context.startActivity(intentWithUserDocument)
+            database.collection("users").document(auth.currentUser?.email!!).get().addOnCompleteListener {
+                task ->
+                    if (task.isSuccessful) {
+                        val intentWithObservedAndCurrentUserDocument = Intent(context, UserProfileActivity::class.java)
+                            .putExtra("observed_user", userDocument.toObject(User::class.java))
+                            .putExtra("current_user", task.result!!.toObject(User::class.java))
+                        context.startActivity(intentWithObservedAndCurrentUserDocument)
+                    }
+            }
         }
     }
 
