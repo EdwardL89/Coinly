@@ -1,13 +1,9 @@
 package com.eightnineapps.coinly.fragments
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +20,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 class MyProfileFragment : Fragment() {
 
     private lateinit var currentUser: User
+    private lateinit var searchIcon: MenuItem
     private lateinit var notificationsRecyclerView: RecyclerView
 
     /**
@@ -35,13 +32,35 @@ class MyProfileFragment : Fragment() {
         return createMyProfileTab(view)
     }
 
+    /**
+     * Override the onCreateOptionsMenu to inflate it with our custom layout
+     */
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.home_fragments_app_bar_menu, menu)
+        searchIcon = menu.findItem(R.id.menu_search)
+        searchIcon.isVisible = false
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    /**
+     * Overrides the onCreate method to allow the fragments to have an options menu
+     */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
+        super.onCreate(savedInstanceState)
+    }
+
+    /**
+     * Refresh notifications every time the my profile fragment is revisited
+     */
     override fun onResume() {
-        if (notificationsRecyclerView.adapter != null) {
-            refreshNotifications()
-        }
+        if (notificationsRecyclerView.adapter != null) refreshNotifications()
         super.onResume()
     }
 
+    /**
+     * Query the firestore to get the most updated notifications
+     */
     private fun refreshNotifications() {
         database.collection("users").document(auth.currentUser?.email!!).get().addOnCompleteListener {
                 task -> updateNotifications(notificationsRecyclerView, task.result?.toObject(User::class.java)!!.notifications)
@@ -62,9 +81,7 @@ class MyProfileFragment : Fragment() {
      * Populates the current User's profile activity tab
      */
     private fun populateMyProfileUI(task: Task<DocumentSnapshot>, view: View) {
-        Log.w("INFO", "CALLLEEDDDDDDD")
         currentUser = task.result!!.toObject(User::class.java)!!
-        Log.w("INFO", currentUser.notifications.size.toString())
         val myProfilePicture = view.findViewById<ImageView>(R.id.my_profile_picture)
         val myDisplayName = view.findViewById<TextView>(R.id.my_display_name_textView)
         Glide.with(activity!!).load(currentUser.profilePictureUri).into(myProfilePicture)
