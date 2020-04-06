@@ -2,7 +2,6 @@ package com.eightnineapps.coinly.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,7 +14,7 @@ import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_BIG
 import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_LITTLE
 import com.eightnineapps.coinly.classes.User
 import com.eightnineapps.coinly.enums.NotificationType
-import com.eightnineapps.coinly.fragments.HomeFragments.Companion.currentUserSnapshot
+import com.eightnineapps.coinly.fragments.AllBigsFragment.Companion.currentUserSnapshot
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 
@@ -86,7 +85,6 @@ class UserProfileActivity : AppCompatActivity() {
         val alreadyAdded = alreadyAdded(true, observedUser)
         val alreadyReceivedRequest = alreadyReceivedRequest(true, currentUser)
         if (!alreadyRequested && !alreadyAdded && !alreadyReceivedRequest) {
-            Log.w("INFO", "THE WRONG BRANCH!")
             addAsBigButton.setOnClickListener {
                 sendAddNotification(true, observedUser)
                 addAsBigButton.text = getString(R.string.requested)
@@ -98,8 +96,7 @@ class UserProfileActivity : AppCompatActivity() {
         } else if (alreadyAdded) {
             addAsBigButton.text = getString(R.string.added_as_big)
             addAsBigButton.isEnabled = false
-        } else { //THEY requested YOU. alreadyReceivedRequest is true
-            Log.w("INFO", "THE CORRECT BRANCH!")
+        } else { //THEY requested YOU
             queryForPendingRequest(observedUser, ADDING_AS_LITTLE)
         }
     }
@@ -111,37 +108,36 @@ class UserProfileActivity : AppCompatActivity() {
     }
 
     private fun checkForPendingRequest(updatedCurrentUserTask: Task<DocumentSnapshot>, observedUser: User, type: NotificationType) {
-        if (updatedCurrentUserTask.isSuccessful) {
-            val updatedCurrentUser = updatedCurrentUserTask.result!!.toObject(User::class.java)!!
-            val potentialNotification = updatedCurrentUser.notifications.find { it.type == type &&
-                    it.toAddUserEmail == updatedCurrentUser.email &&
-                    it.addingToUserEmail == observedUser.email } // should return just one
-            if (potentialNotification != null) {
-                addAsBigButton.text = getString(R.string.accept_request)
-                addAsBigButton.isEnabled = true
-                addAsBigButton.setOnClickListener {
-                    potentialNotification.execute()
-                    updatedCurrentUser.notifications.remove(potentialNotification)
-                    //updaate
-                    addAsBigButton.text = getString(R.string.added_as_big)
-                    addAsBigButton.isEnabled = false
-                }
-            } else { // This else branch should never execute because all other scenarios are covered by the if else blocks in the setUpAs method
-                addAsBigButton.isEnabled = false
-            }
+        val updatedCurrentUser = updatedCurrentUserTask.result!!.toObject(User::class.java)!!
+        val notification = updatedCurrentUser.notifications.find {
+            it.type == type && it.toAddUserEmail == updatedCurrentUser.email && it.addingToUserEmail == observedUser.email }!!
+        setUpAddAsBigAsAcceptRequest(notification, updatedCurrentUser)
+    }
+
+    private fun setUpAddAsBigAsAcceptRequest(notification: Notification, updatedCurrentUser: User) {
+        addAsBigButton.text = getString(R.string.accept_request)
+        addAsBigButton.isEnabled = true
+        addAsBigButton.setOnClickListener {
+            notification.execute()
+
+            val position = updatedCurrentUser.notifications.indexOf(notification)
+            updatedCurrentUser.notifications.removeAt(position)
+            database.collection("users").document(currentUser.email!!).update("notifications", updatedCurrentUser.notifications)
+
+/*            notificationsRecyclerView.removeViewAt(position)
+            notificationsRecyclerView.adapter!!.notifyItemRemoved(position)*/
+            //val adapter = notificationsRecyclerView.adapter
+
+            addAsBigButton.text = getString(R.string.added_as_big)
+            addAsBigButton.isEnabled = false
         }
     }
 
     private fun alreadyReceivedRequest(asBig: Boolean, mostUpdatedCurrentUser: User): Boolean {
-        return if (asBig) {
-            mostUpdatedCurrentUser.notifications.find { it.type == ADDING_AS_LITTLE &&
+           return mostUpdatedCurrentUser.notifications.find {
+                    it.type == (if (asBig) ADDING_AS_LITTLE else ADDING_AS_BIG)  &&
                     it.toAddUserEmail == currentUser.email &&
                     it.addingToUserEmail == ObservedUser.email } != null
-        } else {
-            mostUpdatedCurrentUser.notifications.find { it.type == ADDING_AS_BIG &&
-                    it.toAddUserEmail == currentUser.email &&
-                    it.addingToUserEmail == ObservedUser.email } != null
-        }
     }
 
     /**

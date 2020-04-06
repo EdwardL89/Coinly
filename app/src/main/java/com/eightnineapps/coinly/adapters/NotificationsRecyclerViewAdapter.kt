@@ -71,7 +71,7 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
     /**
      * Removes the notification at the given position
      */
-    private fun removeNotification(position: Int) {
+    fun removeNotification(position: Int) {
         notificationList.removeAt(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, notificationList.size)

@@ -31,24 +31,24 @@
         android:text="@string/display_name_holder"
         android:textSize="30sp"/>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
+        <!-- <TextView
             android:id="@+id/notificationsTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/notifications_title"
-            android:textSize="20sp" />
+            android:textSize="20sp" /> -->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/notificationsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".fragments.HomeFragments"/>
+            tools:context=".fragments.AllBigsFragment"/>
 
-    </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>

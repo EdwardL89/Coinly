@@ -30,7 +30,7 @@ import kotlin.collections.ArrayList
  * A Single fragment class. Represents a single tab in the tab layout on the home activity
  * Can represent the Big, Little, or Linkup tab
  */
-class HomeFragments : Fragment() {
+class AllBigsFragment : Fragment() {
 
     private val BIGS_TAB = 0
     private val LINKUP_TAB = 2
@@ -43,6 +43,7 @@ class HomeFragments : Fragment() {
     private var littleEmailsCounter = 1
 
     private var SHOW_SEARCH_ICON = true
+    private lateinit var currentUser: User
     private lateinit var searchIcon: MenuItem
 
     private lateinit var currentBigsEmails: MutableList<*>
@@ -65,14 +66,11 @@ class HomeFragments : Fragment() {
     }
 
     /**
-     * Use the passed in position Int from the ViewPagerAdapter class to determine the correct
-     * layout to inflate
+     * Inflates the my profile fragment
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        currentTabPosition = arguments?.getInt("FRAGMENT_ID")!!
-        val fragmentLayoutId = getCurrentFragmentResourceId(currentTabPosition)
-        val view = inflater.inflate(fragmentLayoutId, container, false)
-        return createFragmentLayout(view, currentTabPosition)
+        val view = inflater.inflate(R.layout.fragment_bigs, container, false)
+        return createBigsTab(view)
     }
 
     /**
@@ -91,20 +89,7 @@ class HomeFragments : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_search) { // Programs the search button for the recycler view
             val searchView = searchIcon.actionView as SearchView
-            when (currentTabPosition) {
-                BIGS_TAB -> setUpSearchView(searchView,
-                    allBigs,
-                    allBigsToDisplay,
-                    allBigsRecyclerViewList)
-                LITTLES_TAB -> setUpSearchView(searchView,
-                    allLittles,
-                    allLittlesToDisplay,
-                    allLittlesRecyclerViewList)
-                else -> setUpSearchView(searchView,
-                    allUsers,
-                    allUsersToDisplay,
-                    allUsersRecyclerViewList)
-            }
+            setUpSearchView(searchView, allBigs, allBigsToDisplay, allBigsRecyclerViewList)
         }
         return super.onOptionsItemSelected(item)
     }
@@ -115,30 +100,6 @@ class HomeFragments : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
-    }
-
-    /**
-     * Returns the resource Id of the fragment layout that needs to be created based on the position
-     */
-    private fun getCurrentFragmentResourceId(position: Int): Int {
-        return when (position) {
-            BIGS_TAB -> R.layout.fragment_bigs
-            LITTLES_TAB -> R.layout.fragment_littles
-            LINKUP_TAB -> R.layout.fragment_linkup
-            else -> R.layout.fragment_my_profile
-        }
-    }
-
-    /**
-     * Determines which tab fragment's UI we need to set up
-     */
-    private fun createFragmentLayout(view: View, currentTabPosition: Int): View {
-        return when (currentTabPosition) {
-            BIGS_TAB -> createBigTab(view)
-            LITTLES_TAB -> createLittleTab(view)
-            LINKUP_TAB -> createLinkupTab(view)
-            else -> createMyProfileTab(view)
-        }
     }
 
     /**
@@ -193,7 +154,7 @@ class HomeFragments : Fragment() {
     /**
      * Sets up the big tab fragment for the user
      */
-    private fun createBigTab(view: View): View {
+    private fun createBigsTab(view: View): View {
         showSearchIcon(true)
         allBigsRecyclerViewList = view.findViewById(R.id.allBigsRecyclerView)
         allBigs.clear()
@@ -203,24 +164,6 @@ class HomeFragments : Fragment() {
                 bigEmailsCounter = 1
                 numOfBigEmails = userEmails.size
                 for (email in userEmails) queryFirestoreForSingleProfile(true, email)
-            }
-        })
-        return view
-    }
-
-    /**
-     * Sets up the little tab fragment for the user
-     */
-    private fun createLittleTab(view: View): View {
-        showSearchIcon(true)
-        allLittlesRecyclerViewList = view.findViewById(R.id.allLittlesRecyclerView)
-        allLittles.clear()
-        allLittlesToDisplay.clear()
-        queryFirestoreForAllAssociates(false, object: CallBack {
-            override fun secondQueryCallBack(userEmails: MutableList<*>) {
-                littleEmailsCounter = 1
-                numOfLittleEmails = userEmails.size
-                for (email in userEmails) queryFirestoreForSingleProfile(false, email)
             }
         })
         return view
@@ -240,8 +183,7 @@ class HomeFragments : Fragment() {
      * Queries the Firestore to retrieve all Bigs or Littles (associates) the current user has
      */
     private fun queryFirestoreForAllAssociates(queryForBigs: Boolean, callback: CallBack) {
-        val currentUserEmail = auth.currentUser?.email!!
-        database.collection("users").document(currentUserEmail).get().addOnCompleteListener {
+        database.collection("users").document(auth.currentUser?.email!!).get().addOnCompleteListener {
                 task -> addAssociatesToList(queryForBigs, task, callback)
             }
     }
@@ -274,53 +216,10 @@ class HomeFragments : Fragment() {
     private fun addObservedUserToList(queryForBigs: Boolean, task: Task<DocumentSnapshot>) {
         if (task.isSuccessful) {
             val currentUser = task.result!!
-            if (queryForBigs) {
-                allBigs.add(currentUser)
-                allBigsToDisplay.add(currentUser)
-                if (bigEmailsCounter == numOfBigEmails) updateRecyclerViewAdapterAndLayoutManager(allBigsRecyclerViewList, allBigsToDisplay)
-                else bigEmailsCounter += 1
-            } else {
-                allLittles.add(currentUser)
-                allLittlesToDisplay.add(currentUser)
-                if (littleEmailsCounter == numOfLittleEmails) updateRecyclerViewAdapterAndLayoutManager(allLittlesRecyclerViewList, allLittlesToDisplay)
-                else littleEmailsCounter += 1
-            }
-        }
-    }
-
-    /**
-     * Sets up the linkup tab fragment for the user
-     */
-    private fun createLinkupTab(view: View): View {
-        showSearchIcon(true)
-        allUsersRecyclerViewList = view.findViewById(R.id.allUsersRecyclerView)
-        allUsers.clear()
-        allUsersToDisplay.clear()
-        getAllUsers()
-        return view
-    }
-
-    /**
-     * Queries the Firestore for all users
-     */
-    private fun getAllUsers() {
-        database.collection("users").get().addOnCompleteListener{
-                task -> addUsersToList(task)
-        }
-    }
-
-    /**
-     * Adds the retrieved users to the allUsers list upon successful task completion
-     */
-    private fun addUsersToList(task: Task<QuerySnapshot>) {
-        if (task.isSuccessful) {
-            for (users in task.result!!) {
-                if (users.data["email"] != auth.currentUser!!.email) {
-                    allUsers.add(users)
-                }
-            }
-            allUsersToDisplay.addAll(allUsers)
-            updateRecyclerViewAdapterAndLayoutManager(allUsersRecyclerViewList, allUsersToDisplay)
+            allBigs.add(currentUser)
+            allBigsToDisplay.add(currentUser)
+            if (bigEmailsCounter == numOfBigEmails) updateRecyclerViewAdapterAndLayoutManager(allBigsRecyclerViewList, allBigsToDisplay)
+            else bigEmailsCounter += 1
         }
     }
 
@@ -330,47 +229,6 @@ class HomeFragments : Fragment() {
     private fun updateRecyclerViewAdapterAndLayoutManager(recyclerViewList: RecyclerView, listToDisplay: MutableList<DocumentSnapshot>) {
         recyclerViewList.layoutManager = LinearLayoutManager(context)
         recyclerViewList.adapter = UsersRecyclerViewAdapter(listToDisplay, context!!)
-    }
-
-    /**
-     * Sets up the My Profile tab fragment for the user
-     */
-    private fun createMyProfileTab(view: View): View {
-        showSearchIcon(false)
-        notificationsRecyclerView = view.findViewById(R.id.notificationsRecyclerView)
-        database.collection("users").document(auth.currentUser?.email!!).get().addOnCompleteListener {
-                task -> populateMyProfileUI(task, view)
-        }
-        return view
-    }
-
-    /**
-     * Retrieves all current notifications of the user
-     */
-    private fun getMyNotifications(currentUser: DocumentSnapshot): MutableList<Notification> {
-        val currentUserObject = currentUser.toObject(User::class.java)
-        return currentUserObject!!.notifications
-    }
-
-    /**
-     * Assigns the given recycler view's layout manager and adapter using the list whose data is being displayed,
-     * but for notifications, where String is the type
-     */
-    private fun updateNotifications(recyclerViewList: RecyclerView, listToDisplay: MutableList<Notification>) {
-        recyclerViewList.layoutManager = LinearLayoutManager(context)
-        recyclerViewList.adapter = NotificationsRecyclerViewAdapter(listToDisplay, context!!)
-    }
-
-    /**
-     * Populates the current User's profile activity tab
-     */
-    private fun populateMyProfileUI(task: Task<DocumentSnapshot>, view: View) {
-        val currentUserDocument = task.result
-        val myProfilePicture = view.findViewById<ImageView>(R.id.my_profile_picture)
-        val myDisplayName = view.findViewById<TextView>(R.id.my_display_name_textView)
-        Glide.with(activity!!).load(currentUserDocument?.data!!["profilePictureUri"]).into(myProfilePicture)
-        myDisplayName.text = currentUserDocument.data!!["displayName"].toString()
-        updateNotifications(notificationsRecyclerView, getMyNotifications(currentUserDocument))
     }
 
     /**
