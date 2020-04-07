@@ -2,6 +2,8 @@ package com.eightnineapps.coinly.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -82,10 +84,12 @@ class HomeActivity : FragmentBehaviors() {
      */
     @SuppressLint("InflateParams")
     private fun addCoinlyActionBarTitle() {
-        this.supportActionBar!!.setDisplayShowCustomEnabled(true)
-        this.supportActionBar!!.setDisplayShowTitleEnabled(false)
+        val actionBar = this.supportActionBar!!
+        actionBar.setDisplayShowCustomEnabled(true)
+        actionBar.setDisplayShowTitleEnabled(false)
         val v: View = LayoutInflater.from(this).inflate(R.layout.app_bar_title, null)
-        this.supportActionBar!!.customView = v
+        actionBar.customView = v
+        actionBar.setBackgroundDrawable(ColorDrawable(Color.parseColor("#ffffff")))
     }
 
     /**
