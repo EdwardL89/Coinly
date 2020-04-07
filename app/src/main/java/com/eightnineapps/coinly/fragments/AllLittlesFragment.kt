@@ -16,11 +16,11 @@ class AllLittlesFragment : Fragment() {
     private lateinit var searchIcon: MenuItem
 
     companion object {
-        var allLittles: MutableList<DocumentSnapshot> = ArrayList()
         var numOfLittleEmails = 1
         var littleEmailsCounter = 1
         lateinit var currentLittlesEmails: MutableList<*>
         lateinit var allLittlesRecyclerViewList: RecyclerView
+        var allLittles: MutableList<DocumentSnapshot> = ArrayList()
         var allLittlesToDisplay: MutableList<DocumentSnapshot> = ArrayList()
     }
 

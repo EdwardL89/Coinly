@@ -16,12 +16,12 @@ class AllBigsFragment : Fragment() {
     private lateinit var searchIcon: MenuItem
 
     companion object {
-        lateinit var currentBigsEmails: MutableList<*>
-        lateinit var allBigsRecyclerViewList: RecyclerView
         var numOfBigEmails = 1
         var bigEmailsCounter = 1
-        var allBigsToDisplay: MutableList<DocumentSnapshot> = ArrayList()
+        lateinit var currentBigsEmails: MutableList<*>
+        lateinit var allBigsRecyclerViewList: RecyclerView
         var allBigs: MutableList<DocumentSnapshot> = ArrayList()
+        var allBigsToDisplay: MutableList<DocumentSnapshot> = ArrayList()
     }
 
     /**

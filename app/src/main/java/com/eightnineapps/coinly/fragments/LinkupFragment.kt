@@ -16,8 +16,8 @@ class LinkupFragment : Fragment() {
 
     companion object {
         lateinit var allUsersRecyclerViewList: RecyclerView
-        var allUsersToDisplay: MutableList<DocumentSnapshot> = ArrayList()
         var allUsers: MutableList<DocumentSnapshot> = ArrayList()
+        var allUsersToDisplay: MutableList<DocumentSnapshot> = ArrayList()
     }
 
     /**

@@ -14,20 +14,18 @@ import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_BIG
 import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_LITTLE
 import com.eightnineapps.coinly.classes.User
 import com.eightnineapps.coinly.enums.NotificationType
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentSnapshot
 
 /**
  * Represents a single user of the app
  */
 class UserProfileActivity : AppCompatActivity() {
 
+    private lateinit var currentUser: User
+    private lateinit var observedUser: User
     private lateinit var displayName: TextView
+    private lateinit var profilePicture: ImageView
     private lateinit var addAsBigButton: Button
     private lateinit var addAsLittleButton: Button
-    private lateinit var profilePicture: ImageView
-    private lateinit var observedUser: User
-    private lateinit var currentUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,21 +67,27 @@ class UserProfileActivity : AppCompatActivity() {
         val alreadyRequested = alreadyRequested(false, observedUser)
         val alreadyAdded = alreadyAdded(false, observedUser)
         val alreadyReceivedRequest = alreadyReceivedRequest(false, currentUser)
-        if (!alreadyRequested && !alreadyAdded && !alreadyReceivedRequest) {
+        if (!alreadyRequested && !alreadyAdded && !alreadyReceivedRequest)
             addAsLittleButton.setOnClickListener {
                 sendAddNotification(false, observedUser)
-                addAsLittleButton.text = getString(R.string.requested)
-                addAsLittleButton.isEnabled = false
+                showRequested(addAsLittleButton)
             }
-        } else if (alreadyRequested) { //YOU requested THEM
-            addAsLittleButton.text = getString(R.string.requested)
-            addAsLittleButton.isEnabled = false
-        } else if (alreadyAdded) {
-            addAsLittleButton.text = getString(R.string.added_as_little)
-            addAsLittleButton.isEnabled = false
-        } else { //THEY requested YOU
-            checkForPendingRequest(currentUser, observedUser, ADDING_AS_BIG)
-        }
+        else if (alreadyRequested) showRequested(addAsLittleButton)
+        else if (alreadyAdded) showAdded(addAsLittleButton)
+        else checkForPendingRequest(currentUser, observedUser, ADDING_AS_BIG)
+    }
+
+    private fun showAdded(buttonToUpdate: Button) {
+        buttonToUpdate.text = getString(R.string.added_as_little)
+        buttonToUpdate.isEnabled = false
+    }
+
+    /**
+     * Updates a button to show that it's function has already been performed, and disables it
+     */
+    private fun showRequested(buttonToUpdate: Button) {
+        buttonToUpdate.text = getString(R.string.requested)
+        buttonToUpdate.isEnabled = false
     }
 
     /**
@@ -93,57 +97,64 @@ class UserProfileActivity : AppCompatActivity() {
         val alreadyRequested = alreadyRequested(true, observedUser)
         val alreadyAdded = alreadyAdded(true, observedUser)
         val alreadyReceivedRequest = alreadyReceivedRequest(true, currentUser)
-        if (!alreadyRequested && !alreadyAdded && !alreadyReceivedRequest) {
+        if (!alreadyRequested && !alreadyAdded && !alreadyReceivedRequest)
             addAsBigButton.setOnClickListener {
                 sendAddNotification(true, observedUser)
-                addAsBigButton.text = getString(R.string.requested)
-                addAsBigButton.isEnabled = false
+                showRequested(addAsBigButton)
             }
-        } else if (alreadyRequested) { //YOU requested THEM
-            addAsBigButton.text = getString(R.string.requested)
-            addAsBigButton.isEnabled = false
-        } else if (alreadyAdded) {
-            addAsBigButton.text = getString(R.string.added_as_big)
-            addAsBigButton.isEnabled = false
-        } else { //THEY requested YOU
-            checkForPendingRequest(currentUser, observedUser, ADDING_AS_LITTLE)
-        }
+        else if (alreadyRequested) showRequested(addAsBigButton)
+        else if (alreadyAdded) showAdded(addAsBigButton)
+        else checkForPendingRequest(currentUser, observedUser, ADDING_AS_LITTLE)
     }
 
+    /**
+     * Initiates the process of checking if the current user has a pending request
+     */
     private fun checkForPendingRequest(currentUser: User, observedUser: User, type: NotificationType) {
         val notification = currentUser.notifications.find {
             it.type == type && it.toAddUserEmail == currentUser.email && it.addingToUserEmail == observedUser.email }!!
         if (type == ADDING_AS_BIG)  setUpAddAsLittleAsAcceptRequest(notification, currentUser) else setUpAddAsBigAsAcceptRequest(notification, currentUser)
     }
 
+    /**
+     * Updates the add-as-little button to show an accept-request message since there's already a pending notification
+     */
     private fun setUpAddAsLittleAsAcceptRequest(notification: Notification, updatedCurrentUser: User) {
         addAsLittleButton.text = getString(R.string.accept_request)
         addAsLittleButton.isEnabled = true
         addAsLittleButton.setOnClickListener {
-            notification.execute()
-
-            updatedCurrentUser.notifications.remove(notification)
-            database.collection("users").document(currentUser.email!!).update("notifications", updatedCurrentUser.notifications)
-
+            executeAndUpdateNotification(notification, updatedCurrentUser)
             addAsLittleButton.text = getString(R.string.add_as_little)
             addAsLittleButton.isEnabled = false
         }
     }
 
+    /**
+     * Updates the add-as-big button to show an accept-request message since there's already a pending notification
+     */
     private fun setUpAddAsBigAsAcceptRequest(notification: Notification, updatedCurrentUser: User) {
         addAsBigButton.text = getString(R.string.accept_request)
         addAsBigButton.isEnabled = true
         addAsBigButton.setOnClickListener {
-            notification.execute()
-
-            updatedCurrentUser.notifications.remove(notification)
-            database.collection("users").document(currentUser.email!!).update("notifications", updatedCurrentUser.notifications)
-
+            executeAndUpdateNotification(notification, updatedCurrentUser)
             addAsBigButton.text = getString(R.string.added_as_big)
             addAsBigButton.isEnabled = false
         }
     }
 
+    /**
+     * Executes the given notification and updates the notification list
+     */
+    private fun executeAndUpdateNotification(notification: Notification, user: User) {
+        notification.execute()
+        user.notifications.remove(notification)
+        database.collection("users").document(user.email!!).update("notifications", user.notifications)
+
+    }
+
+    /**
+     * Checks if the current user has already received the respective notification from the observed user
+     */
     private fun alreadyReceivedRequest(asBig: Boolean, mostUpdatedCurrentUser: User): Boolean {
            return mostUpdatedCurrentUser.notifications.find {
                     it.type == (if (asBig) ADDING_AS_LITTLE else ADDING_AS_BIG)  &&
