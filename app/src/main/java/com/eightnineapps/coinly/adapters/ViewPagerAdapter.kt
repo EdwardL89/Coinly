@@ -34,14 +34,9 @@ class ViewPagerAdapter(fragmentManager: FragmentManager): FragmentPagerAdapter(f
     }
 
     /**
-     * Sets the name of the tabs in the tab layout
+     * We don't want a title since we'll have icons to represent the tabs
      */
     override fun getPageTitle(position: Int): CharSequence? {
-        return when (position) {
-            0 -> "Bigs"
-            1 -> "Littles"
-            2 -> "Linkup"
-            else -> "Profile"
-        }
+        return null
     }
 }

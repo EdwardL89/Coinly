@@ -3,12 +3,15 @@ package com.eightnineapps.coinly.activities
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
@@ -100,6 +103,45 @@ class HomeActivity : FragmentBehaviors() {
         viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
         val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
         tabLayout.setupWithViewPager(viewPager)
+        setTabLayoutIcons(tabLayout)
+        setTabLayoutSelectedListener(tabLayout)
+    }
+
+    /**
+     * Sets the icons for each tab of the tab layout
+     */
+    @SuppressLint("InflateParams")
+    private fun setTabLayoutIcons(tabLayout: TabLayout) {
+        tabLayout.getTabAt(0)!!.setIcon(R.drawable.bigs_icon)
+        tabLayout.getTabAt(1)!!.setIcon(R.drawable.littles_icon)
+        tabLayout.getTabAt(2)!!.setIcon(R.drawable.linkup_icon)
+        tabLayout.getTabAt(3)!!.setIcon(R.drawable.profile_icon)
+
+        for (i in 0..3) {
+            tabLayout.getTabAt(i)!!.customView = layoutInflater.inflate(R.layout.custom_tab_icon_size, null)
+        }
+    }
+
+    /**
+     * Highlights the icon of the currently selected tab of the tablayout
+     */
+    private fun setTabLayoutSelectedListener(tabLayout: TabLayout) {
+        val tabSelectedIconColor = ContextCompat.getColor(applicationContext, R.color.lightGreen)
+        val tabUnselectedIconColor = ContextCompat.getColor(applicationContext, R.color.black)
+        tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                tab!!.icon!!.colorFilter = PorterDuffColorFilter(tabSelectedIconColor, PorterDuff.Mode.SRC_IN)
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                tab!!.icon!!.colorFilter = PorterDuffColorFilter(tabUnselectedIconColor, PorterDuff.Mode.SRC_IN)
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                tab!!.icon!!.colorFilter = PorterDuffColorFilter(tabSelectedIconColor, PorterDuff.Mode.SRC_IN)
+            }
+        })
+        tabLayout.getTabAt(0)?.select()
     }
 
     /**

@@ -29,4 +29,5 @@
     <string name="app_logo_description">app_logo</string>
     <string name="email_icon_description">email_icon_description</string>
     <string name="password_icon_description">password icon description</string>
+    <string name="icon_tablayout_image_view">icon_tablayout_image_view</string>
 </resources>
