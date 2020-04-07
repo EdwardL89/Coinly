@@ -3,12 +3,14 @@ package com.eightnineapps.coinly.fragments
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.HomeActivity
 import com.google.firebase.firestore.DocumentSnapshot
-import kotlin.collections.ArrayList
+
 
 class LinkupFragment : Fragment() {
 
@@ -63,6 +65,7 @@ class LinkupFragment : Fragment() {
     private fun createLinkupTab(view: View): View {
         allUsersRecyclerViewList = view.findViewById(R.id.allUsersRecyclerView)
         allUsersRecyclerViewList.removeAllViews()
+        (activity as HomeActivity).addSpaceBetweenItems(allUsersRecyclerViewList, context)
         allUsers.clear()
         allUsersToDisplay.clear()
         (activity as HomeActivity).getAllUsers(context)
