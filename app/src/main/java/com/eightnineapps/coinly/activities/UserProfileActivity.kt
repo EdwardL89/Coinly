@@ -113,7 +113,7 @@ class UserProfileActivity : AppCompatActivity() {
     private fun checkForPendingRequest(currentUser: User, observedUser: User, type: NotificationType) {
         val notification = currentUser.notifications.find {
             it.type == type && it.toAddUserEmail == currentUser.email && it.addingToUserEmail == observedUser.email }!!
-        if (type == ADDING_AS_LITTLE)  setUpAddAsLittleAsAcceptRequest(notification, currentUser) else setUpAddAsBigAsAcceptRequest(notification, currentUser)
+        if (type == ADDING_AS_BIG)  setUpAddAsLittleAsAcceptRequest(notification, currentUser) else setUpAddAsBigAsAcceptRequest(notification, currentUser)
     }
 
     private fun setUpAddAsLittleAsAcceptRequest(notification: Notification, updatedCurrentUser: User) {
@@ -125,7 +125,7 @@ class UserProfileActivity : AppCompatActivity() {
             updatedCurrentUser.notifications.remove(notification)
             database.collection("users").document(currentUser.email!!).update("notifications", updatedCurrentUser.notifications)
 
-            addAsLittleButton.text = getString(R.string.added_as_big)
+            addAsLittleButton.text = getString(R.string.add_as_little)
             addAsLittleButton.isEnabled = false
         }
     }
