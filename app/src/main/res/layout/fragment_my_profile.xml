@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/my_profile_rounded_background"
     tools:context=".activities.CreateProfileActivity">
 
     <androidx.cardview.widget.CardView
@@ -27,28 +28,54 @@
         android:id="@+id/my_display_name_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/cardView"
+        android:layout_below="@+id/cardView"
         android:layout_gravity="center"
         android:text="@string/display_name_holder"
-        android:textSize="30sp"/>
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold"/>
 
-    <FrameLayout
+    <TextView
+        android:id="@+id/bio_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:text="@string/sample_bio"
+        android:textColor="@color/black"
+        android:fontFamily="sans-serif-thin"
+        android:layout_alignStart="@id/my_display_name_textView"
+        android:layout_below="@id/my_display_name_textView"/>
 
-        <!-- <TextView
-            android:id="@+id/notificationsTitleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/notifications_title"
-            android:textSize="20sp" /> -->
+    <TextView
+        android:id="@+id/claimed_prizes_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/claimed_prizes"
+        android:layout_below="@id/bio_text_view"
+        android:layout_alignStart="@id/bio_text_view"
+        android:textColor="@color/black"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif-thin"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/notifications_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/notifications_title"
+        android:layout_below="@id/claimed_prizes_title"
+        android:layout_alignStart="@id/bio_text_view"
+        android:textColor="@color/black"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif-thin"
+        android:textSize="20sp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/notificationsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/notifications_title"
+            android:layout_alignStart="@id/notifications_title"
             tools:context=".fragments.AllBigsFragment"/>
 
-    </FrameLayout>
-
-</LinearLayout>
+</RelativeLayout>
