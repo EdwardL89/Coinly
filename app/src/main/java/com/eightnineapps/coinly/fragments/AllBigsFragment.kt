@@ -66,6 +66,7 @@ class AllBigsFragment : Fragment() {
      */
     private fun createBigsTab(view: View): View {
         allBigsRecyclerViewList = view.findViewById(R.id.allBigsRecyclerView)
+        allBigsRecyclerViewList.removeAllViews()
         allBigs.clear()
         allBigsToDisplay.clear()
         (activity as HomeActivity).queryFirestoreForAllAssociates(true, object: CallBack {

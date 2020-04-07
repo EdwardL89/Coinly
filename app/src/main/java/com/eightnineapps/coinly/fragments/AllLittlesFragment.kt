@@ -66,6 +66,7 @@ class AllLittlesFragment : Fragment() {
      */
     private fun createLittlesTab(view: View): View {
         allLittlesRecyclerViewList = view.findViewById(R.id.allLittlesRecyclerView)
+        allLittlesRecyclerViewList.removeAllViews()
         allLittles.clear()
         allLittlesToDisplay.clear()
         (activity as HomeActivity).queryFirestoreForAllAssociates(false, object: CallBack {

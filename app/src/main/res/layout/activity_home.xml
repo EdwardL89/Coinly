@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/login_screen_gradient"
     tools:context=".activities.HomeActivity">
 
    <androidx.viewpager.widget.ViewPager
@@ -21,9 +22,10 @@
        android:minHeight="?attr/actionBarSize"
        app:tabMode="fixed"
        app:tabGravity="fill"
-       app:tabTextColor="#ffffff"
-       app:tabSelectedTextColor="#C1BFBF"
-       app:tabIndicatorColor="#C1BFBF"
+       app:tabTextColor="@color/black"
+       app:tabBackground="@color/white"
+       app:tabSelectedTextColor="@color/lightGreen"
+       app:tabIndicatorColor="@color/lightGreen"
        app:layout_anchorGravity="bottom" />
 
 </LinearLayout>

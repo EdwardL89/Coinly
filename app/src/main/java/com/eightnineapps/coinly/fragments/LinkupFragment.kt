@@ -62,6 +62,7 @@ class LinkupFragment : Fragment() {
      */
     private fun createLinkupTab(view: View): View {
         allUsersRecyclerViewList = view.findViewById(R.id.allUsersRecyclerView)
+        allUsersRecyclerViewList.removeAllViews()
         allUsers.clear()
         allUsersToDisplay.clear()
         (activity as HomeActivity).getAllUsers(context)
