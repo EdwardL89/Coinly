@@ -22,7 +22,8 @@
         </activity>
         <activity
             android:name=".activities.HomeActivity"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/Theme.AppCompat.Light"/>
     </application>
 
 </manifest>

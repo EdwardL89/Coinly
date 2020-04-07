@@ -1,13 +1,16 @@
 package com.eightnineapps.coinly.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.viewpager.widget.ViewPager
-import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
+import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.adapters.ViewPagerAdapter
 import com.eightnineapps.coinly.classes.FragmentBehaviors
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -18,6 +21,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlin.system.exitProcess
+
 
 /**
  * Represents the home page the user lands on after logging in. Provides access to Bigs, Littles,
@@ -39,15 +43,8 @@ class HomeActivity : FragmentBehaviors() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        val viewPager = findViewById<ViewPager>(R.id.home_pager)
-        val viewPagerAdapter =
-            ViewPagerAdapter(
-                supportFragmentManager
-            )
-        viewPager.adapter = viewPagerAdapter
-
-        val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
-        tabLayout.setupWithViewPager(viewPager)
+        addCoinlyActionBarTitle()
+        addTabLayout()
     }
 
     /**
@@ -78,6 +75,27 @@ class HomeActivity : FragmentBehaviors() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_sign_out) signOut()
         return super.onOptionsItemSelected(item)
+    }
+
+    /**
+     * Sets the title of the action bar to the app name in the custom font through an image view
+     */
+    @SuppressLint("InflateParams")
+    private fun addCoinlyActionBarTitle() {
+        this.supportActionBar!!.setDisplayShowCustomEnabled(true)
+        this.supportActionBar!!.setDisplayShowTitleEnabled(false)
+        val v: View = LayoutInflater.from(this).inflate(R.layout.app_bar_title, null)
+        this.supportActionBar!!.customView = v
+    }
+
+    /**
+     * Adds the tab layout to the screen and sets the viewPager
+     */
+    private fun addTabLayout() {
+        val viewPager = findViewById<ViewPager>(R.id.home_pager)
+        viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
+        val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
+        tabLayout.setupWithViewPager(viewPager)
     }
 
     /**
