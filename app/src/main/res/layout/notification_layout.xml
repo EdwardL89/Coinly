@@ -1,22 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
-    >
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clipToPadding="false"
+    android:paddingTop="1dp"
+    android:paddingBottom="5dp"
+    android:paddingStart="2dp"
+    android:paddingEnd="2dp"
+    android:background="@android:color/transparent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/rounded_user_list_view"
+        android:elevation="5dp"
+        tools:ignore="UselessParent">
 
-    <TextView
-        android:id="@+id/notificationInfoTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="20dp" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_centerVertical="true"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="5dp"
+            android:layout_gravity="center"
+            app:cardCornerRadius="100dp">
 
-    <Button
-        android:id="@+id/accept_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:text="@string/accept_button_text" />
+            <ImageView
+                android:id="@+id/my_profile_picture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/user_profile_picture"
+                android:scaleType="centerCrop" />
+        </androidx.cardview.widget.CardView>
 
+        <TextView
+            android:id="@+id/notificationInfoTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:textColor="@color/black"
+            android:fontFamily="sans-serif"
+            android:gravity="center_vertical"
+            android:layout_toEndOf="@id/cardView"
+            android:layout_toStartOf="@id/accept_button"
+            android:textSize="12sp"
+            android:padding="5dp" />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/accept_button"
+            android:background="@drawable/rounded_button"
+            android:layout_width="80dp"
+            android:layout_marginEnd="5dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:textSize="12sp"
+            android:layout_centerVertical="true"
+            android:text="@string/accept_button_text" />
+
+    </RelativeLayout>
+</LinearLayout>

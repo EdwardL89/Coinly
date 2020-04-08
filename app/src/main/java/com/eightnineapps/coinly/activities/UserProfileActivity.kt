@@ -199,6 +199,7 @@ class UserProfileActivity : AppCompatActivity() {
         newNotification.type = if (sendingToBig) ADDING_AS_BIG else ADDING_AS_LITTLE
         newNotification.addingToUserEmail = currentUser.email!!
         newNotification.toAddUserEmail = observedUser.email!!
+        newNotification.profilePictureUri = currentUser.profilePictureUri
         newNotification.message = "${currentUser.displayName} wants to add you as a ${if (sendingToBig) "big" else "little"}!"
         return newNotification
     }

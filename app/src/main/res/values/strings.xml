@@ -32,4 +32,8 @@
     <string name="icon_tablayout_image_view">icon_tablayout_image_view</string>
     <string name="sample_bio">Hi! My name is Edward and I am all about saving our planet and doing the right thing. Go Green!</string>
     <string name="claimed_prizes">Claimed Prizes</string>
+    <string name="coins_count_text">Coins</string>
+    <string name="bigs">Bigs</string>
+    <string name="littles_count_titles">Littles</string>
+    <string name="edit_profile_button_text">Edit Profile</string>
 </resources>

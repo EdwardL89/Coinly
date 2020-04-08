@@ -84,6 +84,12 @@ class MyProfileFragment : Fragment() {
         currentUser = task.result!!.toObject(User::class.java)!!
         val myProfilePicture = view.findViewById<ImageView>(R.id.my_profile_picture)
         val myDisplayName = view.findViewById<TextView>(R.id.my_display_name_textView)
+        val coinCount = view.findViewById<TextView>(R.id.coin_count)
+        val bigsCount = view.findViewById<TextView>(R.id.bigs_count)
+        val littlesCount = view.findViewById<TextView>(R.id.littles_count)
+        coinCount.text = currentUser.coins.toString()
+        bigsCount.text = currentUser.bigs.count().toString()
+        littlesCount.text = currentUser.littles.count().toString()
         Glide.with(activity!!).load(currentUser.profilePictureUri).into(myProfilePicture)
         myDisplayName.text = currentUser.displayName
         updateNotifications(notificationsRecyclerView, currentUser.notifications)

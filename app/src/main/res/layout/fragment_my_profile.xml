@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:clipToPadding="false">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingEnd="5dp"
     android:background="@drawable/my_profile_rounded_background"
-    tools:context=".activities.CreateProfileActivity">
+    tools:context=".activities.CreateProfileActivity"
+    tools:ignore="RtlSymmetry,UselessParent"
+    android:clipToPadding="false">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -23,6 +35,96 @@
             android:contentDescription="@string/user_profile_picture"
             android:scaleType="centerCrop" />
     </androidx.cardview.widget.CardView>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/cardView"
+        android:layout_alignBottom="@+id/cardView"
+        android:layout_toEndOf="@id/cardView">
+        <TextView
+            android:id="@+id/coin_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:fontFamily="sans-serif"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/coin_count_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/coins_count_text"
+            android:fontFamily="sans-serif"
+            android:textSize="15sp"
+            android:layout_below="@id/coin_count"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/bigs_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:layout_alignTop="@id/coin_count"
+            android:fontFamily="sans-serif"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_alignStart="@+id/bigs_count_title"
+            android:layout_toEndOf="@id/coin_count"/>
+
+        <TextView
+            android:id="@+id/bigs_count_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bigs"
+            android:fontFamily="sans-serif"
+            android:textSize="15sp"
+            android:layout_below="@id/coin_count"
+            android:textColor="@color/black"
+            android:layout_marginStart="30dp"
+            android:layout_toEndOf="@id/coin_count_title"/>
+
+        <TextView
+            android:id="@+id/littles_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:layout_alignTop="@id/bigs_count"
+            android:fontFamily="sans-serif"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:layout_alignStart="@+id/littles_count_title"
+            android:layout_toEndOf="@id/bigs_count"/>
+
+        <TextView
+            android:id="@+id/littles_count_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/littles_count_titles"
+            android:fontFamily="sans-serif"
+            android:textSize="15sp"
+            android:layout_below="@id/coin_count"
+            android:textColor="@color/black"
+            android:layout_marginStart="30dp"
+            android:layout_toEndOf="@id/bigs_count_title"/>
+
+        <Button
+            android:id="@+id/edit_profile_button"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:text="@string/edit_profile_button_text"
+            android:background="@drawable/rounded_button"
+            android:layout_below="@id/coin_count_title"
+            android:layout_alignStart="@id/coin_count_title"
+            android:layout_alignEnd="@id/littles_count_title"/>
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/my_display_name_textView"
@@ -55,8 +157,8 @@
         android:layout_alignStart="@id/bio_text_view"
         android:textColor="@color/black"
         android:layout_marginTop="10dp"
-        android:fontFamily="sans-serif-thin"
-        android:textSize="20sp"/>
+        android:fontFamily="sans-serif"
+        android:textSize="15sp"/>
 
     <TextView
         android:id="@+id/notifications_title"
@@ -67,10 +169,11 @@
         android:layout_alignStart="@id/bio_text_view"
         android:textColor="@color/black"
         android:layout_marginTop="10dp"
-        android:fontFamily="sans-serif-thin"
-        android:textSize="20sp"/>
+        android:fontFamily="sans-serif"
+        android:textSize="15sp"/>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="10dp"
             android:id="@+id/notificationsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,3 +182,4 @@
             tools:context=".fragments.AllBigsFragment"/>
 
 </RelativeLayout>
+</LinearLayout>

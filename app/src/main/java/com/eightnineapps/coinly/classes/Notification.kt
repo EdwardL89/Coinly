@@ -11,6 +11,7 @@ class Notification(): Serializable {
     var addingToUserEmail = ""
     var toAddUserEmail = ""
     var message = ""
+    var profilePictureUri = ""
 
     /**
      * Determines the type of notification and calls the appropriate method to handle the notification

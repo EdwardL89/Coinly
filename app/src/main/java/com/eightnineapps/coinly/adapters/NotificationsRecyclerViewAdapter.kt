@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
@@ -29,6 +31,7 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
         private var context: Context = view.context
         val notificationContent: TextView = view.notificationInfoTextView
         val acceptButton: Button = view.accept_button
+        val profilePicture: ImageView = view.my_profile_picture
 
         init {
             view.isClickable = true
@@ -62,6 +65,7 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.notificationContent.text = notificationList[position].message
+        Glide.with(context).load(notificationList[position].profilePictureUri).into(holder.profilePicture)
         holder.acceptButton.setOnClickListener {
             notificationList[position].execute()
             removeNotification(position)
@@ -71,7 +75,7 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
     /**
      * Removes the notification at the given position
      */
-    fun removeNotification(position: Int) {
+    private fun removeNotification(position: Int) {
         notificationList.removeAt(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, notificationList.size)
