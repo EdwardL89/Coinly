@@ -36,4 +36,6 @@
     <string name="bigs">Bigs</string>
     <string name="littles_count_titles">Littles</string>
     <string name="edit_profile_button_text">Edit Profile</string>
+    <string name="shown_when_there_are_no_prizes">Shown when there are no prizes</string>
+    <string name="shown_when_there_are_no_notifications">Shown when there are no notifications</string>
 </resources>

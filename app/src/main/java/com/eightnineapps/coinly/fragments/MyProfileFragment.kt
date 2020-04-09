@@ -22,6 +22,7 @@ class MyProfileFragment : Fragment() {
     private lateinit var currentUser: User
     private lateinit var searchIcon: MenuItem
     private lateinit var notificationsRecyclerView: RecyclerView
+    private lateinit var prizesRecyclerView: RecyclerView
 
     /**
      * Inflates the my profile fragment
@@ -87,6 +88,10 @@ class MyProfileFragment : Fragment() {
         val coinCount = view.findViewById<TextView>(R.id.coin_count)
         val bigsCount = view.findViewById<TextView>(R.id.bigs_count)
         val littlesCount = view.findViewById<TextView>(R.id.littles_count)
+        val emptyPrizesImage = view.findViewById<ImageView>(R.id.no_prizes_image)
+        val emptyNotificationsImage = view.findViewById<ImageView>(R.id.no_notifications_image)
+        if (currentUser.prizes.isEmpty()) emptyPrizesImage.visibility = View.VISIBLE else emptyPrizesImage.visibility = View.INVISIBLE
+        if (currentUser.notifications.isEmpty()) emptyNotificationsImage.visibility = View.VISIBLE else emptyNotificationsImage.visibility = View.INVISIBLE
         coinCount.text = currentUser.coins.toString()
         bigsCount.text = currentUser.bigs.count().toString()
         littlesCount.text = currentUser.littles.count().toString()

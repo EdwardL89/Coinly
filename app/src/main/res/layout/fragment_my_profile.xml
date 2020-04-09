@@ -160,26 +160,55 @@
         android:fontFamily="sans-serif"
         android:textSize="15sp"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/prizesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/claimed_prizes_title"
+        android:layout_below="@id/claimed_prizes_title"/>
+
+    <ImageView
+        android:id="@+id/no_prizes_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/no_prizes_icon"
+        android:layout_marginTop ="10dp"
+        android:alpha=".7"
+        android:layout_alignStart="@id/claimed_prizes_title"
+        android:layout_below="@id/claimed_prizes_title"
+        android:contentDescription="@string/shown_when_there_are_no_prizes" />
+
     <TextView
         android:id="@+id/notifications_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/notifications_title"
-        android:layout_below="@id/claimed_prizes_title"
+        android:layout_below="@id/no_prizes_image"
         android:layout_alignStart="@id/bio_text_view"
         android:textColor="@color/black"
         android:layout_marginTop="10dp"
         android:fontFamily="sans-serif"
         android:textSize="15sp"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginTop="10dp"
-            android:id="@+id/notificationsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/notifications_title"
-            android:layout_alignStart="@id/notifications_title"
-            tools:context=".fragments.AllBigsFragment"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="10dp"
+        android:id="@+id/notificationsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/notifications_title"
+        android:layout_alignStart="@id/notifications_title"
+        tools:context=".fragments.AllBigsFragment"/>
+
+    <ImageView
+        android:id="@+id/no_notifications_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/up_to_date_icon"
+        android:alpha=".7"
+        android:layout_alignStart="@id/notifications_title"
+        android:layout_below="@id/notifications_title"
+        android:layout_marginTop ="10dp"
+        android:contentDescription="@string/shown_when_there_are_no_notifications" />
 
 </RelativeLayout>
 </LinearLayout>
