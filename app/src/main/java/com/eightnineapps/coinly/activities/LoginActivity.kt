@@ -139,7 +139,8 @@ class LoginActivity : AppCompatActivity() {
      */
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
-            startActivity(Intent(this, HomeActivity::class.java))
+            val intent = Intent(this, HomeActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            startActivity(intent)
         } else {
             Log.d(TAG, "Failed to sign in, or new user")
         }

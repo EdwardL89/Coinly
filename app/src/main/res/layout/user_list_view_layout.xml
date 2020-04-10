@@ -9,9 +9,11 @@
     android:padding="5dp"
     android:elevation="3dp"
     android:layout_marginStart="2dp"
-    android:layout_marginEnd="2dp">
+    android:layout_marginEnd="2dp"
+    android:id="@+id/item_body">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="1dp"

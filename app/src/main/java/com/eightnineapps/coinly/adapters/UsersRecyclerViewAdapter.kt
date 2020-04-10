@@ -52,6 +52,7 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
                         val intentWithObservedAndCurrentUserDocument = Intent(context, UserProfileActivity::class.java)
                             .putExtra("observed_user", userDocument.toObject(User::class.java))
                             .putExtra("current_user", task.result!!.toObject(User::class.java))
+                            .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                         context.startActivity(intentWithObservedAndCurrentUserDocument)
                     }
             }

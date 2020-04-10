@@ -194,7 +194,8 @@ class CreateProfileActivity : AppCompatActivity() {
      * Launches an intent to go to the home page activity
      */
     private fun goToHomePage() {
-        startActivity(Intent(this, HomeActivity::class.java))
+        val intent = Intent(this, HomeActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        startActivity(intent)
     }
 
     /**
