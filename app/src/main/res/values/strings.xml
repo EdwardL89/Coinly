@@ -39,4 +39,6 @@
     <string name="shown_when_there_are_no_prizes">Shown when there are no prizes</string>
     <string name="shown_when_there_are_no_notifications">Shown when there are no notifications</string>
     <string name="progress_bar_description">Progress bar description</string>
+    <string name="prizes_title">Prizes</string>
+    <string name="bio">Bio</string>
 </resources>

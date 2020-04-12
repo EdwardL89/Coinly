@@ -1,13 +1,18 @@
 package com.eightnineapps.coinly.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.ImageDecoder
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -64,14 +69,13 @@ class CreateProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_profile)
+        addCoinlyActionBarTitle()
+
         doneButton = findViewById(R.id.done_button)
-        addProfilePictureButton = findViewById(R.id.add_profile_picture_button)
-
         realNameEditText = findViewById(R.id.real_name_editText)
-        displayNameEditText = findViewById(R.id.display_name_editText)
-
         userProfilePicture = findViewById(R.id.user_profile_picture)
-
+        displayNameEditText = findViewById(R.id.display_name_editText)
+        addProfilePictureButton = findViewById(R.id.add_profile_picture_button)
         userProfilePictureByteData = ByteArrayOutputStream().toByteArray()
 
         setupDoneButton()
@@ -96,6 +100,19 @@ class CreateProfileActivity : AppCompatActivity() {
             Glide.with(applicationContext).load(data!!.data).into(userProfilePicture)
             prepareForFirebaseStorageUpload(data)
         }
+    }
+
+    /**
+     * Sets the title of the action bar to the app name in the custom font through an image view
+     */
+    @SuppressLint("InflateParams")
+    private fun addCoinlyActionBarTitle() {
+        val actionBar = this.supportActionBar!!
+        actionBar.setDisplayShowCustomEnabled(true)
+        actionBar.setDisplayShowTitleEnabled(false)
+        val v: View = LayoutInflater.from(this).inflate(R.layout.app_bar_title, null)
+        actionBar.customView = v
+        actionBar.setBackgroundDrawable(ColorDrawable(Color.parseColor("#ffffff")))
     }
 
     /**
