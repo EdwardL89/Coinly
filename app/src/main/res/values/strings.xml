@@ -41,4 +41,19 @@
     <string name="progress_bar_description">Progress bar description</string>
     <string name="prizes_title">Prizes</string>
     <string name="bio">Bio</string>
+    <string name="all_prizes_given">All Prizes Given</string>
+    <string name="all_prizes_claimed">All Prizes Claimed</string>
+    <string name="remove_little">Remove Little</string>
+    <string name="your_set_prizes">Your Set Prizes</string>
+    <string name="claimed_prizes_from_you">Claimed Prizes From You</string>
+    <string name="their_spending_power">Their spending power:</string>
+    <string name="coins">Coins</string>
+    <string name="actions">Actions</string>
+    <string name="give_coins">Give Coins</string>
+    <string name="revoke_coins">Revoke Coins</string>
+    <string name="remove_big">Remove Big</string>
+    <string name="appeal">Appeal</string>
+    <string name="request_coins">Request Coins</string>
+    <string name="prizes">Prizes</string>
+    <string name="prizes_you_ve_claimed">Prizes You\'ve Claimed</string>
 </resources>

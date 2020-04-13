@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.UserProfileActivity"/>
+        <activity android:name=".activities.LittleProfileActivity" />
+        <activity android:name=".activities.BigProfileActivity" />
+        <activity android:name=".activities.LinkupProfileActivity" />
         <activity android:name=".activities.CreateProfileActivity" />
         <activity
             android:name=".activities.LoginActivity"
@@ -22,8 +24,8 @@
         </activity>
         <activity
             android:name=".activities.HomeActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/Theme.AppCompat.Light"/>
+            android:theme="@style/Theme.AppCompat.Light"
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

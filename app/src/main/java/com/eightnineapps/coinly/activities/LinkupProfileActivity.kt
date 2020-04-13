@@ -5,9 +5,11 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
@@ -17,33 +19,33 @@ import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_BIG
 import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_LITTLE
 import com.eightnineapps.coinly.classes.User
 import com.eightnineapps.coinly.enums.NotificationType
+import kotlinx.android.synthetic.main.activity_linkup_profile.*
 
 /**
  * Represents a single user of the app
  */
-class UserProfileActivity : AppCompatActivity() {
+class LinkupProfileActivity : AppCompatActivity() {
 
     private lateinit var currentUser: User
     private lateinit var observedUser: User
     private lateinit var displayName: TextView
-    private lateinit var profilePicture: ImageView
     private lateinit var addAsBigButton: Button
     private lateinit var addAsLittleButton: Button
+    private lateinit var profilePicture: ImageView
+    private lateinit var prizesGivenLock: ImageView
+    private lateinit var prizesClaimedLock: ImageView
+    private lateinit var noPrizesGivenImage: ImageView
+    private lateinit var noPrizesClaimedImage: ImageView
+    private lateinit var allPrizesGivenRecyclerView: RecyclerView
+    private lateinit var allPrizesClaimedRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_profile)
-        addCoinlyActionBarTitle()
+        setContentView(R.layout.activity_linkup_profile)
         instantiateUIElements()
-        populateUIElements()
-    }
-
-    /**
-     * Enables or disables the add-as buttons if not applicable. Sets the onClick listener otherwise
-     */
-    override fun onStart() {
         setupButtons()
-        super.onStart()
+        addCoinlyActionBarTitle()
+        populateUIElements()
     }
 
     /**
@@ -80,6 +82,8 @@ class UserProfileActivity : AppCompatActivity() {
                         val mostUpdatedCurrentUser = currentUserTask.result?.toObject(User::class.java)!!
                         setUpAddAsBig(mostUpdatedObservedUser, mostUpdatedCurrentUser)
                         setUpAddAsLittle(mostUpdatedObservedUser, mostUpdatedCurrentUser)
+                        setUpPrizesGiven()
+                        setUpPrizesClaimed()
                     }
                 }
         }
@@ -230,22 +234,59 @@ class UserProfileActivity : AppCompatActivity() {
     }
 
     /**
+     * Determines whether we need to hide the prizes given info of the observed user
+     */
+    private fun setUpPrizesGiven() {
+        if (addAsBigButton.text == "Added as big") {
+            prizesGivenLock.visibility = View.INVISIBLE
+            prizesGivenRecyclerView.visibility = View.VISIBLE
+            if (observedUser.prizesGiven.size == 0) noPrizesGivenImage.visibility = View.VISIBLE
+        } else {
+            prizesGivenLock.visibility = View.VISIBLE
+            noPrizesGivenImage.visibility = View.INVISIBLE
+            prizesGivenRecyclerView.visibility = View.INVISIBLE
+        }
+    }
+
+    /**
+     * Determines whether we need to hide the prizes claimed info of the observed user
+     */
+    private fun setUpPrizesClaimed() {
+        if (addAsLittleButton.text == "Added as little") {
+            prizesClaimedLock.visibility = View.INVISIBLE
+            prizesClaimedRecyclerView.visibility = View.VISIBLE
+            if (observedUser.prizesClaimed.size == 0) noPrizesClaimedImage.visibility = View.VISIBLE
+        } else {
+            prizesClaimedLock.visibility = View.VISIBLE
+            noPrizesClaimedImage.visibility = View.INVISIBLE
+            prizesClaimedRecyclerView.visibility = View.INVISIBLE
+        }
+    }
+
+    /**
      * Instantiates the UI elements to their resource layout IDs
      */
     private fun instantiateUIElements() {
         addAsBigButton = findViewById(R.id.add_as_big_button)
         profilePicture = findViewById(R.id.user_profile_picture)
-        addAsLittleButton = findViewById(R.id.add_as_little_button)
         displayName = findViewById(R.id.my_display_name_textView)
+        addAsLittleButton = findViewById(R.id.add_as_little_button)
+        prizesGivenLock = findViewById(R.id.prizes_given_lock)
+        prizesClaimedLock = findViewById(R.id.prizes_claimed_lock)
+        noPrizesGivenImage = findViewById(R.id.no_prizes_given_image)
+        noPrizesClaimedImage = findViewById(R.id.no_prizes_claimed_image)
+        allPrizesGivenRecyclerView = findViewById(R.id.prizesGivenRecyclerView)
+        allPrizesClaimedRecyclerView = findViewById(R.id.prizesClaimedRecyclerView)
+        currentUser = intent.getSerializableExtra("current_user") as User
+        observedUser = intent.getSerializableExtra("observed_user") as User
     }
 
     /**
      * Populates the visible UI elements of this activity to their respective data for the user
      */
     private fun populateUIElements() {
-        observedUser = intent.getSerializableExtra("observed_user") as User
-        currentUser = intent.getSerializableExtra("current_user") as User
         displayName.text = observedUser.displayName
         Glide.with(this).load(observedUser.profilePictureUri).into(profilePicture)
+
     }
 }

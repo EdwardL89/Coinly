@@ -48,7 +48,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/face_icon"
             android:contentDescription="@string/user_profile_picture"
-            android:scaleType="fitXY" />
+            android:scaleType="centerCrop" />
     </androidx.cardview.widget.CardView>
 
     <Button

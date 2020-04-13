@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/logo_image_view"
-        android:src="@drawable/lock_icon"
+        android:src="@drawable/password_lock_icon"
         android:layout_alignTop="@+id/password_edit_text"
         android:layout_alignBottom="@+id/password_edit_text"
         android:layout_below="@+id/logo_image_view"

@@ -63,10 +63,10 @@
             android:layout_below="@id/my_display_name_textView"/>
 
         <TextView
-            android:id="@+id/prizes_title"
+            android:id="@+id/prizes_given_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/prizes_title"
+            android:text="@string/all_prizes_given"
             android:layout_below="@id/bio_text_view"
             android:layout_alignStart="@id/bio_text_view"
             android:textColor="@color/black"
@@ -75,34 +75,75 @@
             android:textSize="15sp"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/prizesRecyclerView"
+            android:id="@+id/prizesGivenRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@id/prizes_title"
-            android:layout_below="@id/prizes_title"/>
+            android:layout_alignStart="@id/prizes_given_title"
+            android:layout_above="@id/prizes_claimed_title"
+            android:layout_below="@id/prizes_given_title"/>
 
         <ImageView
-            android:id="@+id/no_prizes_image"
+            android:id="@+id/no_prizes_given_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/no_prizes_icon"
+            android:src="@drawable/no_prizes_given_icon"
             android:layout_marginTop ="10dp"
             android:alpha=".7"
-            android:layout_alignStart="@id/prizes_title"
-            android:layout_below="@id/prizes_title"
+            android:layout_alignStart="@id/prizes_given_title"
+            android:layout_below="@id/prizes_given_title"
+            android:contentDescription="@string/shown_when_there_are_no_prizes" />
+
+        <ImageView
+            android:id="@+id/prizes_given_lock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/lock_icon"
+            android:layout_marginTop ="10dp"
+            android:alpha=".7"
+            android:layout_alignStart="@id/prizes_given_title"
+            android:layout_below="@id/prizes_given_title"
             android:contentDescription="@string/shown_when_there_are_no_prizes" />
 
         <TextView
-            android:id="@+id/notifications_title"
+            android:id="@+id/prizes_claimed_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/notifications_title"
-            android:layout_below="@id/no_prizes_image"
+            android:text="@string/all_prizes_claimed"
+            android:layout_below="@id/no_prizes_given_image"
             android:layout_alignStart="@id/bio_text_view"
             android:textColor="@color/black"
             android:layout_marginTop="10dp"
             android:fontFamily="sans-serif"
             android:textSize="15sp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/prizesClaimedRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/prizes_claimed_title"
+            android:layout_below="@id/prizes_claimed_title"/>
+
+        <ImageView
+            android:id="@+id/no_prizes_claimed_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/no_prizes_icon"
+            android:layout_marginTop ="10dp"
+            android:alpha=".7"
+            android:layout_alignStart="@id/prizes_claimed_title"
+            android:layout_below="@id/prizes_claimed_title"
+            android:contentDescription="@string/shown_when_there_are_no_prizes" />
+
+        <ImageView
+            android:id="@+id/prizes_claimed_lock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/lock_icon"
+            android:layout_marginTop ="10dp"
+            android:alpha=".7"
+            android:layout_alignStart="@id/prizes_claimed_title"
+            android:layout_below="@id/prizes_claimed_title"
+            android:contentDescription="@string/shown_when_there_are_no_prizes" />
 
         <RelativeLayout
             android:layout_width="wrap_content"

@@ -39,6 +39,7 @@ class HomeActivity : FragmentBehaviors() {
      */
     companion object {
         val database = FirebaseFirestore.getInstance()
+        lateinit var tabLayout: TabLayout
     }
 
     /**
@@ -48,21 +49,15 @@ class HomeActivity : FragmentBehaviors() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        addCoinlyActionBarTitle()
-        addTabLayout()
-    }
-
-    /**
-     * Determine whether or not the user needs to be redirected to the profile creation activity
-     */
-    override fun onStart() {
-        super.onStart()
         try { // (Temporary fix)
             val usersEmail = auth.currentUser?.email!!
             handleWhetherUserHasCreatedProfile(usersEmail)
         } catch (e: Exception) {
             Log.w(TAG, "Navigating to createProfile activity..?")
         }
+
+        addCoinlyActionBarTitle()
+        addTabLayout()
     }
 
     /**
@@ -101,7 +96,7 @@ class HomeActivity : FragmentBehaviors() {
     private fun addTabLayout() {
         val viewPager = findViewById<ViewPager>(R.id.home_pager)
         viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
-        val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
+        tabLayout = findViewById<TabLayout>(R.id.tab_layout)
         tabLayout.setupWithViewPager(viewPager)
         setTabLayoutIcons(tabLayout)
         setTabLayoutSelectedListener(tabLayout)

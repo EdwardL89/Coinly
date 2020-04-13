@@ -90,7 +90,7 @@ class MyProfileFragment : Fragment() {
         val littlesCount = view.findViewById<TextView>(R.id.littles_count)
         val emptyPrizesImage = view.findViewById<ImageView>(R.id.no_prizes_image)
         val emptyNotificationsImage = view.findViewById<ImageView>(R.id.no_notifications_image)
-        if (currentUser.prizes.isEmpty()) emptyPrizesImage.visibility = View.VISIBLE else emptyPrizesImage.visibility = View.INVISIBLE
+        if (currentUser.prizesClaimed.isEmpty()) emptyPrizesImage.visibility = View.VISIBLE else emptyPrizesImage.visibility = View.INVISIBLE
         if (currentUser.notifications.isEmpty()) emptyNotificationsImage.visibility = View.VISIBLE else emptyNotificationsImage.visibility = View.INVISIBLE
         coinCount.text = currentUser.coins.toString()
         bigsCount.text = currentUser.bigs.count().toString()

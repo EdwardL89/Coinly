@@ -35,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
      * Initializes sign-in flow
      */
     override fun onCreate(savedInstanceState: Bundle?) {
+        updateUI(auth.currentUser)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         setupSignInButton()
@@ -53,12 +54,12 @@ class LoginActivity : AppCompatActivity() {
      * Determine whether or not a user has already been signed in
      * Update the UI accordingly
      */
-    override fun onStart() {
+    /*override fun onStart() {
         super.onStart()
         runBlocking { // (Temporary fix) Block the current thread to prevent setting the content view in onCreate
             updateUI(auth.currentUser)
         }
-    }
+    }*/
 
     /**
      * Called when sign in attempt is complete
@@ -117,7 +118,7 @@ class LoginActivity : AppCompatActivity() {
         val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOption)
         val googleSignInButton = findViewById<SignInButton>(R.id.sign_in_button)
         googleSignInButton.setOnClickListener {
-            startActivityForResult(googleSignInClient.signInIntent,
+            startActivityForResult(googleSignInClient.signInIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION),
                 RC_SIGN_IN
             )
         }

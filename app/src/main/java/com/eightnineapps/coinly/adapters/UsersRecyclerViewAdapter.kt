@@ -10,9 +10,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.activities.BigProfileActivity
 import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
+import com.eightnineapps.coinly.activities.HomeActivity.Companion.tabLayout
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
-import com.eightnineapps.coinly.activities.UserProfileActivity
+import com.eightnineapps.coinly.activities.LinkupProfileActivity
+import com.eightnineapps.coinly.activities.LittleProfileActivity
 import com.eightnineapps.coinly.classes.User
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.android.synthetic.main.user_list_view_layout.view.*
@@ -46,17 +49,27 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
         override fun onClick(view: View?) {
             val displayName = view!!.display_name_text_view!!.text.toString()
             val userDocument = ViewHolderUserList.first { it.data?.get("displayName") == displayName }
+            val currentTab = tabLayout.selectedTabPosition
             database.collection("users").document(auth.currentUser?.email!!).get().addOnCompleteListener {
                 task ->
                     if (task.isSuccessful) {
-                        val intentWithObservedAndCurrentUserDocument = Intent(context, UserProfileActivity::class.java)
-                            .putExtra("observed_user", userDocument.toObject(User::class.java))
-                            .putExtra("current_user", task.result!!.toObject(User::class.java))
-                            .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                        context.startActivity(intentWithObservedAndCurrentUserDocument)
+                        launchAppropriateActivity(currentTab, task.result!!.toObject(User::class.java)!!, userDocument.toObject(User::class.java)!!)
                     }
             }
         }
+
+        private fun launchAppropriateActivity(currentTab: Int, currentUser: User, observedUser: User) {
+            val intent = when (currentTab) {
+                0 -> Intent(context, BigProfileActivity::class.java)
+                1 -> Intent(context, LittleProfileActivity::class.java)
+                else -> Intent(context, LinkupProfileActivity::class.java)
+            }
+            intent.putExtra("observed_user", observedUser)
+                .putExtra("current_user", currentUser)
+                .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            context.startActivity(intent)
+        }
+
     }
 
     /**
