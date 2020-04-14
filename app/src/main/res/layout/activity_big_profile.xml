@@ -169,10 +169,10 @@
             android:contentDescription="@string/shown_when_there_are_no_prizes" />
 
         <TextView
-            android:id="@+id/their_spending_power"
+            android:id="@+id/your_spending_power"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/their_spending_power"
+            android:text="@string/your_spending_power"
             android:layout_below="@id/no_prizes_claimed_image"
             android:layout_alignStart="@id/bio_text_view"
             android:textColor="@color/black"
@@ -186,7 +186,7 @@
             android:layout_height="wrap_content"
             android:text="43"
             android:layout_below="@id/no_prizes_claimed_image"
-            android:layout_toEndOf="@id/their_spending_power"
+            android:layout_toEndOf="@id/your_spending_power"
             android:textColor="@color/black"
             android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"

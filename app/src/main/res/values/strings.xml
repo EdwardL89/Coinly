@@ -64,4 +64,13 @@
     <string name="coins_revoking">Coins Revoking</string>
     <string name="reason_for_revocation">Reason for Revocation</string>
     <string name="revoke_coins">Revoke Coins</string>
+    <string name="appealing_to">Appealing To</string>
+    <string name="case_title">Case</string>
+    <string name="desired_actions">Desired Actions</string>
+    <string name="send_appeal">Send Appeal</string>
+    <string name="requesting_coins_from">Requesting Coins From</string>
+    <string name="coins_requesting">Coins Requesting</string>
+    <string name="reason_for_request">Reason For Request</string>
+    <string name="send_request">Send Request</string>
+    <string name="your_spending_power">Your spending power:</string>
 </resources>

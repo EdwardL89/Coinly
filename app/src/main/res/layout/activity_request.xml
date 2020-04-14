@@ -23,10 +23,10 @@
         android:clipToPadding="false">
 
         <TextView
-            android:id="@+id/revoking_coins_title_textView"
+            android:id="@+id/requesting_coins_title_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/revoking_coins_from"
+            android:text="@string/requesting_coins_from"
             android:fontFamily="sans-serif"
             android:layout_marginTop="10dp"
             android:textSize="15sp"
@@ -40,7 +40,7 @@
             android:layout_height="100dp"
             app:cardCornerRadius="100dp"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/revoking_coins_title_textView">
+            android:layout_below="@id/requesting_coins_title_textView">
 
             <ImageView
                 android:id="@+id/user_profile_picture"
@@ -63,10 +63,10 @@
             android:layout_below="@id/cardView"/>
 
         <TextView
-            android:id="@+id/coins_revoking_textView"
+            android:id="@+id/coins_requesting_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/coins_revoking"
+            android:text="@string/coins_requesting"
             android:fontFamily="sans-serif"
             android:layout_marginTop="10dp"
             android:layout_marginStart="20dp"
@@ -75,42 +75,42 @@
             android:textColor="@color/black" />
 
         <EditText
-            android:id="@+id/coins_revoking_edit_text"
+            android:id="@+id/coins_requesting_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edit_text_background"
             android:autofillHints=""
             android:layout_marginEnd="15dp"
             android:layout_marginStart="150dp"
-            android:layout_toEndOf="@+id/coins_revoking_textView"
-            android:layout_alignTop="@+id/coins_revoking_textView"
-            android:layout_alignBottom="@+id/coins_revoking_textView"
+            android:layout_toEndOf="@+id/coins_requesting_textView"
+            android:layout_alignTop="@+id/coins_requesting_textView"
+            android:layout_alignBottom="@+id/coins_requesting_textView"
             android:inputType="text"
             android:gravity="top|start"
             tools:ignore="LabelFor" />
 
         <TextView
-            android:id="@+id/reasons_title_textView"
+            android:id="@+id/reason_for_request_title_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/reason_for_revocation"
+            android:text="@string/reason_for_request"
             android:fontFamily="sans-serif"
             android:layout_marginTop="20dp"
             android:layout_marginStart="20dp"
             android:textSize="15sp"
-            android:layout_below="@id/coins_revoking_textView"
+            android:layout_below="@id/coins_requesting_textView"
             android:textColor="@color/black" />
 
         <EditText
-            android:id="@+id/reason_for_revocation_edit_text"
+            android:id="@+id/request_reason_edit_text"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@drawable/edit_text_background"
             android:autofillHints=""
             android:layout_marginEnd="15dp"
             android:layout_marginTop="10dp"
-            android:layout_alignStart="@id/reasons_title_textView"
-            android:layout_below="@id/reasons_title_textView"
+            android:layout_alignStart="@id/reason_for_request_title_textView"
+            android:layout_below="@id/reason_for_request_title_textView"
             android:inputType="text"
             android:gravity="top|start"
             tools:ignore="LabelFor" />
@@ -119,14 +119,14 @@
             android:id="@+id/action_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/reason_for_revocation_edit_text"
-            android:layout_alignStart="@id/reason_for_revocation_edit_text"
+            android:layout_below="@+id/request_reason_edit_text"
+            android:layout_alignStart="@id/request_reason_edit_text"
             android:paddingBottom="10dp"
             android:layout_marginTop="30dp"
             android:clipToPadding="false"
-            android:layout_alignEnd="@id/reason_for_revocation_edit_text">
+            android:layout_alignEnd="@id/request_reason_edit_text">
             <Button
-                android:id="@+id/revoke_coins_button"
+                android:id="@+id/send_request_button"
                 android:layout_width="0dp"
                 android:layout_height="25dp"
                 android:layout_weight="1"
@@ -134,11 +134,11 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="5dp"
                 android:textSize="12sp"
-                android:text="@string/revoke_coins"
+                android:text="@string/send_request"
                 tools:ignore="ButtonStyle" />
 
             <Button
-                android:id="@+id/cancel_revoke_coins_button"
+                android:id="@+id/cancel_request_coins_button"
                 android:layout_width="0dp"
                 android:layout_height="25dp"
                 android:layout_weight="1"
