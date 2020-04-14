@@ -56,4 +56,5 @@
     <string name="request_coins">Request Coins</string>
     <string name="prizes">Prizes</string>
     <string name="prizes_you_ve_claimed">Prizes You\'ve Claimed</string>
+    <string name="edit_your_profile">Edit your profile</string>
 </resources>
