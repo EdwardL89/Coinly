@@ -58,7 +58,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/add"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/rounded_button"
+        android:background="@drawable/rounded_button_green"
         android:layout_below="@id/cardView"/>
 
     <EditText
@@ -117,7 +117,7 @@
         android:layout_marginTop="10dp"
         android:layout_alignStart="@id/bio_edit_text"
         android:layout_alignEnd="@+id/bio_edit_text"
-        android:background="@drawable/rounded_button"
+        android:background="@drawable/rounded_button_green"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/bio_edit_text"/>
 

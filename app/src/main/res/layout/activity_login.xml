@@ -78,7 +78,7 @@
         android:textColor="@color/white"
         android:layout_marginTop="10dp"
         android:elevation="10dp"
-        android:background="@drawable/rounded_button"/>
+        android:background="@drawable/rounded_button_green"/>
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"

@@ -1,28 +1,19 @@
 package com.eightnineapps.coinly.activities
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
 import com.eightnineapps.coinly.R
 
-class LittleProfileActivity : AppCompatActivity() {
-
-    private lateinit var giveCoinsButton: Button
-    private lateinit var revokeCoinsButton: Button
-
+class GiveCoinsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_little_profile)
-        giveCoinsButton = findViewById(R.id.give_coins_button)
-        revokeCoinsButton = findViewById(R.id.revoke_coins_button)
-        setUpButtons()
+        setContentView(R.layout.activity_give_coins)
         addCoinlyActionBarTitle()
     }
 
@@ -32,17 +23,6 @@ class LittleProfileActivity : AppCompatActivity() {
     override fun finish() {
         super.finish()
         overridePendingTransition(0, 0)
-    }
-
-    private fun setUpButtons() {
-        giveCoinsButton.setOnClickListener {
-            val intent = Intent(this, GiveCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            startActivity(intent)
-        }
-        revokeCoinsButton.setOnClickListener {
-            val intent = Intent(this, RevokeCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            startActivity(intent)
-        }
     }
 
     /**

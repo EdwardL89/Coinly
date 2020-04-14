@@ -23,7 +23,7 @@
         android:clipToPadding="false">
 
         <TextView
-            android:id="@+id/profile_creation_page_title_textView"
+            android:id="@+id/edit_profile_page_title_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/edit_your_profile"
@@ -40,7 +40,7 @@
             android:layout_height="100dp"
             app:cardCornerRadius="100dp"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/profile_creation_page_title_textView">
+            android:layout_below="@id/edit_profile_page_title_textView">
 
             <ImageView
                 android:id="@+id/user_profile_picture"
@@ -58,7 +58,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/add"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/rounded_button_green"
             android:layout_below="@id/cardView"/>
 
         <EditText
@@ -117,7 +117,7 @@
             android:layout_marginTop="10dp"
             android:layout_alignStart="@id/bio_edit_text"
             android:layout_alignEnd="@+id/bio_edit_text"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/rounded_button_green"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/bio_edit_text"/>
 
