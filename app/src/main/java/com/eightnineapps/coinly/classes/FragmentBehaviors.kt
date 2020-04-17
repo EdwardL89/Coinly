@@ -179,7 +179,7 @@ abstract class FragmentBehaviors : AppCompatActivity() {
     }
 
     /**
-     * Adds space between recycler view list items
+     * Adds space between recycler view list itemsF
      */
     fun addSpaceBetweenItems(recyclerView: RecyclerView, context: Context?) {
         val itemDecorator = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)

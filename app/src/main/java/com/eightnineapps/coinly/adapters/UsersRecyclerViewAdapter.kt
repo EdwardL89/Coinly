@@ -26,14 +26,17 @@ import kotlinx.android.synthetic.main.user_list_view_layout.view.*
 class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context): RecyclerView.Adapter<UsersRecyclerViewAdapter.ViewHolder>() {
 
     private var userList = _items
-    private var context = _context
+    var context = _context
 
     /**
      * Explicitly defines the UI elements belonging to a single list element in the recycler view
      */
     class ViewHolder(view: View, _items: List<DocumentSnapshot>): RecyclerView.ViewHolder(view), View.OnClickListener {
+
         private var context: Context = view.context
         private var ViewHolderUserList = _items
+        private var REQUEST_CODE = 100
+
         val singleUserName: TextView = view.display_name_text_view
         val singleUserProfilePicture: ImageView = view.user_profile_picture
 
@@ -68,6 +71,7 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
                 .putExtra("current_user", currentUser)
                 .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             context.startActivity(intent)
+
         }
 
     }

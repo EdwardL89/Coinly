@@ -2,14 +2,13 @@ package com.eightnineapps.coinly.fragments
 
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.HomeActivity
 import com.eightnineapps.coinly.interfaces.CallBack
 import com.google.firebase.firestore.DocumentSnapshot
-import kotlin.collections.ArrayList
 
 class AllBigsFragment : Fragment() {
 

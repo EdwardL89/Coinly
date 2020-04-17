@@ -96,7 +96,7 @@ class HomeActivity : FragmentBehaviors() {
     private fun addTabLayout() {
         val viewPager = findViewById<ViewPager>(R.id.home_pager)
         viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
-        tabLayout = findViewById<TabLayout>(R.id.tab_layout)
+        tabLayout = findViewById(R.id.tab_layout)
         tabLayout.setupWithViewPager(viewPager)
         setTabLayoutIcons(tabLayout)
         setTabLayoutSelectedListener(tabLayout)
@@ -179,5 +179,9 @@ class HomeActivity : FragmentBehaviors() {
             .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
             .build()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }
