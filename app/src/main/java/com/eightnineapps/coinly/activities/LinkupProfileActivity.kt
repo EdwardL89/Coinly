@@ -1,10 +1,15 @@
 package com.eightnineapps.coinly.activities
 
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.*
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
@@ -14,32 +19,54 @@ import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_BIG
 import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_LITTLE
 import com.eightnineapps.coinly.classes.User
 import com.eightnineapps.coinly.enums.NotificationType
+import kotlinx.android.synthetic.main.activity_linkup_profile.*
 
 /**
  * Represents a single user of the app
  */
-class UserProfileActivity : AppCompatActivity() {
+class LinkupProfileActivity : AppCompatActivity() {
 
     private lateinit var currentUser: User
     private lateinit var observedUser: User
     private lateinit var displayName: TextView
-    private lateinit var profilePicture: ImageView
     private lateinit var addAsBigButton: Button
     private lateinit var addAsLittleButton: Button
+    private lateinit var profilePicture: ImageView
+    private lateinit var prizesGivenLock: ImageView
+    private lateinit var prizesClaimedLock: ImageView
+    private lateinit var noPrizesGivenImage: ImageView
+    private lateinit var noPrizesClaimedImage: ImageView
+    private lateinit var allPrizesGivenRecyclerView: RecyclerView
+    private lateinit var allPrizesClaimedRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_profile)
+        setContentView(R.layout.activity_linkup_profile)
         instantiateUIElements()
+        setupButtons()
+        addCoinlyActionBarTitle()
         populateUIElements()
     }
 
     /**
-     * Enables or disables the add-as buttons if not applicable. Sets the onClick listener otherwise
+     * Makes for a clean transition back to the previous activity with no animation or flashes
      */
-    override fun onStart() {
-        setupButtons()
-        super.onStart()
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(0, 0)
+    }
+
+    /**
+     * Sets the title of the action bar to the app name in the custom font through an image view
+     */
+    @SuppressLint("InflateParams")
+    private fun addCoinlyActionBarTitle() {
+        val actionBar = this.supportActionBar!!
+        actionBar.setDisplayShowCustomEnabled(true)
+        actionBar.setDisplayShowTitleEnabled(false)
+        val v: View = LayoutInflater.from(this).inflate(R.layout.app_bar_title, null)
+        actionBar.customView = v
+        actionBar.setBackgroundDrawable(ColorDrawable(Color.parseColor("#ffffff")))
     }
 
     /**
@@ -55,6 +82,8 @@ class UserProfileActivity : AppCompatActivity() {
                         val mostUpdatedCurrentUser = currentUserTask.result?.toObject(User::class.java)!!
                         setUpAddAsBig(mostUpdatedObservedUser, mostUpdatedCurrentUser)
                         setUpAddAsLittle(mostUpdatedObservedUser, mostUpdatedCurrentUser)
+                        setUpPrizesGiven()
+                        setUpPrizesClaimed()
                     }
                 }
         }
@@ -73,12 +102,16 @@ class UserProfileActivity : AppCompatActivity() {
                 showRequested(addAsLittleButton)
             }
         else if (alreadyRequested) showRequested(addAsLittleButton)
-        else if (alreadyAdded) showAdded(addAsLittleButton)
+        else if (alreadyAdded) showAdded(false, addAsLittleButton)
         else checkForPendingRequest(currentUser, observedUser, ADDING_AS_BIG)
     }
 
-    private fun showAdded(buttonToUpdate: Button) {
-        buttonToUpdate.text = getString(R.string.added_as_little)
+    /**
+     * Disables the add button and displays a message to notify that the observed user has already
+     * been added
+     */
+    private fun showAdded(addedAsBig: Boolean, buttonToUpdate: Button) {
+        buttonToUpdate.text = if (addedAsBig) "Added as big" else getString(R.string.added_as_little)
         buttonToUpdate.isEnabled = false
     }
 
@@ -103,7 +136,7 @@ class UserProfileActivity : AppCompatActivity() {
                 showRequested(addAsBigButton)
             }
         else if (alreadyRequested) showRequested(addAsBigButton)
-        else if (alreadyAdded) showAdded(addAsBigButton)
+        else if (alreadyAdded) showAdded(true, addAsBigButton)
         else checkForPendingRequest(currentUser, observedUser, ADDING_AS_LITTLE)
     }
 
@@ -124,7 +157,7 @@ class UserProfileActivity : AppCompatActivity() {
         addAsLittleButton.isEnabled = true
         addAsLittleButton.setOnClickListener {
             executeAndUpdateNotification(notification, updatedCurrentUser)
-            addAsLittleButton.text = getString(R.string.add_as_little)
+            addAsLittleButton.text = getString(R.string.added_as_little)
             addAsLittleButton.isEnabled = false
         }
     }
@@ -199,8 +232,39 @@ class UserProfileActivity : AppCompatActivity() {
         newNotification.type = if (sendingToBig) ADDING_AS_BIG else ADDING_AS_LITTLE
         newNotification.addingToUserEmail = currentUser.email!!
         newNotification.toAddUserEmail = observedUser.email!!
+        newNotification.profilePictureUri = currentUser.profilePictureUri
         newNotification.message = "${currentUser.displayName} wants to add you as a ${if (sendingToBig) "big" else "little"}!"
         return newNotification
+    }
+
+    /**
+     * Determines whether we need to hide the prizes given info of the observed user
+     */
+    private fun setUpPrizesGiven() {
+        if (addAsBigButton.text == "Added as big") {
+            prizesGivenLock.visibility = View.INVISIBLE
+            prizesGivenRecyclerView.visibility = View.VISIBLE
+            if (observedUser.prizesGiven.size == 0) noPrizesGivenImage.visibility = View.VISIBLE
+        } else {
+            prizesGivenLock.visibility = View.VISIBLE
+            noPrizesGivenImage.visibility = View.INVISIBLE
+            prizesGivenRecyclerView.visibility = View.INVISIBLE
+        }
+    }
+
+    /**
+     * Determines whether we need to hide the prizes claimed info of the observed user
+     */
+    private fun setUpPrizesClaimed() {
+        if (addAsLittleButton.text == "Added as little") {
+            prizesClaimedLock.visibility = View.INVISIBLE
+            prizesClaimedRecyclerView.visibility = View.VISIBLE
+            if (observedUser.prizesClaimed.size == 0) noPrizesClaimedImage.visibility = View.VISIBLE
+        } else {
+            prizesClaimedLock.visibility = View.VISIBLE
+            noPrizesClaimedImage.visibility = View.INVISIBLE
+            prizesClaimedRecyclerView.visibility = View.INVISIBLE
+        }
     }
 
     /**
@@ -209,17 +273,24 @@ class UserProfileActivity : AppCompatActivity() {
     private fun instantiateUIElements() {
         addAsBigButton = findViewById(R.id.add_as_big_button)
         profilePicture = findViewById(R.id.user_profile_picture)
+        displayName = findViewById(R.id.my_display_name_textView)
         addAsLittleButton = findViewById(R.id.add_as_little_button)
-        displayName = findViewById(R.id.profile_page_display_name_textView)
+        prizesGivenLock = findViewById(R.id.prizes_given_lock)
+        prizesClaimedLock = findViewById(R.id.prizes_claimed_lock)
+        noPrizesGivenImage = findViewById(R.id.no_prizes_given_image)
+        noPrizesClaimedImage = findViewById(R.id.no_prizes_claimed_image)
+        allPrizesGivenRecyclerView = findViewById(R.id.prizesGivenRecyclerView)
+        allPrizesClaimedRecyclerView = findViewById(R.id.prizesClaimedRecyclerView)
+        currentUser = intent.getSerializableExtra("current_user") as User
+        observedUser = intent.getSerializableExtra("observed_user") as User
     }
 
     /**
      * Populates the visible UI elements of this activity to their respective data for the user
      */
     private fun populateUIElements() {
-        observedUser = intent.getSerializableExtra("observed_user") as User
-        currentUser = intent.getSerializableExtra("current_user") as User
         displayName.text = observedUser.displayName
         Glide.with(this).load(observedUser.profilePictureUri).into(profilePicture)
+
     }
 }

@@ -4,14 +4,23 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/coinly_app_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/coinly_app_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.UserProfileActivity"></activity>
+        <activity android:name=".activities.RequestCoinsActivity"/>
+        <activity android:name=".activities.AppealActivity" />
+        <activity android:name=".activities.RevokeCoinsActivity" />
+        <activity android:name=".activities.GiveCoinsActivity" />
+        <activity android:name=".activities.EditProfileActivity" />
+        <activity android:name=".activities.LittleProfileActivity" />
+        <activity android:name=".activities.BigProfileActivity" />
+        <activity android:name=".activities.LinkupProfileActivity" />
         <activity android:name=".activities.CreateProfileActivity" />
-        <activity android:name=".activities.LoginActivity">
+        <activity
+            android:name=".activities.LoginActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,6 +29,7 @@
         </activity>
         <activity
             android:name=".activities.HomeActivity"
+            android:theme="@style/Theme.AppCompat.Light"
             android:windowSoftInputMode="adjustPan" />
     </application>
 

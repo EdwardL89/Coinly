@@ -66,6 +66,8 @@ class AllLittlesFragment : Fragment() {
      */
     private fun createLittlesTab(view: View): View {
         allLittlesRecyclerViewList = view.findViewById(R.id.allLittlesRecyclerView)
+        allLittlesRecyclerViewList.removeAllViews()
+        (activity as HomeActivity).addSpaceBetweenItems(allLittlesRecyclerViewList, context)
         allLittles.clear()
         allLittlesToDisplay.clear()
         (activity as HomeActivity).queryFirestoreForAllAssociates(false, object: CallBack {

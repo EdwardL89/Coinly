@@ -20,6 +20,9 @@ import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.runBlocking
 import kotlin.system.exitProcess
 
+/**
+ * Allows the user to login either through google or email & password
+ */
 class LoginActivity : AppCompatActivity() {
 
     /**
@@ -35,6 +38,7 @@ class LoginActivity : AppCompatActivity() {
      * Initializes sign-in flow
      */
     override fun onCreate(savedInstanceState: Bundle?) {
+        updateUI(auth.currentUser)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         setupSignInButton()
@@ -47,17 +51,6 @@ class LoginActivity : AppCompatActivity() {
         super.onBackPressed()
         finishAffinity()
         exitProcess(0)
-    }
-
-    /**
-     * Determine whether or not a user has already been signed in
-     * Update the UI accordingly
-     */
-    override fun onStart() {
-        super.onStart()
-        runBlocking { // (Temporary fix) Block the current thread to prevent setting the content view in onCreate
-            updateUI(auth.currentUser)
-        }
     }
 
     /**
@@ -117,7 +110,7 @@ class LoginActivity : AppCompatActivity() {
         val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOption)
         val googleSignInButton = findViewById<SignInButton>(R.id.sign_in_button)
         googleSignInButton.setOnClickListener {
-            startActivityForResult(googleSignInClient.signInIntent,
+            startActivityForResult(googleSignInClient.signInIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION),
                 RC_SIGN_IN
             )
         }
@@ -139,7 +132,8 @@ class LoginActivity : AppCompatActivity() {
      */
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
-            startActivity(Intent(this, HomeActivity::class.java))
+            val intent = Intent(this, HomeActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            startActivity(intent)
         } else {
             Log.d(TAG, "Failed to sign in, or new user")
         }

@@ -4,8 +4,11 @@ import android.content.Context
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.HomeActivity
 import com.eightnineapps.coinly.activities.LoginActivity
 import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
@@ -31,6 +34,9 @@ import com.google.firebase.firestore.QuerySnapshot
 import java.lang.Exception
 import java.util.*
 
+/**
+ * Defines all common behaviors of the existing fragments
+ */
 abstract class FragmentBehaviors : AppCompatActivity() {
 
     /**
@@ -173,5 +179,14 @@ abstract class FragmentBehaviors : AppCompatActivity() {
             allUsersToDisplay.addAll(LinkupFragment.allUsers)
             updateRecyclerViewAdapterAndLayoutManager(allUsersRecyclerViewList, allUsersToDisplay, context)
         }
+    }
+
+    /**
+     * Adds space between recycler view list itemsF
+     */
+    fun addSpaceBetweenItems(recyclerView: RecyclerView, context: Context?) {
+        val itemDecorator = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        itemDecorator.setDrawable(ContextCompat.getDrawable(context!!, R.drawable.space_between_list_items)!!)
+        recyclerView.addItemDecoration(itemDecorator)
     }
 }

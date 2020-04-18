@@ -1,7 +1,9 @@
 package com.eightnineapps.coinly.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.activities.EditProfileActivity
 import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.adapters.NotificationsRecyclerViewAdapter
@@ -21,7 +24,9 @@ class MyProfileFragment : Fragment() {
 
     private lateinit var currentUser: User
     private lateinit var searchIcon: MenuItem
+    private lateinit var prizesRecyclerView: RecyclerView
     private lateinit var notificationsRecyclerView: RecyclerView
+    private lateinit var editProfileButton: Button
 
     /**
      * Inflates the my profile fragment
@@ -84,9 +89,31 @@ class MyProfileFragment : Fragment() {
         currentUser = task.result!!.toObject(User::class.java)!!
         val myProfilePicture = view.findViewById<ImageView>(R.id.my_profile_picture)
         val myDisplayName = view.findViewById<TextView>(R.id.my_display_name_textView)
+        val coinCount = view.findViewById<TextView>(R.id.coin_count)
+        val bigsCount = view.findViewById<TextView>(R.id.bigs_count)
+        val littlesCount = view.findViewById<TextView>(R.id.littles_count)
+        val emptyPrizesImage = view.findViewById<ImageView>(R.id.no_prizes_image)
+        val emptyNotificationsImage = view.findViewById<ImageView>(R.id.no_notifications_image)
+        editProfileButton = view.findViewById(R.id.edit_profile_button)
+        setUpEditProfileButton()
+        if (currentUser.prizesClaimed.isEmpty()) emptyPrizesImage.visibility = View.VISIBLE else emptyPrizesImage.visibility = View.INVISIBLE
+        if (currentUser.notifications.isEmpty()) emptyNotificationsImage.visibility = View.VISIBLE else emptyNotificationsImage.visibility = View.INVISIBLE
+        coinCount.text = currentUser.coins.toString()
+        bigsCount.text = currentUser.bigs.count().toString()
+        littlesCount.text = currentUser.littles.count().toString()
         Glide.with(activity!!).load(currentUser.profilePictureUri).into(myProfilePicture)
         myDisplayName.text = currentUser.displayName
         updateNotifications(notificationsRecyclerView, currentUser.notifications)
+    }
+
+    /**
+     * Sets the onClick listener for the edit profile button
+     */
+    private fun setUpEditProfileButton() {
+        editProfileButton.setOnClickListener {
+            val intent = Intent(activity, EditProfileActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            startActivity(intent)
+        }
     }
 
     /**
