@@ -9,6 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import com.eightnineapps.coinly.R
 
+/**
+ * Allows the little to send an appeal to an action done by the little's big
+ */
 class AppealActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

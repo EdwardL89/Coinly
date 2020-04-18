@@ -13,7 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.User
 
-
+/**
+ * Displays the prizes a little can claim from this big as well as the prizes already claimed
+ */
 class BigProfileActivity : AppCompatActivity() {
 
     private lateinit var currentUser: User

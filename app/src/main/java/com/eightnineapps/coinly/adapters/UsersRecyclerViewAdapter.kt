@@ -60,6 +60,9 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
             }
         }
 
+        /**
+         * Launches the appropriate activity based on which fragment was tapped
+         */
         private fun launchAppropriateActivity(currentTab: Int, currentUser: User, observedUser: User) {
             val intent = when (currentTab) {
                 0 -> Intent(context, BigProfileActivity::class.java)

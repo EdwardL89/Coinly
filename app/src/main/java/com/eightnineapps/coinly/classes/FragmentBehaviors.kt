@@ -34,6 +34,9 @@ import com.google.firebase.firestore.QuerySnapshot
 import java.lang.Exception
 import java.util.*
 
+/**
+ * Defines all common behaviors of the existing fragments
+ */
 abstract class FragmentBehaviors : AppCompatActivity() {
 
     /**

@@ -13,6 +13,9 @@ import android.widget.Toast
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.User
 
+/**
+ * Displays the prizes the little has claim from you as well as the prizes you have set for the little
+ */
 class LittleProfileActivity : AppCompatActivity() {
 
     private lateinit var currentUser: User
@@ -42,6 +45,9 @@ class LittleProfileActivity : AppCompatActivity() {
         overridePendingTransition(0, 0)
     }
 
+    /**
+     * Attaches the on click listeners to all buttons
+     */
     private fun setUpButtons() {
         giveCoinsButton.setOnClickListener {
             val intent = Intent(this, GiveCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)

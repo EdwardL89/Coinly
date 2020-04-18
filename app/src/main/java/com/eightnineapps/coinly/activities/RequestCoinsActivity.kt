@@ -9,6 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import com.eightnineapps.coinly.R
 
+/**
+ * Allows a little send a request to a big for coins
+ */
 class RequestCoinsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

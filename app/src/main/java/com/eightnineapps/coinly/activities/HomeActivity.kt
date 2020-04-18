@@ -32,7 +32,6 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlin.system.exitProcess
 
-
 /**
  * Represents the home page the user lands on after logging in. Provides access to Bigs, Littles,
  * and the search bar for link ups
@@ -73,10 +72,14 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
         } catch (e: Exception) {
             Log.w(TAG, "Navigating to createProfile activity..?")
         }
+
         addCoinlyActionBarTitle()
         addTabLayout()
     }
 
+    /**
+     * Determines what actions to take when the user clicks on an item in the drawer layout
+     */
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
             R.id.settings -> {
@@ -101,6 +104,14 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
             finishAffinity()
             exitProcess(0)
         }
+    }
+
+    /**
+     * Makes for a clean transition back to the previous activity with no animation or flashes
+     */
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(0, 0)
     }
 
     /**

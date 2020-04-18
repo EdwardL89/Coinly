@@ -9,6 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import com.eightnineapps.coinly.R
 
+/**
+ * Allows a big to revoke a specified number of coins from a little
+ */
 class RevokeCoinsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

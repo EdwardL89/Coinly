@@ -9,6 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import com.eightnineapps.coinly.R
 
+/**
+ * Allows the user to edit their profile information
+ */
 class EditProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -9,6 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import com.eightnineapps.coinly.R
 
+/**
+ * Lets a big give a chosen number of coins to a little
+ */
 class GiveCoinsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

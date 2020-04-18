@@ -106,6 +106,10 @@ class LinkupProfileActivity : AppCompatActivity() {
         else checkForPendingRequest(currentUser, observedUser, ADDING_AS_BIG)
     }
 
+    /**
+     * Disables the add button and displays a message to notify that the observed user has already
+     * been added
+     */
     private fun showAdded(addedAsBig: Boolean, buttonToUpdate: Button) {
         buttonToUpdate.text = if (addedAsBig) "Added as big" else getString(R.string.added_as_little)
         buttonToUpdate.isEnabled = false

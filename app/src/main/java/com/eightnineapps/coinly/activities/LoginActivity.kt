@@ -20,6 +20,9 @@ import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.runBlocking
 import kotlin.system.exitProcess
 
+/**
+ * Allows the user to login either through google or email & password
+ */
 class LoginActivity : AppCompatActivity() {
 
     /**
@@ -49,17 +52,6 @@ class LoginActivity : AppCompatActivity() {
         finishAffinity()
         exitProcess(0)
     }
-
-    /**
-     * Determine whether or not a user has already been signed in
-     * Update the UI accordingly
-     */
-    /*override fun onStart() {
-        super.onStart()
-        runBlocking { // (Temporary fix) Block the current thread to prevent setting the content view in onCreate
-            updateUI(auth.currentUser)
-        }
-    }*/
 
     /**
      * Called when sign in attempt is complete
