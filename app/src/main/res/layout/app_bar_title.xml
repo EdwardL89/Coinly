@@ -9,9 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginStart="10dp"
         android:src="@drawable/coinly_title"
         android:maxLines="1"
-        android:ellipsize="end"
-        android:text="" />
+        android:ellipsize="end"/>
 </RelativeLayout>

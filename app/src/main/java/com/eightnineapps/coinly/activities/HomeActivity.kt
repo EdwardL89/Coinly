@@ -11,7 +11,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
@@ -22,6 +26,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -32,7 +37,11 @@ import kotlin.system.exitProcess
  * Represents the home page the user lands on after logging in. Provides access to Bigs, Littles,
  * and the search bar for link ups
  */
-class HomeActivity : FragmentBehaviors() {
+class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelectedListener {
+
+    private lateinit var dl: DrawerLayout
+    private lateinit var t: ActionBarDrawerToggle
+    private lateinit var nv: NavigationView
 
     /**
      * Provides access to data structures for all the below methods
@@ -49,6 +58,15 @@ class HomeActivity : FragmentBehaviors() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        dl = findViewById(R.id.activity_main)
+        t = ActionBarDrawerToggle(this, dl, R.string.added_as_big, R.string.add_as_little)
+        dl.addDrawerListener(t)
+        t.syncState()
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        nv = findViewById(R.id.nv)
+        nv.setNavigationItemSelectedListener(this)
+
         try { // (Temporary fix)
             val usersEmail = auth.currentUser?.email!!
             handleWhetherUserHasCreatedProfile(usersEmail)
@@ -60,13 +78,33 @@ class HomeActivity : FragmentBehaviors() {
         addTabLayout()
     }
 
+    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId) {
+            R.id.account -> {
+                Toast.makeText(this, "Publication", Toast.LENGTH_SHORT).show()
+            }
+            R.id.settings -> {
+                Toast.makeText(this, "Android Store", Toast.LENGTH_SHORT).show()
+            }
+            R.id.mycart -> {
+                Toast.makeText(this, "Newsletter", Toast.LENGTH_SHORT).show()
+            }
+        }
+        dl.closeDrawer(GravityCompat.START)
+        return true
+    }
+
     /**
      * Close the app when the user hits "back"
      */
     override fun onBackPressed() {
-        super.onBackPressed()
-        finishAffinity()
-        exitProcess(0)
+        if (dl.isDrawerOpen(GravityCompat.START)) {
+            dl.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+            finishAffinity()
+            exitProcess(0)
+        }
     }
 
     /**
@@ -74,6 +112,7 @@ class HomeActivity : FragmentBehaviors() {
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_sign_out) signOut()
+        if (t.onOptionsItemSelected(item)) return true
         return super.onOptionsItemSelected(item)
     }
 
