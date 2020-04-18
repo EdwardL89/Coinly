@@ -35,7 +35,6 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
 
         private var context: Context = view.context
         private var ViewHolderUserList = _items
-        private var REQUEST_CODE = 100
 
         val singleUserName: TextView = view.display_name_text_view
         val singleUserProfilePicture: ImageView = view.user_profile_picture

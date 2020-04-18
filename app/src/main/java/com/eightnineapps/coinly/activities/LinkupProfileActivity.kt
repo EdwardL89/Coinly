@@ -153,7 +153,7 @@ class LinkupProfileActivity : AppCompatActivity() {
         addAsLittleButton.isEnabled = true
         addAsLittleButton.setOnClickListener {
             executeAndUpdateNotification(notification, updatedCurrentUser)
-            addAsLittleButton.text = getString(R.string.add_as_little)
+            addAsLittleButton.text = getString(R.string.added_as_little)
             addAsLittleButton.isEnabled = false
         }
     }
