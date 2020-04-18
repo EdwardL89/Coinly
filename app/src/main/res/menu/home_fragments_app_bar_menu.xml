@@ -9,9 +9,4 @@
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
 
-    <item
-        android:id="@+id/action_sign_out"
-        android:title="@string/sign_out"
-        android:icon="@drawable/triple_dots"
-        app:showAsAction="ifRoom|collapseActionView"/>
 </menu>

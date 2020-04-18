@@ -39,9 +39,9 @@ import kotlin.system.exitProcess
  */
 class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var dl: DrawerLayout
-    private lateinit var t: ActionBarDrawerToggle
-    private lateinit var nv: NavigationView
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var drawerToggle: ActionBarDrawerToggle
+    private lateinit var navigationView: NavigationView
 
     /**
      * Provides access to data structures for all the below methods
@@ -58,14 +58,14 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        dl = findViewById(R.id.activity_main)
-        t = ActionBarDrawerToggle(this, dl, R.string.added_as_big, R.string.add_as_little)
-        dl.addDrawerListener(t)
-        t.syncState()
+        drawerLayout = findViewById(R.id.drawer_layout)
+        drawerToggle = ActionBarDrawerToggle(this, drawerLayout, 0, 0)
+        drawerLayout.addDrawerListener(drawerToggle)
+        drawerToggle.syncState()
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        nv = findViewById(R.id.nv)
-        nv.setNavigationItemSelectedListener(this)
+        navigationView = findViewById(R.id.nv)
+        navigationView.setNavigationItemSelectedListener(this)
 
         try { // (Temporary fix)
             val usersEmail = auth.currentUser?.email!!
@@ -73,24 +73,20 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
         } catch (e: Exception) {
             Log.w(TAG, "Navigating to createProfile activity..?")
         }
-
         addCoinlyActionBarTitle()
         addTabLayout()
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
-            R.id.account -> {
-                Toast.makeText(this, "Publication", Toast.LENGTH_SHORT).show()
-            }
             R.id.settings -> {
-                Toast.makeText(this, "Android Store", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
             }
-            R.id.mycart -> {
-                Toast.makeText(this, "Newsletter", Toast.LENGTH_SHORT).show()
+            R.id.sign_out -> {
+                signOut()
             }
         }
-        dl.closeDrawer(GravityCompat.START)
+        drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
@@ -98,8 +94,8 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
      * Close the app when the user hits "back"
      */
     override fun onBackPressed() {
-        if (dl.isDrawerOpen(GravityCompat.START)) {
-            dl.closeDrawer(GravityCompat.START)
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
             finishAffinity()
@@ -111,8 +107,7 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
      * Set up the sign out option in the action bar menu item
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.action_sign_out) signOut()
-        if (t.onOptionsItemSelected(item)) return true
+        if (drawerToggle.onOptionsItemSelected(item)) return true
         return super.onOptionsItemSelected(item)
     }
 
@@ -218,9 +213,5 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
             .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
             .build()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
     }
 }

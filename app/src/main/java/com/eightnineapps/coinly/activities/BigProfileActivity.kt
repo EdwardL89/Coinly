@@ -74,7 +74,7 @@ class BigProfileActivity : AppCompatActivity() {
                     }
         }
         Toast.makeText(this, "Removed ${observedUser.displayName} as a big", Toast.LENGTH_SHORT).show()
-
+        //TODO: add a listener to the bigs recycler view to refresh it after the removal
         finish()
     }
 
