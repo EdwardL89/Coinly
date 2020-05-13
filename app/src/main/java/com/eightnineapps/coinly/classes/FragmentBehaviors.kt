@@ -29,8 +29,7 @@ import com.eightnineapps.coinly.fragments.LinkupFragment.Companion.allUsersRecyc
 import com.eightnineapps.coinly.fragments.LinkupFragment.Companion.allUsersToDisplay
 import com.eightnineapps.coinly.interfaces.CallBack
 import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.*
 import java.lang.Exception
 import java.util.*
 

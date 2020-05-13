@@ -7,11 +7,11 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.User
+import kotlinx.android.synthetic.main.activity_big_profile.*
 
 /**
  * Displays the prizes a little can claim from this big as well as the prizes already claimed
@@ -20,16 +20,10 @@ class BigProfileActivity : AppCompatActivity() {
 
     private lateinit var currentUser: User
     private lateinit var observedUser: User
-    private lateinit var appealButton: Button
-    private lateinit var requestButton: Button
-    private lateinit var removeBigButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_big_profile)
-        appealButton = findViewById(R.id.appeal_button)
-        removeBigButton = findViewById(R.id.remove_big_button)
-        requestButton = findViewById(R.id.request_coins_button)
         currentUser = intent.getSerializableExtra("current_user") as User
         observedUser = intent.getSerializableExtra("observed_user") as User
         setUpButtons()
@@ -48,15 +42,15 @@ class BigProfileActivity : AppCompatActivity() {
      * Sets up the on click listeners for all buttons
      */
     private fun setUpButtons() {
-        appealButton.setOnClickListener {
+        appeal_button.setOnClickListener {
             val intent = Intent(this, AppealActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             startActivity(intent)
         }
-        requestButton.setOnClickListener {
+        request_coins_button.setOnClickListener {
             val intent = Intent(this, RequestCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             startActivity(intent)
         }
-        removeBigButton.setOnClickListener {
+        remove_big_button.setOnClickListener {
             removeBigAndSendBack()
         }
     }
