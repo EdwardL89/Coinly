@@ -28,16 +28,6 @@ class LinkupProfileActivity : AppCompatActivity() {
 
     private lateinit var currentUser: User
     private lateinit var observedUser: User
-    private lateinit var displayName: TextView
-    private lateinit var addAsBigButton: Button
-    private lateinit var addAsLittleButton: Button
-    private lateinit var profilePicture: ImageView
-    private lateinit var prizesGivenLock: ImageView
-    private lateinit var prizesClaimedLock: ImageView
-    private lateinit var noPrizesGivenImage: ImageView
-    private lateinit var noPrizesClaimedImage: ImageView
-    private lateinit var allPrizesGivenRecyclerView: RecyclerView
-    private lateinit var allPrizesClaimedRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,12 +87,12 @@ class LinkupProfileActivity : AppCompatActivity() {
         val alreadyAdded = alreadyAdded(false, observedUser)
         val alreadyReceivedRequest = alreadyReceivedRequest(false, currentUser)
         if (!alreadyRequested && !alreadyAdded && !alreadyReceivedRequest)
-            addAsLittleButton.setOnClickListener {
+            add_as_little_button.setOnClickListener {
                 sendAddNotification(false, observedUser)
-                showRequested(addAsLittleButton)
+                showRequested(add_as_little_button)
             }
-        else if (alreadyRequested) showRequested(addAsLittleButton)
-        else if (alreadyAdded) showAdded(false, addAsLittleButton)
+        else if (alreadyRequested) showRequested(add_as_little_button)
+        else if (alreadyAdded) showAdded(false, add_as_little_button)
         else checkForPendingRequest(currentUser, observedUser, ADDING_AS_BIG)
     }
 
@@ -131,12 +121,12 @@ class LinkupProfileActivity : AppCompatActivity() {
         val alreadyAdded = alreadyAdded(true, observedUser)
         val alreadyReceivedRequest = alreadyReceivedRequest(true, currentUser)
         if (!alreadyRequested && !alreadyAdded && !alreadyReceivedRequest)
-            addAsBigButton.setOnClickListener {
+            add_as_big_button.setOnClickListener {
                 sendAddNotification(true, observedUser)
-                showRequested(addAsBigButton)
+                showRequested(add_as_big_button)
             }
-        else if (alreadyRequested) showRequested(addAsBigButton)
-        else if (alreadyAdded) showAdded(true, addAsBigButton)
+        else if (alreadyRequested) showRequested(add_as_big_button)
+        else if (alreadyAdded) showAdded(true, add_as_big_button)
         else checkForPendingRequest(currentUser, observedUser, ADDING_AS_LITTLE)
     }
 
@@ -153,12 +143,12 @@ class LinkupProfileActivity : AppCompatActivity() {
      * Updates the add-as-little button to show an accept-request message since there's already a pending notification
      */
     private fun setUpAddAsLittleAsAcceptRequest(notification: Notification, updatedCurrentUser: User) {
-        addAsLittleButton.text = getString(R.string.accept_request)
-        addAsLittleButton.isEnabled = true
-        addAsLittleButton.setOnClickListener {
+        add_as_little_button.text = getString(R.string.accept_request)
+        add_as_little_button.isEnabled = true
+        add_as_little_button.setOnClickListener {
             executeAndUpdateNotification(notification, updatedCurrentUser)
-            addAsLittleButton.text = getString(R.string.added_as_little)
-            addAsLittleButton.isEnabled = false
+            add_as_little_button.text = getString(R.string.added_as_little)
+            add_as_little_button.isEnabled = false
         }
     }
 
@@ -166,12 +156,12 @@ class LinkupProfileActivity : AppCompatActivity() {
      * Updates the add-as-big button to show an accept-request message since there's already a pending notification
      */
     private fun setUpAddAsBigAsAcceptRequest(notification: Notification, updatedCurrentUser: User) {
-        addAsBigButton.text = getString(R.string.accept_request)
-        addAsBigButton.isEnabled = true
-        addAsBigButton.setOnClickListener {
+        add_as_big_button.text = getString(R.string.accept_request)
+        add_as_big_button.isEnabled = true
+        add_as_big_button.setOnClickListener {
             executeAndUpdateNotification(notification, updatedCurrentUser)
-            addAsBigButton.text = getString(R.string.added_as_big)
-            addAsBigButton.isEnabled = false
+            add_as_big_button.text = getString(R.string.added_as_big)
+            add_as_big_button.isEnabled = false
         }
     }
 
@@ -241,13 +231,13 @@ class LinkupProfileActivity : AppCompatActivity() {
      * Determines whether we need to hide the prizes given info of the observed user
      */
     private fun setUpPrizesGiven() {
-        if (addAsBigButton.text == "Added as big") {
-            prizesGivenLock.visibility = View.INVISIBLE
+        if (add_as_big_button.text == "Added as big") {
+            prizes_given_lock.visibility = View.INVISIBLE
             prizesGivenRecyclerView.visibility = View.VISIBLE
-            if (observedUser.prizesGiven.size == 0) noPrizesGivenImage.visibility = View.VISIBLE
+            if (observedUser.prizesGiven.size == 0) no_prizes_given_image.visibility = View.VISIBLE
         } else {
-            prizesGivenLock.visibility = View.VISIBLE
-            noPrizesGivenImage.visibility = View.INVISIBLE
+            prizes_given_lock.visibility = View.VISIBLE
+            no_prizes_given_image.visibility = View.INVISIBLE
             prizesGivenRecyclerView.visibility = View.INVISIBLE
         }
     }
@@ -256,13 +246,13 @@ class LinkupProfileActivity : AppCompatActivity() {
      * Determines whether we need to hide the prizes claimed info of the observed user
      */
     private fun setUpPrizesClaimed() {
-        if (addAsLittleButton.text == "Added as little") {
-            prizesClaimedLock.visibility = View.INVISIBLE
+        if (add_as_little_button.text == "Added as little") {
+            prizes_claimed_lock.visibility = View.INVISIBLE
             prizesClaimedRecyclerView.visibility = View.VISIBLE
-            if (observedUser.prizesClaimed.size == 0) noPrizesClaimedImage.visibility = View.VISIBLE
+            if (observedUser.prizesClaimed.size == 0) no_prizes_claimed_image.visibility = View.VISIBLE
         } else {
-            prizesClaimedLock.visibility = View.VISIBLE
-            noPrizesClaimedImage.visibility = View.INVISIBLE
+            prizes_claimed_lock.visibility = View.VISIBLE
+            no_prizes_claimed_image.visibility = View.INVISIBLE
             prizesClaimedRecyclerView.visibility = View.INVISIBLE
         }
     }
@@ -271,16 +261,6 @@ class LinkupProfileActivity : AppCompatActivity() {
      * Instantiates the UI elements to their resource layout IDs
      */
     private fun instantiateUIElements() {
-        addAsBigButton = findViewById(R.id.add_as_big_button)
-        profilePicture = findViewById(R.id.user_profile_picture)
-        displayName = findViewById(R.id.my_display_name_textView)
-        addAsLittleButton = findViewById(R.id.add_as_little_button)
-        prizesGivenLock = findViewById(R.id.prizes_given_lock)
-        prizesClaimedLock = findViewById(R.id.prizes_claimed_lock)
-        noPrizesGivenImage = findViewById(R.id.no_prizes_given_image)
-        noPrizesClaimedImage = findViewById(R.id.no_prizes_claimed_image)
-        allPrizesGivenRecyclerView = findViewById(R.id.prizesGivenRecyclerView)
-        allPrizesClaimedRecyclerView = findViewById(R.id.prizesClaimedRecyclerView)
         currentUser = intent.getSerializableExtra("current_user") as User
         observedUser = intent.getSerializableExtra("observed_user") as User
     }
@@ -289,8 +269,8 @@ class LinkupProfileActivity : AppCompatActivity() {
      * Populates the visible UI elements of this activity to their respective data for the user
      */
     private fun populateUIElements() {
-        displayName.text = observedUser.displayName
-        Glide.with(this).load(observedUser.profilePictureUri).into(profilePicture)
+        my_display_name_textView.text = observedUser.displayName
+        Glide.with(this).load(observedUser.profilePictureUri).into(user_profile_picture)
 
     }
 }

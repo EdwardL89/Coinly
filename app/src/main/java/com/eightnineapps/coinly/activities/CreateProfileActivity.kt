@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
+import kotlinx.android.synthetic.main.activity_create_profile.*
 import java.io.ByteArrayOutputStream
 import kotlin.random.Random
 import kotlin.system.exitProcess
@@ -44,14 +45,6 @@ class CreateProfileActivity : AppCompatActivity() {
      * Must be late initialized because we haven't set the content view yet in the onCreate method
      */
     private lateinit var thisUser: User
-    private lateinit var doneButton: Button
-    private lateinit var addProfilePictureButton: Button
-
-    private lateinit var realNameEditText: EditText
-    private lateinit var displayNameEditText: EditText
-
-    private lateinit var userProfilePicture: ImageView
-
     private lateinit var userProfilePictureByteData: ByteArray
 
     /**
@@ -71,11 +64,6 @@ class CreateProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_create_profile)
         addCoinlyActionBarTitle()
 
-        doneButton = findViewById(R.id.done_button)
-        realNameEditText = findViewById(R.id.real_name_editText)
-        userProfilePicture = findViewById(R.id.user_profile_picture)
-        displayNameEditText = findViewById(R.id.display_name_editText)
-        addProfilePictureButton = findViewById(R.id.add_profile_picture_button)
         userProfilePictureByteData = ByteArrayOutputStream().toByteArray()
 
         setupDoneButton()
@@ -97,7 +85,7 @@ class CreateProfileActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == IMAGE_SELECTION_SUCCESS && resultCode == RESULT_OK) {
-            Glide.with(applicationContext).load(data!!.data).into(userProfilePicture)
+            Glide.with(applicationContext).load(data!!.data).into(user_profile_picture)
             prepareForFirebaseStorageUpload(data)
         }
     }
@@ -144,7 +132,7 @@ class CreateProfileActivity : AppCompatActivity() {
      * Opens the gallery to select a profile picture image
      */
     private fun setupAddProfilePictureButton() {
-        addProfilePictureButton.setOnClickListener {
+        add_profile_picture_button.setOnClickListener {
             val openGallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(openGallery, IMAGE_SELECTION_SUCCESS)
         }
@@ -154,7 +142,7 @@ class CreateProfileActivity : AppCompatActivity() {
      * Creates a new user, writes it to the database, then navigates to the home page
      */
     private fun setupDoneButton() {
-        doneButton.setOnClickListener {
+        done_button.setOnClickListener {
             if (noFieldsEmpty()) {
                 thisUser = createNewUser()
                 uploadUserAndGoToHome(thisUser)
@@ -219,15 +207,15 @@ class CreateProfileActivity : AppCompatActivity() {
      * Determines whether or not all fields are empty
      */
     private fun noFieldsEmpty(): Boolean {
-        return userProfilePictureByteData.isNotEmpty() && realNameEditText.text.toString() != "" && displayNameEditText.text.toString() != ""
+        return userProfilePictureByteData.isNotEmpty() && real_name_editText.text.toString() != "" && display_name_editText.text.toString() != ""
     }
 
     /**
      * Grabs the name information from the UI to create a new user
      */
     private fun createNewUser(): User {
-        val realName = realNameEditText.text.toString()
-        val displayName = displayNameEditText.text.toString()
+        val realName = real_name_editText.text.toString()
+        val displayName = display_name_editText.text.toString()
         val id = generateId()
         val email = auth.currentUser!!.email
         return User(realName, displayName, id, email)

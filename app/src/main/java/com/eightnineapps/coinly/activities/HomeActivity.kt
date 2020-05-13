@@ -15,12 +15,12 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.adapters.ViewPagerAdapter
+import com.eightnineapps.coinly.classes.FirestoreHelper
 import com.eightnineapps.coinly.classes.FragmentBehaviors
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -30,6 +30,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_home.*
 import kotlin.system.exitProcess
 
 /**
@@ -38,14 +39,13 @@ import kotlin.system.exitProcess
  */
 class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var drawerLayout: DrawerLayout
     private lateinit var drawerToggle: ActionBarDrawerToggle
-    private lateinit var navigationView: NavigationView
 
     /**
      * Provides access to data structures for all the below methods
      */
     companion object {
+        val firestoreHelper = FirestoreHelper()
         val database = FirebaseFirestore.getInstance()
         lateinit var tabLayout: TabLayout
     }
@@ -57,14 +57,12 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        drawerLayout = findViewById(R.id.drawer_layout)
-        drawerToggle = ActionBarDrawerToggle(this, drawerLayout, 0, 0)
-        drawerLayout.addDrawerListener(drawerToggle)
+        drawerToggle = ActionBarDrawerToggle(this, drawer_layout, 0, 0)
+        drawer_layout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        navigationView = findViewById(R.id.nv)
-        navigationView.setNavigationItemSelectedListener(this)
+        navigation_view.setNavigationItemSelectedListener(this)
 
         try { // (Temporary fix)
             val usersEmail = auth.currentUser?.email!!
@@ -89,7 +87,7 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
                 signOut()
             }
         }
-        drawerLayout.closeDrawer(GravityCompat.START)
+        drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
 
@@ -97,8 +95,8 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
      * Close the app when the user hits "back"
      */
     override fun onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START)
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
             finishAffinity()
@@ -188,7 +186,7 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
      * Starts a query for a document with the current user's email
      */
     private fun handleWhetherUserHasCreatedProfile(usersEmail: String) {
-        database.collection("users").document(usersEmail).get().addOnCompleteListener { task -> handleQueryTask(task) }
+        firestoreHelper.getUser(usersEmail).addOnCompleteListener { task -> handleQueryTask(task) }
     }
 
     /**

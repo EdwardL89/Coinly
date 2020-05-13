@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.Toast
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.User
+import kotlinx.android.synthetic.main.activity_little_profile.*
 
 /**
  * Displays the prizes the little has claim from you as well as the prizes you have set for the little
@@ -20,17 +21,10 @@ class LittleProfileActivity : AppCompatActivity() {
 
     private lateinit var currentUser: User
     private lateinit var observedUser: User
-    private lateinit var giveCoinsButton: Button
-    private lateinit var revokeCoinsButton: Button
-    private lateinit var removeLittleButton: Button
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_little_profile)
-        giveCoinsButton = findViewById(R.id.give_coins_button)
-        revokeCoinsButton = findViewById(R.id.revoke_coins_button)
-        removeLittleButton = findViewById(R.id.remove_little_button)
         currentUser = intent.getSerializableExtra("current_user") as User
         observedUser = intent.getSerializableExtra("observed_user") as User
         setUpButtons()
@@ -49,15 +43,15 @@ class LittleProfileActivity : AppCompatActivity() {
      * Attaches the on click listeners to all buttons
      */
     private fun setUpButtons() {
-        giveCoinsButton.setOnClickListener {
+        give_coins_button.setOnClickListener {
             val intent = Intent(this, GiveCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             startActivity(intent)
         }
-        revokeCoinsButton.setOnClickListener {
+        revoke_coins_button.setOnClickListener {
             val intent = Intent(this, RevokeCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             startActivity(intent)
         }
-        removeLittleButton.setOnClickListener {
+        remove_little_button.setOnClickListener {
             removeLittleAndSendBack()
         }
     }
