@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import com.eightnineapps.coinly.R
+import kotlinx.android.synthetic.main.activity_edit_profile.*
 
 /**
  * Allows the user to edit their profile information
@@ -18,6 +19,7 @@ class EditProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
         addCoinlyActionBarTitle()
+        setUpButtons()
     }
 
     /**
@@ -39,5 +41,14 @@ class EditProfileActivity : AppCompatActivity() {
         val v: View = LayoutInflater.from(this).inflate(R.layout.app_bar_title, null)
         actionBar.customView = v
         actionBar.setBackgroundDrawable(ColorDrawable(Color.parseColor("#ffffff")))
+    }
+
+    /**
+     * Sets the on click listeners of all buttons of this activity
+     */
+    private fun setUpButtons() {
+        cancel_edit_profile_button.setOnClickListener {
+            finish()
+        }
     }
 }
