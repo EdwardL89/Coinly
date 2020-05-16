@@ -111,6 +111,7 @@ class MyProfileFragment : Fragment() {
     private fun setUpEditProfileButton() {
         editProfileButton.setOnClickListener {
             val intent = Intent(activity, EditProfileActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                .putExtra("current_user", currentUser)
             startActivity(intent)
         }
     }

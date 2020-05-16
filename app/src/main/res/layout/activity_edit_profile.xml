@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:layout_marginTop="10dp"
-            android:text="@string/add"
+            android:text="@string/change"
             android:layout_centerHorizontal="true"
             android:background="@drawable/rounded_button_green"
             android:layout_below="@id/cardView"/>

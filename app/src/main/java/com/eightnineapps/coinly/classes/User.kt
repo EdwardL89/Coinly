@@ -5,12 +5,11 @@ import java.io.Serializable
 /**
  * Represents a user of the app
  */
-class User(_realName: String = "", _displayName: String = "", _id: String = "", _email: String? = ""): Serializable {
+class User(_realName: String = "", _displayName: String = "", _id: String = "", _email: String? = "", _bio: String? = ""): Serializable {
 
-    //Properties
     var coins = 0
-    var isBig = false
     var id = _id
+    var bio = _bio
     var email = _email
     var realName = _realName
     var displayName = _displayName

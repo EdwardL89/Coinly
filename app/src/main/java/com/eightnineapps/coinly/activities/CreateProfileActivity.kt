@@ -2,31 +2,22 @@ package com.eightnineapps.coinly.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.ImageDecoder
 import android.graphics.drawable.ColorDrawable
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
+import com.eightnineapps.coinly.classes.ImageUploader
 import com.eightnineapps.coinly.classes.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_create_profile.*
 import java.io.ByteArrayOutputStream
@@ -37,7 +28,7 @@ import kotlin.system.exitProcess
 /**
  * Creates a new user
  */
-class CreateProfileActivity : AppCompatActivity() {
+class CreateProfileActivity : ImageUploader() {
 
     private var IMAGE_SELECTION_SUCCESS = 1
 
@@ -86,7 +77,7 @@ class CreateProfileActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == IMAGE_SELECTION_SUCCESS && resultCode == RESULT_OK) {
             Glide.with(applicationContext).load(data!!.data).into(user_profile_picture)
-            prepareForFirebaseStorageUpload(data)
+            userProfilePictureByteData = prepareForFirebaseStorageUpload(data)
         }
     }
 
@@ -104,37 +95,11 @@ class CreateProfileActivity : AppCompatActivity() {
     }
 
     /**
-     * Begins the process to upload the selected image to the Firebase storage reference.
-     * Does not upload yet because we need to make sure a new user has been created (hitting the
-     * "done" button) so we can name the image file the user's unique ID.
-     */
-    private fun prepareForFirebaseStorageUpload(data: Intent?) {
-        val selectedImageUri = data!!.data
-        val selectedImageBitmap = convertUriToBitmap(selectedImageUri)
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        selectedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-        userProfilePictureByteData = byteArrayOutputStream.toByteArray()
-    }
-
-    /**
-     * Converts a Uri to a Bitmap
-     */
-    private fun convertUriToBitmap(selectedImageUri: Uri?): Bitmap {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val imageSource = ImageDecoder.createSource(this.contentResolver, selectedImageUri!!)
-            ImageDecoder.decodeBitmap(imageSource)
-        } else {
-            MediaStore.Images.Media.getBitmap(this.contentResolver, selectedImageUri)
-        }
-    }
-
-    /**
      * Opens the gallery to select a profile picture image
      */
     private fun setupAddProfilePictureButton() {
         add_profile_picture_button.setOnClickListener {
-            val openGallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-            startActivityForResult(openGallery, IMAGE_SELECTION_SUCCESS)
+            chooseImageFromGallery()
         }
     }
 
@@ -173,22 +138,6 @@ class CreateProfileActivity : AppCompatActivity() {
     }
 
     /**
-     * Uploads an image's byte data to the Firebase Storage reference
-     */
-    private fun uploadToImageStorage(imageByteData: ByteArray, currentUser: User): UploadTask {
-        return imageStorage.reference.child("profile_pictures").child(currentUser.id).putBytes(imageByteData)
-    }
-
-    /**
-     * Queries the Firebase Storage reference for the user's profile picture
-     */
-    private fun downloadProfilePicture(newUser: User): Task<Uri> {
-        return imageStorage.reference
-            .child("profile_pictures")
-            .child(newUser.id).downloadUrl
-    }
-
-    /**
      * Writes a new user to the database
      */
     private fun uploadToFirestore(newUser: User): Task<Void> {
@@ -207,7 +156,10 @@ class CreateProfileActivity : AppCompatActivity() {
      * Determines whether or not all fields are empty
      */
     private fun noFieldsEmpty(): Boolean {
-        return userProfilePictureByteData.isNotEmpty() && real_name_editText.text.toString() != "" && display_name_editText.text.toString() != ""
+        return userProfilePictureByteData.isNotEmpty() &&
+                real_name_editText.text.toString() != "" &&
+                display_name_editText.text.toString() != "" &&
+                bio_edit_text.text.toString() != ""
     }
 
     /**
@@ -216,9 +168,10 @@ class CreateProfileActivity : AppCompatActivity() {
     private fun createNewUser(): User {
         val realName = real_name_editText.text.toString()
         val displayName = display_name_editText.text.toString()
+        val bio = bio_edit_text.text.toString()
         val id = generateId()
         val email = auth.currentUser!!.email
-        return User(realName, displayName, id, email)
+        return User(realName, displayName, id, email, bio)
     }
 
     /**
