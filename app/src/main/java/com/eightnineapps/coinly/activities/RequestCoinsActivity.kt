@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import com.eightnineapps.coinly.R
+import kotlinx.android.synthetic.main.activity_request.*
 
 /**
  * Allows a little send a request to a big for coins
@@ -18,6 +19,7 @@ class RequestCoinsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_request)
         addCoinlyActionBarTitle()
+        setUpButtons()
     }
 
     /**
@@ -40,4 +42,12 @@ class RequestCoinsActivity : AppCompatActivity() {
         actionBar.setBackgroundDrawable(ColorDrawable(Color.parseColor("#ffffff")))
     }
 
+    /**
+     * Sets the on click listeners of all buttons of this activity
+     */
+    private fun setUpButtons() {
+        cancel_request_coins_button.setOnClickListener {
+            finish()
+        }
+    }
 }

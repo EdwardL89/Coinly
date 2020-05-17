@@ -15,6 +15,7 @@ import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
 import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.classes.Notification
+import com.eightnineapps.coinly.classes.PrizeLoader
 import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_BIG
 import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_LITTLE
 import com.eightnineapps.coinly.classes.User
@@ -24,7 +25,7 @@ import kotlinx.android.synthetic.main.activity_linkup_profile.*
 /**
  * Represents a single user of the app
  */
-class LinkupProfileActivity : AppCompatActivity() {
+class LinkupProfileActivity : PrizeLoader() {
 
     private lateinit var currentUser: User
     private lateinit var observedUser: User
@@ -271,6 +272,18 @@ class LinkupProfileActivity : AppCompatActivity() {
     private fun populateUIElements() {
         my_display_name_textView.text = observedUser.displayName
         Glide.with(this).load(observedUser.profilePictureUri).into(user_profile_picture)
+        coin_count.text = observedUser.coins.toString()
+        bigs_count.text = observedUser.bigs.size.toString()
+        littles_count.text = observedUser.littles.size.toString()
+        bio_text_view.text = observedUser.bio
+        displayPrizesGiven()
+    }
 
+    /**
+     * Load all the prizes given by this user if the recycler view is visible
+     */
+    private fun displayPrizesGiven() {
+        if (prizesGivenRecyclerView.visibility == View.VISIBLE) loadAllPrizesGiven(prizesGivenRecyclerView)
+        if (prizesClaimedRecyclerView.visibility == View.VISIBLE) loadAllPrizesClaimed(prizesClaimedRecyclerView)
     }
 }
