@@ -20,12 +20,12 @@ import com.eightnineapps.coinly.classes.Notification
 import com.eightnineapps.coinly.classes.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
+import org.w3c.dom.Text
 
 class MyProfileFragment : Fragment() {
 
     private lateinit var currentUser: User
     private lateinit var searchIcon: MenuItem
-    private lateinit var prizesRecyclerView: RecyclerView
     private lateinit var notificationsRecyclerView: RecyclerView
     private lateinit var editProfileButton: Button
 
@@ -90,6 +90,7 @@ class MyProfileFragment : Fragment() {
         val myDisplayName = view.findViewById<TextView>(R.id.my_display_name_textView)
         val coinCount = view.findViewById<TextView>(R.id.coin_count)
         val bigsCount = view.findViewById<TextView>(R.id.bigs_count)
+        val bio = view.findViewById<TextView>(R.id.bio_text_view)
         val littlesCount = view.findViewById<TextView>(R.id.littles_count)
         val emptyPrizesImage = view.findViewById<ImageView>(R.id.no_prizes_image)
         val emptyNotificationsImage = view.findViewById<ImageView>(R.id.no_notifications_image)
@@ -97,6 +98,7 @@ class MyProfileFragment : Fragment() {
         setUpEditProfileButton()
         if (currentUser.prizesClaimed.isEmpty()) emptyPrizesImage.visibility = View.VISIBLE else emptyPrizesImage.visibility = View.INVISIBLE
         if (currentUser.notifications.isEmpty()) emptyNotificationsImage.visibility = View.VISIBLE else emptyNotificationsImage.visibility = View.INVISIBLE
+        bio.text = currentUser.bio
         coinCount.text = currentUser.coins.toString()
         bigsCount.text = currentUser.bigs.count().toString()
         littlesCount.text = currentUser.littles.count().toString()
