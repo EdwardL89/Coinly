@@ -1,4 +1,4 @@
-package com.eightnineapps.coinly.activities
+package com.eightnineapps.coinly.views.activities
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -8,16 +8,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import com.eightnineapps.coinly.R
-import kotlinx.android.synthetic.main.activity_appeal.*
+import kotlinx.android.synthetic.main.activity_give_coins.*
 
 /**
- * Allows the little to send an appeal to an action done by the little's big
+ * Lets a big give a chosen number of coins to a little
  */
-class AppealActivity : AppCompatActivity() {
+class GiveCoinsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_appeal)
+        setContentView(R.layout.activity_give_coins)
         addCoinlyActionBarTitle()
         setUpButtons()
     }
@@ -47,7 +47,7 @@ class AppealActivity : AppCompatActivity() {
      * Sets the on click listeners of all buttons of this activity
      */
     private fun setUpButtons() {
-        cancel_appeal_coins_button.setOnClickListener {
+        cancel_give_coins_button.setOnClickListener {
             finish()
         }
     }

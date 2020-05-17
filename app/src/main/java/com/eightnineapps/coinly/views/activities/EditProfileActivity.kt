@@ -1,4 +1,4 @@
-package com.eightnineapps.coinly.activities
+package com.eightnineapps.coinly.views.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent

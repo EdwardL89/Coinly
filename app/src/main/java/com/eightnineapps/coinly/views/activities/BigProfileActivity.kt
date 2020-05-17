@@ -1,30 +1,29 @@
-package com.eightnineapps.coinly.activities
+package com.eightnineapps.coinly.views.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.User
-import kotlinx.android.synthetic.main.activity_little_profile.*
+import kotlinx.android.synthetic.main.activity_big_profile.*
 
 /**
- * Displays the prizes the little has claim from you as well as the prizes you have set for the little
+ * Displays the prizes a little can claim from this big as well as the prizes already claimed
  */
-class LittleProfileActivity : AppCompatActivity() {
+class BigProfileActivity : AppCompatActivity() {
 
     private lateinit var currentUser: User
     private lateinit var observedUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_little_profile)
+        setContentView(R.layout.activity_big_profile)
         currentUser = intent.getSerializableExtra("current_user") as User
         observedUser = intent.getSerializableExtra("observed_user") as User
         setUpButtons()
@@ -40,38 +39,38 @@ class LittleProfileActivity : AppCompatActivity() {
     }
 
     /**
-     * Attaches the on click listeners to all buttons
+     * Sets up the on click listeners for all buttons
      */
     private fun setUpButtons() {
-        give_coins_button.setOnClickListener {
-            val intent = Intent(this, GiveCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        appeal_button.setOnClickListener {
+            val intent = Intent(this, AppealActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             startActivity(intent)
         }
-        revoke_coins_button.setOnClickListener {
-            val intent = Intent(this, RevokeCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        request_coins_button.setOnClickListener {
+            val intent = Intent(this, RequestCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             startActivity(intent)
         }
-        remove_little_button.setOnClickListener {
-            removeLittleAndSendBack()
+        remove_big_button.setOnClickListener {
+            removeBigAndSendBack()
         }
     }
 
     /**
-     * Removes the observed Little and navigates to the previous page
+     * Removes the observed Big and navigates to the previous page
      */
-    private fun removeLittleAndSendBack() {
-        currentUser.littles.remove(observedUser.email)
-        HomeActivity.database.collection("users").document(currentUser.email!!).update("littles", currentUser.littles)
+    private fun removeBigAndSendBack() {
+        currentUser.bigs.remove(observedUser.email)
+        HomeActivity.database.collection("users").document(currentUser.email!!).update("bigs", currentUser.bigs)
         HomeActivity.database.collection("users").document(observedUser.email!!).get().addOnCompleteListener {
                 task ->
-            if (task.isSuccessful) {
-                val mostUpdatedObservedUser = task.result!!.toObject(User::class.java)!!
-                val successfullyRemoved = mostUpdatedObservedUser.bigs.remove(currentUser.email.toString())
-                if (successfullyRemoved) HomeActivity.database.collection("users").document(observedUser.email!!).update("bigs", mostUpdatedObservedUser.bigs)
-            }
+                    if (task.isSuccessful) {
+                        val mostUpdatedObservedUser = task.result!!.toObject(User::class.java)!!
+                        val successfullyRemoved = mostUpdatedObservedUser.littles.remove(currentUser.email.toString())
+                        if (successfullyRemoved) HomeActivity.database.collection("users").document(observedUser.email!!).update("littles", mostUpdatedObservedUser.littles)
+                    }
         }
-        Toast.makeText(this, "Removed ${observedUser.displayName} as a little", Toast.LENGTH_SHORT).show()
-        //TODO: add a listener to the littles recycler view to refresh it after the removal
+        Toast.makeText(this, "Removed ${observedUser.displayName} as a big", Toast.LENGTH_SHORT).show()
+        //TODO: add a listener to the bigs recycler view to refresh it after the removal
         finish()
     }
 

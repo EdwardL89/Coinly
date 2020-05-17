@@ -1,4 +1,4 @@
-package com.eightnineapps.coinly.activities
+package com.eightnineapps.coinly.views.activities
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -8,16 +8,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import com.eightnineapps.coinly.R
-import kotlinx.android.synthetic.main.activity_request.*
+import kotlinx.android.synthetic.main.activity_appeal.*
 
 /**
- * Allows a little send a request to a big for coins
+ * Allows the little to send an appeal to an action done by the little's big
  */
-class RequestCoinsActivity : AppCompatActivity() {
+class AppealActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_request)
+        setContentView(R.layout.activity_appeal)
         addCoinlyActionBarTitle()
         setUpButtons()
     }
@@ -29,6 +29,7 @@ class RequestCoinsActivity : AppCompatActivity() {
         super.finish()
         overridePendingTransition(0, 0)
     }
+
     /**
      * Sets the title of the action bar to the app name in the custom font through an image view
      */
@@ -46,7 +47,7 @@ class RequestCoinsActivity : AppCompatActivity() {
      * Sets the on click listeners of all buttons of this activity
      */
     private fun setUpButtons() {
-        cancel_request_coins_button.setOnClickListener {
+        cancel_appeal_coins_button.setOnClickListener {
             finish()
         }
     }

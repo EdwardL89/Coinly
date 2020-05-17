@@ -7,7 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
-import com.eightnineapps.coinly.activities.CreateProfileActivity
+import com.eightnineapps.coinly.views.activities.CreateProfileActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.storage.UploadTask
 import java.io.ByteArrayOutputStream

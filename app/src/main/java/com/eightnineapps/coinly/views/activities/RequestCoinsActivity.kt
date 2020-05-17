@@ -1,4 +1,4 @@
-package com.eightnineapps.coinly.activities
+package com.eightnineapps.coinly.views.activities
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -8,16 +8,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import com.eightnineapps.coinly.R
-import kotlinx.android.synthetic.main.activity_revoke_coins.*
+import kotlinx.android.synthetic.main.activity_request.*
 
 /**
- * Allows a big to revoke a specified number of coins from a little
+ * Allows a little send a request to a big for coins
  */
-class RevokeCoinsActivity : AppCompatActivity() {
+class RequestCoinsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_revoke_coins)
+        setContentView(R.layout.activity_request)
         addCoinlyActionBarTitle()
         setUpButtons()
     }
@@ -29,7 +29,6 @@ class RevokeCoinsActivity : AppCompatActivity() {
         super.finish()
         overridePendingTransition(0, 0)
     }
-
     /**
      * Sets the title of the action bar to the app name in the custom font through an image view
      */
@@ -47,7 +46,7 @@ class RevokeCoinsActivity : AppCompatActivity() {
      * Sets the on click listeners of all buttons of this activity
      */
     private fun setUpButtons() {
-        cancel_revoke_coins_button.setOnClickListener {
+        cancel_request_coins_button.setOnClickListener {
             finish()
         }
     }

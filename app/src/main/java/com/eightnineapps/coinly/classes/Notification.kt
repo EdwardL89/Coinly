@@ -1,6 +1,6 @@
 package com.eightnineapps.coinly.classes
 
-import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
+import com.eightnineapps.coinly.views.activities.HomeActivity.Companion.database
 import com.eightnineapps.coinly.enums.NotificationType
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot

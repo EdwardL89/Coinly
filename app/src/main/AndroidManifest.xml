@@ -9,17 +9,17 @@
         android:roundIcon="@mipmap/coinly_app_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.RequestCoinsActivity"/>
-        <activity android:name=".activities.AppealActivity" />
-        <activity android:name=".activities.RevokeCoinsActivity" />
-        <activity android:name=".activities.GiveCoinsActivity" />
-        <activity android:name=".activities.EditProfileActivity" />
-        <activity android:name=".activities.LittleProfileActivity" />
-        <activity android:name=".activities.BigProfileActivity" />
-        <activity android:name=".activities.LinkupProfileActivity" />
-        <activity android:name=".activities.CreateProfileActivity" />
+        <activity android:name="com.eightnineapps.coinly.views.activities.RequestCoinsActivity"/>
+        <activity android:name="com.eightnineapps.coinly.views.activities.AppealActivity" />
+        <activity android:name="com.eightnineapps.coinly.views.activities.RevokeCoinsActivity" />
+        <activity android:name="com.eightnineapps.coinly.views.activities.GiveCoinsActivity" />
+        <activity android:name="com.eightnineapps.coinly.views.activities.EditProfileActivity" />
+        <activity android:name="com.eightnineapps.coinly.views.activities.LittleProfileActivity" />
+        <activity android:name="com.eightnineapps.coinly.views.activities.BigProfileActivity" />
+        <activity android:name="com.eightnineapps.coinly.views.activities.LinkupProfileActivity" />
+        <activity android:name="com.eightnineapps.coinly.views.activities.CreateProfileActivity" />
         <activity
-            android:name=".activities.LoginActivity"
+            android:name="com.eightnineapps.coinly.views.activities.LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.HomeActivity"
+            android:name="com.eightnineapps.coinly.views.activities.HomeActivity"
             android:theme="@style/Theme.AppCompat.Light"
             android:windowSoftInputMode="adjustPan" />
     </application>

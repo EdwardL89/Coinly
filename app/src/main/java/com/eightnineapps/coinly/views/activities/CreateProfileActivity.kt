@@ -1,4 +1,4 @@
-package com.eightnineapps.coinly.activities
+package com.eightnineapps.coinly.views.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -11,9 +11,9 @@ import android.view.View
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
-import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
-import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
+import com.eightnineapps.coinly.views.activities.HomeActivity.Companion.database
+import com.eightnineapps.coinly.views.activities.LoginActivity.Companion.TAG
+import com.eightnineapps.coinly.views.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.classes.ImageUploader
 import com.eightnineapps.coinly.classes.User
 import com.google.android.gms.tasks.Task

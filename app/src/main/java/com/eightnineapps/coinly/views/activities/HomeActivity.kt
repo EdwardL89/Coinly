@@ -1,4 +1,4 @@
-package com.eightnineapps.coinly.activities
+package com.eightnineapps.coinly.views.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -17,8 +17,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.viewpager.widget.ViewPager
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.activities.LoginActivity.Companion.TAG
-import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
+import com.eightnineapps.coinly.views.activities.LoginActivity.Companion.TAG
+import com.eightnineapps.coinly.views.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.adapters.ViewPagerAdapter
 import com.eightnineapps.coinly.classes.FirestoreHelper
 import com.eightnineapps.coinly.classes.FragmentBehaviors

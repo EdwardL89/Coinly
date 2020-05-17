@@ -1,19 +1,16 @@
-package com.eightnineapps.coinly.activities
+package com.eightnineapps.coinly.views.activities
 
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.activities.HomeActivity.Companion.database
-import com.eightnineapps.coinly.activities.LoginActivity.Companion.auth
+import com.eightnineapps.coinly.views.activities.HomeActivity.Companion.database
+import com.eightnineapps.coinly.views.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.classes.Notification
 import com.eightnineapps.coinly.classes.PrizeLoader
 import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_BIG

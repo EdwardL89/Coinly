@@ -16,7 +16,7 @@
     android:orientation="vertical"
     android:paddingEnd="5dp"
     android:background="@drawable/my_profile_rounded_background"
-    tools:context=".activities.CreateProfileActivity"
+    tools:context=".views.activities.CreateProfileActivity"
     tools:ignore="RtlSymmetry,UselessParent"
     android:clipToPadding="false">
 
@@ -168,7 +168,7 @@
         android:layout_below="@id/notifications_title"
         android:layout_above="@id/claimed_prizes_title"
         android:layout_alignStart="@id/notifications_title"
-        tools:context=".fragments.AllBigsFragment"/>
+        tools:context=".views.fragments.AllBigsFragment"/>
 
     <ImageView
         android:id="@+id/no_notifications_image"
