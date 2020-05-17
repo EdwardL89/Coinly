@@ -3,9 +3,7 @@ package com.eightnineapps.coinly.fragments
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.activities.HomeActivity

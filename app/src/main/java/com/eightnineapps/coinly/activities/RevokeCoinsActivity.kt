@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import com.eightnineapps.coinly.R
+import kotlinx.android.synthetic.main.activity_revoke_coins.*
 
 /**
  * Allows a big to revoke a specified number of coins from a little
@@ -18,6 +19,7 @@ class RevokeCoinsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_revoke_coins)
         addCoinlyActionBarTitle()
+        setUpButtons()
     }
 
     /**
@@ -39,5 +41,14 @@ class RevokeCoinsActivity : AppCompatActivity() {
         val v: View = LayoutInflater.from(this).inflate(R.layout.app_bar_title, null)
         actionBar.customView = v
         actionBar.setBackgroundDrawable(ColorDrawable(Color.parseColor("#ffffff")))
+    }
+
+    /**
+     * Sets the on click listeners of all buttons of this activity
+     */
+    private fun setUpButtons() {
+        cancel_revoke_coins_button.setOnClickListener {
+            finish()
+        }
     }
 }
