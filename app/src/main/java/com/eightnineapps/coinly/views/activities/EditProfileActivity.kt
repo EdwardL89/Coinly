@@ -1,14 +1,20 @@
 package com.eightnineapps.coinly.views.activities
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.ImageDecoder
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.ImageUploader
@@ -19,7 +25,7 @@ import java.io.ByteArrayOutputStream
 /**
  * Allows the user to edit their profile information
  */
-class EditProfileActivity : ImageUploader() {
+class EditProfileActivity : AppCompatActivity() {
 
     private lateinit var currentUser: User
     private var IMAGE_SELECTION_SUCCESS = 1
@@ -49,7 +55,7 @@ class EditProfileActivity : ImageUploader() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == IMAGE_SELECTION_SUCCESS && resultCode == RESULT_OK) {
             Glide.with(applicationContext).load(data!!.data).into(user_profile_picture)
-            userProfilePictureByteData = prepareForFirebaseStorageUpload(data)
+            userProfilePictureByteData = prepareForFirebaseStorageUpload(data, this)
         }
     }
 
@@ -114,14 +120,38 @@ class EditProfileActivity : ImageUploader() {
     }
 
     private fun updateProfilePicture() {
-        uploadToImageStorage(userProfilePictureByteData, currentUser)
+        //Temporary until view model is implemented:
+        val helper = ImageUploader()
+        helper.uploadToImageStorage(userProfilePictureByteData, currentUser)
             .addOnSuccessListener {
-                downloadProfilePicture(currentUser)
+                helper.downloadProfilePicture(currentUser)
                     .addOnSuccessListener {
                         uri ->
                         currentUser.profilePictureUri = uri.toString()
                         HomeActivity.database.collection("users").document(currentUser.email!!).update("profilePictureUri", currentUser.profilePictureUri)
                     }
             }
+    }
+
+    /**
+     * Begins the process to upload the selected image to the Firebase storage reference.
+     * Does not upload yet because we need to make sure a new user has been created (hitting the
+     * "done" button) so we can name the image file the user's unique ID.
+     */
+    private fun prepareForFirebaseStorageUpload(data: Intent?, context: Context) : ByteArray {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        convertUriToBitmap(data!!.data, context).compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+        return byteArrayOutputStream.toByteArray()
+    }
+
+    /**
+     * Converts a Uri to a Bitmap
+     */
+    private fun convertUriToBitmap(selectedImageUri: Uri?, context: Context): Bitmap {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, selectedImageUri!!))
+        } else {
+            MediaStore.Images.Media.getBitmap(context.contentResolver, selectedImageUri)
+        }
     }
 }
