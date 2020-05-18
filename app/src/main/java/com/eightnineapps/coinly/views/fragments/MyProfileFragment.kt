@@ -6,6 +6,7 @@ import android.view.*
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,7 @@ import com.eightnineapps.coinly.views.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.adapters.NotificationsRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.Notification
 import com.eightnineapps.coinly.classes.User
+import com.eightnineapps.coinly.databinding.FragmentMyProfileBinding
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 
@@ -27,13 +29,19 @@ class MyProfileFragment : Fragment() {
     private lateinit var searchIcon: MenuItem
     private lateinit var notificationsRecyclerView: RecyclerView
     private lateinit var editProfileButton: Button
+    private lateinit var binding: FragmentMyProfileBinding
 
     /**
      * Inflates the my profile fragment
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_my_profile, container, false)
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_profile, container, false)
+
+        val view = binding.root
+
         notificationsRecyclerView = view.findViewById(R.id.notificationsRecyclerView)
+
         return createMyProfileTab(view)
     }
 
@@ -85,8 +93,9 @@ class MyProfileFragment : Fragment() {
      */
     private fun populateMyProfileUI(task: Task<DocumentSnapshot>, view: View) {
         currentUser = task.result!!.toObject(User::class.java)!!
+        binding.currentUser = currentUser
         val myProfilePicture = view.findViewById<ImageView>(R.id.my_profile_picture)
-        val myDisplayName = view.findViewById<TextView>(R.id.my_display_name_textView)
+        //val myDisplayName = view.findViewById<TextView>(R.id.my_display_name_textView)
         val coinCount = view.findViewById<TextView>(R.id.coin_count)
         val bigsCount = view.findViewById<TextView>(R.id.bigs_count)
         val bio = view.findViewById<TextView>(R.id.bio_text_view)
@@ -102,7 +111,7 @@ class MyProfileFragment : Fragment() {
         bigsCount.text = currentUser.bigs.count().toString()
         littlesCount.text = currentUser.littles.count().toString()
         Glide.with(activity!!).load(currentUser.profilePictureUri).into(myProfilePicture)
-        myDisplayName.text = currentUser.displayName
+        //myDisplayName.text = currentUser.displayName
         updateNotifications(notificationsRecyclerView, currentUser.notifications)
     }
 
