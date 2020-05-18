@@ -24,13 +24,6 @@ class CreateProfileActivity : AppCompatActivity() {
     private lateinit var createProfileViewModel: CreateProfileViewModel
 
     /**
-     * Placed in a companion object to allow access to a single instance to all other activities
-     */
-    companion object {
-        val imageStorage = Firebase.storage
-    }
-
-    /**
      * Initializes what's required for the user to create their profile
      */
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +69,7 @@ class CreateProfileActivity : AppCompatActivity() {
      */
     private fun setupAddProfilePictureButton() {
         add_profile_picture_button.setOnClickListener {
-            createProfileViewModel.chooseImageFromGallery(this)
+            createProfileViewModel.imgUploadHelper.chooseImageFromGallery(this)
         }
     }
 

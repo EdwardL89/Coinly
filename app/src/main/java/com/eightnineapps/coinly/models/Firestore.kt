@@ -3,12 +3,13 @@ package com.eightnineapps.coinly.models
 import com.eightnineapps.coinly.classes.User
 import com.eightnineapps.coinly.interfaces.Repository
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 
 /**
  * Model that provides access to the Firebase Firestore
  */
-class Firestore : Repository<User, Void, Task<Void>> {
+class Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
 
     private val database = FirebaseFirestore.getInstance()
 
@@ -16,11 +17,14 @@ class Firestore : Repository<User, Void, Task<Void>> {
         return database.collection("users").document(data.email.toString()).set(data)
     }
 
-    override fun update(user: User): Task<Void> {
-        TODO("Not yet implemented")
+    override fun update(user: User, field: String, value: String): Task<Void> {
+        return database.collection("users").document(user.email!!).update(field, value)
     }
 
-    override fun read(user: User): Task<Void> {
-        TODO("Not yet implemented")
+    override fun read(user: User): DocumentReference {
+        return database.collection("users").document(user.email!!)
     }
+
+    fun getInstance() = database
+
 }

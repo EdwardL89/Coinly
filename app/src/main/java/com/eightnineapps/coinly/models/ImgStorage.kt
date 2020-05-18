@@ -11,7 +11,7 @@ import com.google.firebase.storage.ktx.storage
 /**
  * Model that provides access to the Firebase Storage
  */
-class ImgStorage : Repository<ByteArray, Uri, UploadTask> {
+class ImgStorage : Repository<ByteArray, Uri, Task<Uri>, UploadTask> {
 
     private val imageStorage = Firebase.storage
 
@@ -19,7 +19,7 @@ class ImgStorage : Repository<ByteArray, Uri, UploadTask> {
         return imageStorage.reference.child("profile_pictures").child(path).putBytes(data)
     }
 
-    override fun update(user: User): Task<Uri> {
+    override fun update(user: User, field: String, value: String): Task<Uri> {
         TODO("Not yet implemented")
     }
 

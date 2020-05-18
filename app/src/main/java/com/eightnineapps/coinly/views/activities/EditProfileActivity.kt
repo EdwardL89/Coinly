@@ -1,41 +1,31 @@
 package com.eightnineapps.coinly.views.activities
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.ImageDecoder
 import android.graphics.drawable.ColorDrawable
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.classes.ImageUploader
-import com.eightnineapps.coinly.classes.User
+import com.eightnineapps.coinly.viewmodels.EditProfileViewModel
 import kotlinx.android.synthetic.main.activity_edit_profile.*
-import java.io.ByteArrayOutputStream
 
 /**
  * Allows the user to edit their profile information
  */
 class EditProfileActivity : AppCompatActivity() {
 
-    private lateinit var currentUser: User
-    private var IMAGE_SELECTION_SUCCESS = 1
-    private lateinit var userProfilePictureByteData: ByteArray
+    private lateinit var editProfileViewModel: EditProfileViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        editProfileViewModel = ViewModelProvider(this).get(EditProfileViewModel::class.java)
+        editProfileViewModel.instantiateCurrentUser(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
         addCoinlyActionBarTitle()
-        userProfilePictureByteData = ByteArrayOutputStream().toByteArray()
         populateUserDetailFields()
         setUpButtons()
     }
@@ -53,10 +43,7 @@ class EditProfileActivity : AppCompatActivity() {
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == IMAGE_SELECTION_SUCCESS && resultCode == RESULT_OK) {
-            Glide.with(applicationContext).load(data!!.data).into(user_profile_picture)
-            userProfilePictureByteData = prepareForFirebaseStorageUpload(data, this)
-        }
+        editProfileViewModel.handleGallerySelectionCompletion(requestCode, resultCode, data, applicationContext, this, user_profile_picture)
     }
 
     /**
@@ -67,8 +54,7 @@ class EditProfileActivity : AppCompatActivity() {
         val actionBar = this.supportActionBar!!
         actionBar.setDisplayShowCustomEnabled(true)
         actionBar.setDisplayShowTitleEnabled(false)
-        val v: View = LayoutInflater.from(this).inflate(R.layout.app_bar_title, null)
-        actionBar.customView = v
+        actionBar.customView = LayoutInflater.from(this).inflate(R.layout.app_bar_title, null)
         actionBar.setBackgroundDrawable(ColorDrawable(Color.parseColor("#ffffff")))
     }
 
@@ -76,7 +62,7 @@ class EditProfileActivity : AppCompatActivity() {
      * Populates all the editable fields of the user's profile with the existing information
      */
     private fun populateUserDetailFields() {
-        currentUser = intent.getSerializableExtra("current_user") as User
+        val currentUser = editProfileViewModel.currentUser
         Glide.with(this).load(currentUser.profilePictureUri).into(user_profile_picture)
         real_name_editText.setText(currentUser.realName)
         display_name_editText.setText(currentUser.displayName)
@@ -91,67 +77,11 @@ class EditProfileActivity : AppCompatActivity() {
             finish()
         }
         done_edit_profile_button.setOnClickListener {
-            commitProfileChanges()
+            editProfileViewModel.updateUserFields(real_name_editText, display_name_editText, bio_edit_text)
+            editProfileViewModel.commitProfileChanges(this)
         }
         add_profile_picture_button.setOnClickListener {
-            val openGallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-            startActivityForResult(openGallery, IMAGE_SELECTION_SUCCESS)
-        }
-    }
-
-    /**
-     * Updates the user object in the firestore with the changes made
-     */
-    private fun commitProfileChanges() {
-        currentUser.realName = real_name_editText.text.toString()
-        currentUser.displayName = display_name_editText.text.toString()
-        currentUser.bio = bio_edit_text.text.toString()
-        updateProfilePicture()
-
-        val writeBatch = HomeActivity.database.batch()
-        val userReference = HomeActivity.database.collection("users").document(currentUser.email!!)
-        writeBatch.update(userReference, "realName", currentUser.realName)
-        writeBatch.update(userReference, "displayName", currentUser.displayName)
-        writeBatch.update(userReference, "bio", currentUser.bio)
-        writeBatch.commit().addOnSuccessListener {
-            Toast.makeText(this, "Changes Saved!", Toast.LENGTH_SHORT).show()
-            finish()
-        }
-    }
-
-    private fun updateProfilePicture() {
-        //Temporary until view model is implemented:
-        val helper = ImageUploader()
-        helper.uploadToImageStorage(userProfilePictureByteData, currentUser)
-            .addOnSuccessListener {
-                helper.downloadProfilePicture(currentUser)
-                    .addOnSuccessListener {
-                        uri ->
-                        currentUser.profilePictureUri = uri.toString()
-                        HomeActivity.database.collection("users").document(currentUser.email!!).update("profilePictureUri", currentUser.profilePictureUri)
-                    }
-            }
-    }
-
-    /**
-     * Begins the process to upload the selected image to the Firebase storage reference.
-     * Does not upload yet because we need to make sure a new user has been created (hitting the
-     * "done" button) so we can name the image file the user's unique ID.
-     */
-    private fun prepareForFirebaseStorageUpload(data: Intent?, context: Context) : ByteArray {
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        convertUriToBitmap(data!!.data, context).compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-        return byteArrayOutputStream.toByteArray()
-    }
-
-    /**
-     * Converts a Uri to a Bitmap
-     */
-    private fun convertUriToBitmap(selectedImageUri: Uri?, context: Context): Bitmap {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, selectedImageUri!!))
-        } else {
-            MediaStore.Images.Media.getBitmap(context.contentResolver, selectedImageUri)
+            editProfileViewModel.imgUploadHelper.chooseImageFromGallery(this)
         }
     }
 }

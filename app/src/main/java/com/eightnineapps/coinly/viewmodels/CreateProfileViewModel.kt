@@ -1,13 +1,7 @@
 package com.eightnineapps.coinly.viewmodels
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
-import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
 import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
@@ -16,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.classes.AuthHelper
+import com.eightnineapps.coinly.classes.ImageUploadHelper
 import com.eightnineapps.coinly.classes.User
 import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.models.ImgStorage
@@ -25,6 +20,7 @@ import kotlin.random.Random
 
 class CreateProfileViewModel : ViewModel() {
 
+    val imgUploadHelper = ImageUploadHelper()
     private val firestore = Firestore()
     private val imgStorage = ImgStorage()
     private val authHelper = AuthHelper()
@@ -45,16 +41,8 @@ class CreateProfileViewModel : ViewModel() {
     fun handleGallerySelectionCompletion(requestCode: Int, resultCode: Int, data: Intent?, appContext: Context, context: Context, profilePictureImgView: ImageView) {
         if (requestCode == 1 && resultCode == AppCompatActivity.RESULT_OK) {
             Glide.with(appContext).load(data!!.data).into(profilePictureImgView)
-            userProfilePictureByteData = prepareForFirebaseStorageUpload(data, context)
+            userProfilePictureByteData = imgUploadHelper.prepareForFirebaseStorageUpload(data, context)
         }
-    }
-
-    /**
-     * Opens the gallery app and returns the selected image
-     */
-    fun chooseImageFromGallery(context: Context) {
-        val openGallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-        (context as Activity).startActivityForResult(openGallery, 1)
     }
 
     /**
@@ -91,25 +79,5 @@ class CreateProfileViewModel : ViewModel() {
     private fun goToHomePage(context: Context) {
         val intent = Intent(context, HomeActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         context.startActivity(intent)
-    }
-
-    /**
-     * Begins the process to upload the selected image to the Firebase storage reference.
-     */
-    private fun prepareForFirebaseStorageUpload(data: Intent?, context: Context) : ByteArray {
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        convertUriToBitmap(data!!.data, context).compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-        return byteArrayOutputStream.toByteArray()
-    }
-
-    /**
-     * Converts a Uri to a Bitmap
-     */
-    private fun convertUriToBitmap(selectedImageUri: Uri?, context: Context): Bitmap {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, selectedImageUri!!))
-        } else {
-            MediaStore.Images.Media.getBitmap(context.contentResolver, selectedImageUri)
-        }
     }
 }
