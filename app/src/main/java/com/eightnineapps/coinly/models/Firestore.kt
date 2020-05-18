@@ -10,7 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore
  */
 class Firestore : Repository<User, Void, Task<Void>> {
 
-    val database = FirebaseFirestore.getInstance()
+    private val database = FirebaseFirestore.getInstance()
 
     override fun insert(data: User, path: String): Task<Void> {
         return database.collection("users").document(data.email.toString()).set(data)
@@ -23,5 +23,4 @@ class Firestore : Repository<User, Void, Task<Void>> {
     override fun read(user: User): Task<Void> {
         TODO("Not yet implemented")
     }
-
 }

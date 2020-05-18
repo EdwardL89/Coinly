@@ -15,18 +15,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import com.bumptech.glide.Glide
+import com.eightnineapps.coinly.classes.AuthHelper
 import com.eightnineapps.coinly.classes.User
 import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.models.ImgStorage
 import com.eightnineapps.coinly.views.activities.HomeActivity
-import com.eightnineapps.coinly.views.activities.LoginActivity.Companion.auth
 import java.io.ByteArrayOutputStream
 import kotlin.random.Random
 
 class CreateProfileViewModel : ViewModel() {
 
-    private val firestore: Firestore = Firestore()
-    private val imgStorage: ImgStorage = ImgStorage()
+    private val firestore = Firestore()
+    private val imgStorage = ImgStorage()
+    private val authHelper = AuthHelper()
     private val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
     private var userProfilePictureByteData = ByteArrayOutputStream().toByteArray()
 
@@ -34,7 +35,7 @@ class CreateProfileViewModel : ViewModel() {
      * Makes sure all fields are filled in before continuing
      */
     fun verifyProfileCreationIsComplete(context: Context, realName: EditText, displayName: EditText, bio: EditText) {
-        if (noFieldsEmpty(realName, displayName, bio)) uploadUserAndGoToHome(User(realName.text.toString(), displayName.text.toString(), generateId(), auth.currentUser?.email!!, bio.text.toString()), context)
+        if (noFieldsEmpty(realName, displayName, bio)) uploadUserAndGoToHome(User(realName.text.toString(), displayName.text.toString(), generateId(), authHelper.getAuthUserEmail(), bio.text.toString()), context)
         else Toast.makeText(context, "Info missing!", Toast.LENGTH_SHORT).show()
     }
 
@@ -94,8 +95,6 @@ class CreateProfileViewModel : ViewModel() {
 
     /**
      * Begins the process to upload the selected image to the Firebase storage reference.
-     * Does not upload yet because we need to make sure a new user has been created (hitting the
-     * "done" button) so we can name the image file the user's unique ID.
      */
     private fun prepareForFirebaseStorageUpload(data: Intent?, context: Context) : ByteArray {
         val byteArrayOutputStream = ByteArrayOutputStream()
