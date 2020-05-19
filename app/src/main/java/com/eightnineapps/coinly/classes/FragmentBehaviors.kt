@@ -123,7 +123,7 @@ abstract class FragmentBehaviors : AppCompatActivity() {
                 }
             }
         } catch (e: Exception) {
-            Log.w(LoginActivity.TAG, e.message.toString())
+            Log.w("INFO", e.message.toString())
         }
     }
 

@@ -8,18 +8,21 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.views.activities.EditProfileActivity
-import com.eightnineapps.coinly.views.activities.HomeActivity.Companion.database
-import com.eightnineapps.coinly.views.activities.HomeActivity.Companion.firestoreHelper
-import com.eightnineapps.coinly.views.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.adapters.NotificationsRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.Notification
 import com.eightnineapps.coinly.classes.User
 import com.eightnineapps.coinly.databinding.FragmentMyProfileBinding
+import com.eightnineapps.coinly.models.CurrentUser
+import com.eightnineapps.coinly.models.Firestore
+import com.eightnineapps.coinly.viewmodels.MyProfileViewModel
+import com.eightnineapps.coinly.views.activities.EditProfileActivity
+import com.eightnineapps.coinly.views.activities.HomeActivity.Companion.database
+import com.eightnineapps.coinly.views.activities.LoginActivity.Companion.auth
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 
@@ -30,18 +33,17 @@ class MyProfileFragment : Fragment() {
     private lateinit var notificationsRecyclerView: RecyclerView
     private lateinit var editProfileButton: Button
     private lateinit var binding: FragmentMyProfileBinding
+    private lateinit var myProfileViewModel: MyProfileViewModel
+
 
     /**
      * Inflates the my profile fragment
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
+        myProfileViewModel = ViewModelProvider(this).get(MyProfileViewModel::class.java)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_profile, container, false)
-
         val view = binding.root
-
         notificationsRecyclerView = view.findViewById(R.id.notificationsRecyclerView)
-
         return createMyProfileTab(view)
     }
 
@@ -84,7 +86,9 @@ class MyProfileFragment : Fragment() {
      * Sets up the My Profile tab fragment for the user
      */
     private fun createMyProfileTab(view: View): View {
-        firestoreHelper.getUser(auth.currentUser?.email!!).addOnCompleteListener { task -> populateMyProfileUI(task, view) }
+        val user = User()
+        user.email = auth.currentUser?.email!!
+        Firestore.read(user).get().addOnCompleteListener { task -> populateMyProfileUI(task, view) }
         return view
     }
 
@@ -93,7 +97,9 @@ class MyProfileFragment : Fragment() {
      */
     private fun populateMyProfileUI(task: Task<DocumentSnapshot>, view: View) {
         currentUser = task.result!!.toObject(User::class.java)!!
-        binding.currentUser = currentUser
+        CurrentUser.instance = currentUser
+        CurrentUser.realName.value = currentUser.realName
+        binding.currentUser = CurrentUser
         val myProfilePicture = view.findViewById<ImageView>(R.id.my_profile_picture)
         //val myDisplayName = view.findViewById<TextView>(R.id.my_display_name_textView)
         val coinCount = view.findViewById<TextView>(R.id.coin_count)

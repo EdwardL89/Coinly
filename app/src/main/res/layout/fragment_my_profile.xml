@@ -4,9 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
+        <import type="com.eightnineapps.coinly.models.CurrentUser"/>
         <variable
             name="currentUser"
-            type="com.eightnineapps.coinly.classes.User"/>
+            type="CurrentUser"/>
     </data>
     <LinearLayout
         android:layout_width="match_parent"
@@ -130,7 +131,6 @@
                 android:layout_alignStart="@id/coin_count_title"
                 android:layout_alignEnd="@id/littles_count_title"/>
         </RelativeLayout>
-        <!--"@string/display_name_holder"-->
 
         <TextView
             android:id="@+id/my_display_name_textView"
@@ -139,7 +139,7 @@
             android:layout_alignStart="@+id/cardView"
             android:layout_below="@+id/cardView"
             android:layout_gravity="center"
-            android:text="@{currentUser.displayName}"
+            android:text="@{currentUser.instance.realName}"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"/>

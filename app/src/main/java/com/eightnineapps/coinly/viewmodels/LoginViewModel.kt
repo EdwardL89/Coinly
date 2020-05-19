@@ -3,9 +3,13 @@ package com.eightnineapps.coinly.viewmodels
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.classes.AuthHelper
+import com.eightnineapps.coinly.classes.User
+import com.eightnineapps.coinly.models.Firestore
+import com.eightnineapps.coinly.views.activities.CreateProfileActivity
 import com.eightnineapps.coinly.views.activities.HomeActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -13,6 +17,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.DocumentSnapshot
 
 class LoginViewModel : ViewModel() {
 
@@ -23,7 +28,22 @@ class LoginViewModel : ViewModel() {
      */
     fun updateUI(context: Context) {
         if (authHelper.getAuthUser() != null) {
-            context.startActivity(Intent(context, HomeActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+            val user = User()
+            user.email = authHelper.getAuthUserEmail()
+            Firestore.read(user).get().addOnCompleteListener { task -> handleQueryTask(task, context) }
+        }
+    }
+
+    /**
+     * Populates home screen or re-directs to the profile creation activity depending on whether a document
+     * with the user's email was found
+     */
+    private fun handleQueryTask(task: Task<DocumentSnapshot>, context: Context) {
+        if (task.isSuccessful) {
+            if (!task.result?.exists()!!) context.startActivity(Intent(context, CreateProfileActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+            else context.startActivity(Intent(context, HomeActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+        } else {
+            Log.w("INFO", task.exception)
         }
     }
 

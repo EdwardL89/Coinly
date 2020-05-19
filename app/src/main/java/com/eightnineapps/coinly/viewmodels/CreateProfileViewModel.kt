@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.classes.AuthHelper
@@ -20,10 +21,8 @@ import kotlin.random.Random
 
 class CreateProfileViewModel : ViewModel() {
 
+    val authHelper = AuthHelper()
     val imgUploadHelper = ImageUploadHelper()
-    private val firestore = Firestore()
-    private val imgStorage = ImgStorage()
-    private val authHelper = AuthHelper()
     private val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
     private var userProfilePictureByteData = ByteArrayOutputStream().toByteArray()
 
@@ -65,9 +64,9 @@ class CreateProfileViewModel : ViewModel() {
      * uploads the user to the Firestore
      */
     private fun uploadUserAndGoToHome(newUser: User, context: Context) {
-        imgStorage.insert(userProfilePictureByteData, newUser.id).addOnSuccessListener {
-                imgStorage.read(newUser).addOnSuccessListener { uri -> newUser.profilePictureUri = uri.toString()
-                        firestore.insert(newUser).addOnSuccessListener { goToHomePage(context)
+        ImgStorage.insert(userProfilePictureByteData, newUser.id).addOnSuccessListener {
+            ImgStorage.read(newUser).addOnSuccessListener { uri -> newUser.profilePictureUri = uri.toString()
+                        Firestore.insert(newUser).addOnSuccessListener { goToHomePage(context)
                             }.addOnFailureListener { Log.w("INFO", "Could not upload user to Firestore") }
                     }.addOnFailureListener { Log.w("INFO", "Could not download from Storage") }
             }.addOnFailureListener { Log.w("INFO", "Could not upload to Firebase storage") }

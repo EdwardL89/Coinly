@@ -18,8 +18,6 @@ import java.io.ByteArrayOutputStream
 class EditProfileViewModel: ViewModel() {
 
     val imgUploadHelper = ImageUploadHelper()
-    private val firestore = Firestore()
-    private val imgStorage = ImgStorage()
     private var userProfilePictureByteData = ByteArrayOutputStream().toByteArray()
     lateinit var currentUser: User
         private set
@@ -28,8 +26,8 @@ class EditProfileViewModel: ViewModel() {
      * Updates the user object in the firestore with the changes made
      */
     fun commitProfileChanges(context: Context) {
-        val writeBatch = firestore.getInstance().batch()
-        val userReference = firestore.read(currentUser)
+        val writeBatch = Firestore.getInstance().batch()
+        val userReference = Firestore.read(currentUser)
         writeBatch.update(userReference, "realName", currentUser.realName)
         writeBatch.update(userReference, "displayName", currentUser.displayName)
         writeBatch.update(userReference, "bio", currentUser.bio)
@@ -70,10 +68,10 @@ class EditProfileViewModel: ViewModel() {
      * Uploads image to storage nad updates the user's Uri
      */
     private fun updateProfilePicture(user: User) {
-        imgStorage.insert(userProfilePictureByteData, user.id).addOnSuccessListener {
-                imgStorage.read(user).addOnSuccessListener {
+        ImgStorage.insert(userProfilePictureByteData, user.id).addOnSuccessListener {
+            ImgStorage.read(user).addOnSuccessListener {
                             uri -> user.profilePictureUri = uri.toString()
-                            firestore.update(user, "profilePictureUri", user.profilePictureUri)
+                            Firestore.update(user, "profilePictureUri", user.profilePictureUri)
                     }
             }
     }

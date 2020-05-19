@@ -9,7 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 /**
  * Model that provides access to the Firebase Firestore
  */
-class Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
+object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
 
     private val database = FirebaseFirestore.getInstance()
 

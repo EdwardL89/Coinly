@@ -21,7 +21,6 @@ class LoginActivity : AppCompatActivity() {
 
     companion object {
         var auth = FirebaseAuth.getInstance()
-        var TAG = "INFO"
     }
 
     /**
@@ -53,25 +52,14 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.checkAndHandleActivityResultCode(requestCode, data, this)
     }
 
-
     /**
      * Creates the Google sign-in button and initiates the Firebase authentication process
      */
     private fun setupSignInButton() {
         sign_in_button.setOnClickListener {
-            startActivityForResult(GoogleSignIn.getClient(this, buildGoogleSignInOption())
+            startActivityForResult(GoogleSignIn.getClient(this, GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build())
                 .signInIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION), 1)
         }
-    }
-
-    /**
-     * Builds the Google sign-in option for the user
-     */
-    private fun buildGoogleSignInOption(): GoogleSignInOptions {
-        return GoogleSignInOptions
-            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
     }
 }

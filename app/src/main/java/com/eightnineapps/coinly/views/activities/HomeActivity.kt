@@ -1,13 +1,11 @@
 package com.eightnineapps.coinly.views.activities
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -15,20 +13,15 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.views.activities.LoginActivity.Companion.TAG
-import com.eightnineapps.coinly.views.activities.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.adapters.ViewPagerAdapter
-import com.eightnineapps.coinly.classes.FirestoreHelper
+import com.eightnineapps.coinly.classes.AuthHelper
 import com.eightnineapps.coinly.classes.FragmentBehaviors
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.tasks.Task
+import com.eightnineapps.coinly.viewmodels.HomeViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlin.system.exitProcess
@@ -40,12 +33,13 @@ import kotlin.system.exitProcess
 class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
+    private lateinit var homeViewModel: HomeViewModel
+    private val authHelper = AuthHelper()
 
     /**
      * Provides access to data structures for all the below methods
      */
     companion object {
-        val firestoreHelper = FirestoreHelper()
         val database = FirebaseFirestore.getInstance()
         lateinit var tabLayout: TabLayout
     }
@@ -54,25 +48,12 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
      * Initializes required elements of the home page
      */
     override fun onCreate(savedInstanceState: Bundle?) {
+        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
-        drawerToggle = ActionBarDrawerToggle(this, drawer_layout, 0, 0)
-        drawer_layout.addDrawerListener(drawerToggle)
-        drawerToggle.syncState()
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-        navigation_view.setNavigationItemSelectedListener(this)
-
-        try { // (Temporary fix)
-            val usersEmail = auth.currentUser?.email!!
-            handleWhetherUserHasCreatedProfile(usersEmail)
-        } catch (e: Exception) {
-            Log.w(TAG, "Navigating to createProfile activity..?")
-        }
-
         addCoinlyActionBarTitle()
         addTabLayout()
+        setUpDrawer()
     }
 
     /**
@@ -84,7 +65,7 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
             }
             R.id.sign_out -> {
-                signOut()
+                authHelper.signOut(this, applicationContext)
             }
         }
         drawer_layout.closeDrawer(GravityCompat.START)
@@ -118,6 +99,17 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (drawerToggle.onOptionsItemSelected(item)) return true
         return super.onOptionsItemSelected(item)
+    }
+
+    /**
+     * Sets up the navigation drawer
+     */
+    private fun setUpDrawer() {
+        drawerToggle = ActionBarDrawerToggle(this, drawer_layout, 0, 0)
+        drawer_layout.addDrawerListener(drawerToggle)
+        drawerToggle.syncState()
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        navigation_view.setNavigationItemSelectedListener(this)
     }
 
     /**
@@ -180,47 +172,5 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
             }
         })
         tabLayout.getTabAt(0)?.select()
-    }
-
-    /**
-     * Starts a query for a document with the current user's email
-     */
-    private fun handleWhetherUserHasCreatedProfile(usersEmail: String) {
-        firestoreHelper.getUser(usersEmail).addOnCompleteListener { task -> handleQueryTask(task) }
-    }
-
-    /**
-     * Populates home screen or re-directs to the profile creation activity depending on whether a document
-     * with the user's email was found
-     */
-    private fun handleQueryTask(task: Task<DocumentSnapshot>) {
-        if (task.isSuccessful) {
-            if (!task.result?.exists()!!) startActivity(Intent(this, CreateProfileActivity::class.java))
-        } else {
-            Log.w(TAG, task.exception)
-        }
-    }
-
-    /**
-     * Creates the sign-out button and initiates the Firebase and Google sign-out process
-     */
-    private fun signOut() {
-        val googleSignInOption: GoogleSignInOptions = buildGoogleSignOutOption()
-        val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOption)
-        auth.signOut() // Sign out of Firebase
-        googleSignInClient.signOut().addOnCompleteListener{ // Sign out of the Google account
-            startActivity(Intent(applicationContext, LoginActivity::class.java))
-            this.finish()
-        }
-    }
-
-    /**
-     * Builds the Google sign-out option for the user
-     */
-    private fun buildGoogleSignOutOption(): GoogleSignInOptions {
-        return GoogleSignInOptions
-            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build()
     }
 }

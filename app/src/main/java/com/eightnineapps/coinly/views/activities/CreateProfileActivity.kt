@@ -10,10 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.viewmodels.CreateProfileViewModel
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_create_profile.*
-import kotlin.system.exitProcess
 
 
 /**
@@ -40,8 +37,7 @@ class CreateProfileActivity : AppCompatActivity() {
      */
     override fun onBackPressed() {
         super.onBackPressed()
-        finishAffinity()
-        exitProcess(0)
+        createProfileViewModel.authHelper.signOut(this, applicationContext)
     }
 
     /**
@@ -50,6 +46,14 @@ class CreateProfileActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         createProfileViewModel.handleGallerySelectionCompletion(requestCode, resultCode, data, applicationContext, this, user_profile_picture)
+    }
+
+    /**
+     * Makes for a clean transition back to the previous activity with no animation or flashes
+     */
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(0, 0)
     }
 
     /**

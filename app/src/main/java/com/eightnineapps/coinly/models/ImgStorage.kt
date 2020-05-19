@@ -11,7 +11,7 @@ import com.google.firebase.storage.ktx.storage
 /**
  * Model that provides access to the Firebase Storage
  */
-class ImgStorage : Repository<ByteArray, Uri, Task<Uri>, UploadTask> {
+object ImgStorage : Repository<ByteArray, Uri, Task<Uri>, UploadTask> {
 
     private val imageStorage = Firebase.storage
 
