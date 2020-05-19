@@ -40,8 +40,13 @@ class LoginViewModel : ViewModel() {
      */
     private fun handleQueryTask(task: Task<DocumentSnapshot>, context: Context) {
         if (task.isSuccessful) {
-            if (!task.result?.exists()!!) context.startActivity(Intent(context, CreateProfileActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
-            else context.startActivity(Intent(context, HomeActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+            if (!task.result?.exists()!!) {
+                context.startActivity(Intent(context, CreateProfileActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+            } else {
+                context.startActivity(Intent(context, HomeActivity::class.java)
+                    .putExtra("current_user", task.result?.toObject(User::class.java)!!)
+                    .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+            }
         } else {
             Log.w("INFO", task.exception)
         }

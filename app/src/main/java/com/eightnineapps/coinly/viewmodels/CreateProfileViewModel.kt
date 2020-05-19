@@ -7,7 +7,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.classes.AuthHelper
@@ -66,7 +65,7 @@ class CreateProfileViewModel : ViewModel() {
     private fun uploadUserAndGoToHome(newUser: User, context: Context) {
         ImgStorage.insert(userProfilePictureByteData, newUser.id).addOnSuccessListener {
             ImgStorage.read(newUser).addOnSuccessListener { uri -> newUser.profilePictureUri = uri.toString()
-                        Firestore.insert(newUser).addOnSuccessListener { goToHomePage(context)
+                        Firestore.insert(newUser).addOnSuccessListener { goToHomePage(context, newUser)
                             }.addOnFailureListener { Log.w("INFO", "Could not upload user to Firestore") }
                     }.addOnFailureListener { Log.w("INFO", "Could not download from Storage") }
             }.addOnFailureListener { Log.w("INFO", "Could not upload to Firebase storage") }
@@ -75,8 +74,10 @@ class CreateProfileViewModel : ViewModel() {
     /**
      * Launches an intent to go to the home page activity
      */
-    private fun goToHomePage(context: Context) {
-        val intent = Intent(context, HomeActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+    private fun goToHomePage(context: Context, user: User) {
+        val intent = Intent(context, HomeActivity::class.java)
+            .putExtra("current_user", user)
+            .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         context.startActivity(intent)
     }
 }

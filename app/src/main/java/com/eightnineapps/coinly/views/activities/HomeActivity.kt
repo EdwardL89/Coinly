@@ -49,6 +49,7 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        homeViewModel.setCurrentUser(intent)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         addCoinlyActionBarTitle()
