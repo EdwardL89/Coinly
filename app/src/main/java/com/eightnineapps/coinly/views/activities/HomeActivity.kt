@@ -14,7 +14,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager.widget.ViewPager
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.adapters.ViewPagerAdapter
 import com.eightnineapps.coinly.classes.AuthHelper
@@ -130,10 +129,9 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
      * Adds the tab layout to the screen and sets the viewPager
      */
     private fun addTabLayout() {
-        val viewPager = findViewById<ViewPager>(R.id.home_pager)
-        viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
+        home_pager.adapter = ViewPagerAdapter(supportFragmentManager)
         tabLayout = findViewById(R.id.tab_layout)
-        tabLayout.setupWithViewPager(viewPager)
+        tabLayout.setupWithViewPager(home_pager)
         setTabLayoutIcons(tabLayout)
         setTabLayoutSelectedListener(tabLayout)
     }
@@ -154,7 +152,7 @@ class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelecte
     }
 
     /**
-     * Highlights the icon of the currently selected tab of the tablayout
+     * Highlights the icon of the currently selected tab of the tab layout
      */
     private fun setTabLayoutSelectedListener(tabLayout: TabLayout) {
         val tabSelectedIconColor = ContextCompat.getColor(applicationContext, R.color.lightGreen)
