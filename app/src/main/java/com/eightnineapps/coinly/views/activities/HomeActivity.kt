@@ -11,13 +11,13 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.adapters.ViewPagerAdapter
 import com.eightnineapps.coinly.classes.AuthHelper
-import com.eightnineapps.coinly.classes.FragmentBehaviors
 import com.eightnineapps.coinly.viewmodels.HomeViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
@@ -29,7 +29,7 @@ import kotlin.system.exitProcess
  * Represents the home page the user lands on after logging in. Provides access to Bigs, Littles,
  * and the search bar for link ups
  */
-class HomeActivity : FragmentBehaviors(), NavigationView.OnNavigationItemSelectedListener {
+class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var homeViewModel: HomeViewModel

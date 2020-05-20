@@ -4,30 +4,19 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.views.activities.HomeActivity
-import com.eightnineapps.coinly.interfaces.CallBack
-import com.google.firebase.firestore.DocumentSnapshot
-import kotlin.collections.ArrayList
+import com.eightnineapps.coinly.viewmodels.AllLittlesFragmentViewModel
 
 class AllLittlesFragment : Fragment() {
 
-    private lateinit var searchIcon: MenuItem
-
-    companion object {
-        var numOfLittleEmails = 1
-        var littleEmailsCounter = 1
-        lateinit var currentLittlesEmails: MutableList<*>
-        lateinit var allLittlesRecyclerViewList: RecyclerView
-        var allLittles: MutableList<DocumentSnapshot> = ArrayList()
-        var allLittlesToDisplay: MutableList<DocumentSnapshot> = ArrayList()
-    }
+    private lateinit var allLittlesFragmentViewModel: AllLittlesFragmentViewModel
 
     /**
      * Inflates the my profile fragment
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        allLittlesFragmentViewModel = ViewModelProvider(this).get(AllLittlesFragmentViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_littles, container, false)
         return createLittlesTab(view)
     }
@@ -37,20 +26,10 @@ class AllLittlesFragment : Fragment() {
      */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.home_fragments_app_bar_menu, menu)
-        searchIcon = menu.findItem(R.id.menu_search)
+        val searchIcon = menu.findItem(R.id.menu_search)
         searchIcon.isVisible = true
+        allLittlesFragmentViewModel.setUpSearchView(searchIcon.actionView as SearchView)
         super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    /**
-     * Determines what the item menus in the app bar option items do
-     */
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_search) { // Programs the search button for the recycler view
-            val searchView = searchIcon.actionView as SearchView
-            (activity as HomeActivity).setUpSearchView(searchView, allLittles, allLittlesToDisplay, allLittlesRecyclerViewList)
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     /**
@@ -65,18 +44,9 @@ class AllLittlesFragment : Fragment() {
      * Sets up the little tab fragment for the user
      */
     private fun createLittlesTab(view: View): View {
-        allLittlesRecyclerViewList = view.findViewById(R.id.allLittlesRecyclerView)
-        allLittlesRecyclerViewList.removeAllViews()
-        (activity as HomeActivity).addSpaceBetweenItems(allLittlesRecyclerViewList, context)
-        allLittles.clear()
-        allLittlesToDisplay.clear()
-        (activity as HomeActivity).queryFirestoreForAllAssociates(false, object: CallBack {
-            override fun secondQueryCallBack(userEmails: MutableList<*>) {
-                littleEmailsCounter = 1
-                numOfLittleEmails = userEmails.size
-                for (email in userEmails) (activity as HomeActivity).queryFirestoreForSingleProfile(false, email, context)
-            }
-        })
+        allLittlesFragmentViewModel.setupRecycler(view.findViewById(R.id.allLittlesRecyclerView))
+        allLittlesFragmentViewModel.addSpaceBetweenItems(context)
+        allLittlesFragmentViewModel.addAllLittlesToRecyclerView(context)
         return view
     }
 }

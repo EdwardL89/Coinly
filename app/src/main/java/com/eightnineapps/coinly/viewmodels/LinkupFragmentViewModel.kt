@@ -1,4 +1,7 @@
 package com.eightnineapps.coinly.viewmodels
 
-class LinkupFragmentViewModel {
+import com.eightnineapps.coinly.classes.TabLayoutFragmentViewModel
+
+class LinkupFragmentViewModel: TabLayoutFragmentViewModel() {
+
 }

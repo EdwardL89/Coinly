@@ -4,26 +4,20 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.views.activities.HomeActivity
-import com.google.firebase.firestore.DocumentSnapshot
+import com.eightnineapps.coinly.viewmodels.LinkupFragmentViewModel
 
 
 class LinkupFragment : Fragment() {
 
-    private lateinit var searchIcon: MenuItem
-
-    companion object {
-        lateinit var allUsersRecyclerViewList: RecyclerView
-        var allUsers: MutableList<DocumentSnapshot> = ArrayList()
-        var allUsersToDisplay: MutableList<DocumentSnapshot> = ArrayList()
-    }
+    private lateinit var linkupFragmentViewModel: LinkupFragmentViewModel
 
     /**
      * Inflates the my profile fragment
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        linkupFragmentViewModel = ViewModelProvider(this).get(LinkupFragmentViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_linkup, container, false)
         return createLinkupTab(view)
     }
@@ -33,20 +27,10 @@ class LinkupFragment : Fragment() {
      */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.home_fragments_app_bar_menu, menu)
-        searchIcon = menu.findItem(R.id.menu_search)
+        val searchIcon = menu.findItem(R.id.menu_search)
         searchIcon.isVisible = true
+        linkupFragmentViewModel.setUpSearchView(searchIcon.actionView as SearchView)
         super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    /**
-     * Determines what the item menus in the app bar option items do
-     */
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_search) { // Programs the search button for the recycler view
-            val searchView = searchIcon.actionView as SearchView
-            (activity as HomeActivity).setUpSearchView(searchView, allUsers, allUsersToDisplay, allUsersRecyclerViewList)
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     /**
@@ -61,12 +45,9 @@ class LinkupFragment : Fragment() {
      * Sets up the linkup tab fragment for the user
      */
     private fun createLinkupTab(view: View): View {
-        allUsersRecyclerViewList = view.findViewById(R.id.allUsersRecyclerView)
-        allUsersRecyclerViewList.removeAllViews()
-        (activity as HomeActivity).addSpaceBetweenItems(allUsersRecyclerViewList, context)
-        allUsers.clear()
-        allUsersToDisplay.clear()
-        (activity as HomeActivity).getAllUsers(context)
+        linkupFragmentViewModel.setupRecycler(view.findViewById(R.id.allUsersRecyclerView))
+        linkupFragmentViewModel.addSpaceBetweenItems(context)
+        linkupFragmentViewModel.getAllUsers(context)
         return view
     }
 }
