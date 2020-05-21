@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <import type="com.eightnineapps.coinly.models.CurrentUser"/>
+        <import type="com.eightnineapps.coinly.viewmodels.MyProfileViewModel"/>
         <variable
-            name="currentUser"
-            type="CurrentUser"/>
+            name="myProfileViewModel"
+            type="MyProfileViewModel"/>
     </data>
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,7 +53,7 @@
                 android:id="@+id/coin_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/zero"
+                android:text="@{String.valueOf(myProfileViewModel.userCoins.intValue()), default = 0}"
                 android:fontFamily="sans-serif"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -73,7 +73,7 @@
                 android:id="@+id/bigs_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/zero"
+                android:text="@{String.valueOf(myProfileViewModel.numberOfBigs.intValue()), default = 0}"
                 android:layout_alignTop="@id/coin_count"
                 android:fontFamily="sans-serif"
                 android:textSize="15sp"
@@ -98,7 +98,7 @@
                 android:id="@+id/littles_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/zero"
+                android:text="@{String.valueOf(myProfileViewModel.numberOfLittles.intValue()), default = 0}"
                 android:layout_alignTop="@id/bigs_count"
                 android:fontFamily="sans-serif"
                 android:textStyle="bold"
@@ -139,7 +139,7 @@
             android:layout_alignStart="@+id/cardView"
             android:layout_below="@+id/cardView"
             android:layout_gravity="center"
-            android:text="@{currentUser.instance.realName}"
+            android:text="@{myProfileViewModel.displayName, default = Name}"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"/>
@@ -148,7 +148,7 @@
             android:id="@+id/bio_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/sample_bio"
+            android:text="@{myProfileViewModel.userBio, default = Bio}"
             android:textColor="@color/black"
             android:fontFamily="sans-serif-thin"
             android:layout_alignStart="@id/my_display_name_textView"
