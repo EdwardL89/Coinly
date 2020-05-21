@@ -44,9 +44,7 @@ class AllLittlesFragment : Fragment() {
      * Sets up the little tab fragment for the user
      */
     private fun createLittlesTab(view: View): View {
-        allLittlesFragmentViewModel.setupRecycler(view.findViewById(R.id.allLittlesRecyclerView))
-        allLittlesFragmentViewModel.addSpaceBetweenItems(context)
-        allLittlesFragmentViewModel.addAllLittlesToRecyclerView(context)
+        allLittlesFragmentViewModel.addAllLittlesToRecyclerView(view.findViewById(R.id.allLittlesRecyclerView), context)
         return view
     }
 }

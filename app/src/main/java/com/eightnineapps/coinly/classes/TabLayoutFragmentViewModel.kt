@@ -78,6 +78,14 @@ abstract class TabLayoutFragmentViewModel: ViewModel() {
     }
 
     /**
+     * Assigns the given recycler view's layout manager and adapter using the list whose data is being displayed
+     */
+    fun updateRecyclerViewAdapterAndLayoutManager(context: Context?) {
+        allAssociatesRecyclerViewList.layoutManager = LinearLayoutManager(context)
+        allAssociatesRecyclerViewList.adapter = UsersRecyclerViewAdapter(allAssociatesToDisplay, context!!)
+    }
+
+    /**
      * Adds the retrieved users to the allUsers list upon successful task completion
      */
     private fun addUsersToList(task: Task<QuerySnapshot>, context: Context?) {
@@ -112,14 +120,6 @@ abstract class TabLayoutFragmentViewModel: ViewModel() {
         } else {
             Log.w("INFO", "User read on Firestore unsuccessful")
         }
-    }
-
-    /**
-     * Assigns the given recycler view's layout manager and adapter using the list whose data is being displayed
-     */
-    private fun updateRecyclerViewAdapterAndLayoutManager(context: Context?) {
-        allAssociatesRecyclerViewList.layoutManager = LinearLayoutManager(context)
-        allAssociatesRecyclerViewList.adapter = UsersRecyclerViewAdapter(allAssociatesToDisplay, context!!)
     }
 
     /**

@@ -44,9 +44,7 @@ class AllBigsFragment : Fragment() {
      * Sets up the big tab fragment for the user
      */
     private fun createBigsTab(view: View): View {
-        allBigsFragmentViewModel.setupRecycler(view.findViewById(R.id.allBigsRecyclerView))
-        allBigsFragmentViewModel.addSpaceBetweenItems(context)
-        allBigsFragmentViewModel.addAllBigsToRecyclerView(context)
+        allBigsFragmentViewModel.addAllBigsToRecyclerView(view.findViewById(R.id.allBigsRecyclerView), context)
         return view
     }
 }

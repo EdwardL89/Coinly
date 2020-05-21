@@ -45,9 +45,7 @@ class LinkupFragment : Fragment() {
      * Sets up the linkup tab fragment for the user
      */
     private fun createLinkupTab(view: View): View {
-        linkupFragmentViewModel.setupRecycler(view.findViewById(R.id.allUsersRecyclerView))
-        linkupFragmentViewModel.addSpaceBetweenItems(context)
-        linkupFragmentViewModel.getAllUsers(context)
+        linkupFragmentViewModel.addAllUsersToRecyclerView(view.findViewById(R.id.allUsersRecyclerView), context)
         return view
     }
 }
