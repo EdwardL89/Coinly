@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.classes.ImageUploadHelper
-import com.eightnineapps.coinly.classes.User
+import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.models.ImgStorage
 import java.io.ByteArrayOutputStream
@@ -19,8 +19,18 @@ class EditProfileViewModel: ViewModel() {
 
     val imgUploadHelper = ImageUploadHelper()
     private var userProfilePictureByteData = ByteArrayOutputStream().toByteArray()
-    lateinit var currentUser: User
+    var currentUser = CurrentUser.instance!!
         private set
+
+    /**
+     * Update the given user with the given fields
+     */
+    fun updateUserFields(realName: EditText, displayName: EditText, bio: EditText) {
+        currentUser.realName = realName.text.toString()
+        currentUser.displayName = displayName.text.toString()
+        currentUser.bio = bio.text.toString()
+        updateProfilePicture()
+    }
 
     /**
      * Updates the user object in the firestore with the changes made
@@ -48,30 +58,13 @@ class EditProfileViewModel: ViewModel() {
     }
 
     /**
-     * Update the given user with the given fields
-     */
-    fun updateUserFields(realName: EditText, displayName: EditText, bio: EditText) {
-        currentUser.realName = realName.text.toString()
-        currentUser.displayName = displayName.text.toString()
-        currentUser.bio = bio.text.toString()
-        updateProfilePicture(currentUser)
-    }
-
-    /**
-     * Instantiates the User object that's going to be used for editing
-     */
-    fun instantiateCurrentUser(context: Context) {
-        currentUser = (context as Activity).intent.getSerializableExtra("current_user") as User
-    }
-
-    /**
      * Uploads image to storage nad updates the user's Uri
      */
-    private fun updateProfilePicture(user: User) {
-        ImgStorage.insert(userProfilePictureByteData, user.id).addOnSuccessListener {
-            ImgStorage.read(user).addOnSuccessListener {
-                            uri -> user.profilePictureUri = uri.toString()
-                            Firestore.update(user, "profilePictureUri", user.profilePictureUri)
+    private fun updateProfilePicture() {
+        ImgStorage.insert(userProfilePictureByteData, currentUser.id).addOnSuccessListener {
+            ImgStorage.read(currentUser).addOnSuccessListener {
+                            uri -> currentUser.profilePictureUri = uri.toString()
+                            Firestore.update(currentUser, "profilePictureUri", currentUser.profilePictureUri)
                     }
             }
     }

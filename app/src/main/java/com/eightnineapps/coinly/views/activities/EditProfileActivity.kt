@@ -22,7 +22,6 @@ class EditProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         editProfileViewModel = ViewModelProvider(this).get(EditProfileViewModel::class.java)
-        editProfileViewModel.instantiateCurrentUser(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
         addCoinlyActionBarTitle()
