@@ -19,16 +19,16 @@ class EditProfileViewModel: ViewModel() {
 
     val imgUploadHelper = ImageUploadHelper()
     private var userProfilePictureByteData = ByteArrayOutputStream().toByteArray()
-    var currentUser = CurrentUser.instance!!
+    var currentUser = CurrentUser
         private set
 
     /**
      * Update the given user with the given fields
      */
     fun updateUserFields(realName: EditText, displayName: EditText, bio: EditText) {
-        currentUser.realName = realName.text.toString()
-        currentUser.displayName = displayName.text.toString()
-        currentUser.bio = bio.text.toString()
+        currentUser.bio.value = bio.text.toString()
+        currentUser.realName.value = realName.text.toString()
+        currentUser.displayName.value = displayName.text.toString()
         updateProfilePicture()
     }
 
@@ -37,10 +37,10 @@ class EditProfileViewModel: ViewModel() {
      */
     fun commitProfileChanges(context: Context) {
         val writeBatch = Firestore.getInstance().batch()
-        val userReference = Firestore.read(currentUser)
-        writeBatch.update(userReference, "realName", currentUser.realName)
-        writeBatch.update(userReference, "displayName", currentUser.displayName)
-        writeBatch.update(userReference, "bio", currentUser.bio)
+        val userReference = Firestore.read(currentUser.instance!!)
+        writeBatch.update(userReference, "bio", currentUser.bio.value)
+        writeBatch.update(userReference, "realName", currentUser.realName.value)
+        writeBatch.update(userReference, "displayName", currentUser.displayName.value)
         writeBatch.commit().addOnSuccessListener {
             Toast.makeText(context, "Changes Saved!", Toast.LENGTH_SHORT).show()
             (context as Activity).finish()
@@ -61,10 +61,10 @@ class EditProfileViewModel: ViewModel() {
      * Uploads image to storage nad updates the user's Uri
      */
     private fun updateProfilePicture() {
-        ImgStorage.insert(userProfilePictureByteData, currentUser.id).addOnSuccessListener {
-            ImgStorage.read(currentUser).addOnSuccessListener {
-                            uri -> currentUser.profilePictureUri = uri.toString()
-                            Firestore.update(currentUser, "profilePictureUri", currentUser.profilePictureUri)
+        ImgStorage.insert(userProfilePictureByteData, currentUser.instance!!.id).addOnSuccessListener {
+            ImgStorage.read(currentUser.instance!!).addOnSuccessListener {
+                            uri -> currentUser.profilePictureUri.value = uri.toString()
+                            Firestore.update(currentUser.instance!!, "profilePictureUri", currentUser.profilePictureUri.value!!)
                     }
             }
     }

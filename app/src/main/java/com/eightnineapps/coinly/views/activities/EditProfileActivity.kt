@@ -62,10 +62,10 @@ class EditProfileActivity : AppCompatActivity() {
      */
     private fun populateUserDetailFields() {
         val currentUser = editProfileViewModel.currentUser
-        Glide.with(this).load(currentUser.profilePictureUri).into(user_profile_picture)
-        real_name_editText.setText(currentUser.realName)
-        display_name_editText.setText(currentUser.displayName)
-        bio_edit_text.setText(currentUser.bio)
+        Glide.with(this).load(currentUser.instance!!.profilePictureUri).into(user_profile_picture)
+        real_name_editText.setText(currentUser.instance!!.realName)
+        display_name_editText.setText(currentUser.instance!!.displayName)
+        bio_edit_text.setText(currentUser.instance!!.bio)
     }
 
     /**

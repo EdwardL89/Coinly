@@ -9,28 +9,15 @@ import com.eightnineapps.coinly.models.CurrentUser
 
 class MyProfileViewModel: ViewModel() {
 
+    var currentUser = CurrentUser
+        private set
+
     /**
      * Assigns the given recycler view's layout manager and adapter using the list whose data is being displayed,
      * but for notifications, where String is the type
      */
     fun updateNotifications(recyclerViewList: RecyclerView, context: Context?) {
         recyclerViewList.layoutManager = LinearLayoutManager(context)
-        recyclerViewList.adapter = NotificationsRecyclerViewAdapter(getNotifications().value!!, context!!)
+        recyclerViewList.adapter = NotificationsRecyclerViewAdapter(currentUser.instance!!.notifications, context!!)
     }
-
-    fun getUserBio() = CurrentUser.bio
-
-    fun getUserCoins() = CurrentUser.coins
-
-    fun getDisplayName() = CurrentUser.displayName
-
-    fun getNumberOfBigs() = CurrentUser.numberOfBigs
-
-    fun getPrizesClaimed() = CurrentUser.prizesClaimed
-
-    fun getNotifications() = CurrentUser.notifications
-
-    fun getNumberOfLittles() = CurrentUser.numberOfLittles
-
-    fun getProfilePictureUri() = CurrentUser.profilePictureUri
 }

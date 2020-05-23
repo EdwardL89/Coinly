@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
-import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
@@ -22,6 +21,7 @@ abstract class TabLayoutFragmentViewModel: ViewModel() {
 
     private var numOfEmails = 1
     private var emailsCounter = 1
+    private val authHelper = AuthHelper()
     private lateinit var allAssociatesRecyclerViewList: RecyclerView
     private var allAssociates: MutableList<DocumentSnapshot> = ArrayList()
     private var allAssociatesToDisplay: MutableList<DocumentSnapshot> = ArrayList()
@@ -90,7 +90,7 @@ abstract class TabLayoutFragmentViewModel: ViewModel() {
      */
     private fun addUsersToList(task: Task<QuerySnapshot>, context: Context?) {
         if (task.isSuccessful) {
-            for (users in task.result!!) if (users.data["email"] != CurrentUser.instance!!.email) allAssociates.add(users)
+            for (users in task.result!!) if (users.data["email"] != authHelper.getAuthUserEmail()) allAssociates.add(users)
             allAssociatesToDisplay.addAll(allAssociates)
             updateRecyclerViewAdapterAndLayoutManager(context)
         }

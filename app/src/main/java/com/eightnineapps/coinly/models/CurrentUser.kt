@@ -12,19 +12,21 @@ object CurrentUser {
 
     var instance: User? = null
 
-    val coins get() = MutableLiveData<Int>(instance?.coins)
+    val coins = MutableLiveData<Int>()
 
-    val bio get() = MutableLiveData<String>(instance?.bio)
+    val bio = MutableLiveData<String>()
 
-    val numberOfBigs get() = MutableLiveData<Int>(instance?.bigs?.size)
+    val realName = MutableLiveData<String>()
 
-    val displayName get() = MutableLiveData<String>(instance?.displayName)
+    val numberOfBigs = MutableLiveData<Int>()
 
-    val numberOfLittles get() = MutableLiveData<Int>(instance?.littles?.size)
+    val displayName = MutableLiveData<String>()
 
-    val profilePictureUri get() = MutableLiveData<String>(instance?.profilePictureUri)
+    val numberOfLittles = MutableLiveData<Int>()
 
-    val prizesClaimed get() = MutableLiveData<MutableList<String>>(instance?.prizesClaimed)
+    val profilePictureUri = MutableLiveData<String>()
 
-    val notifications get() = MutableLiveData<MutableList<Notification>>(instance?.notifications)
+    val prizesClaimed = MutableLiveData<MutableList<String>>()
+
+    val notifications = MutableLiveData<MutableList<Notification>>()
 }
