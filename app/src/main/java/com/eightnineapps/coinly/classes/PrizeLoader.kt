@@ -1,9 +1,8 @@
 package com.eightnineapps.coinly.classes
 
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class PrizeLoader() : AppCompatActivity() {
+class PrizeLoader {
 
     /**
      * Retrieves the images of all the prizes given by this user from storage
