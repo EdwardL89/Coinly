@@ -4,6 +4,6 @@ import androidx.lifecycle.ViewModel
 
 class AppealViewModel: ViewModel() {
 
-
+    lateinit var observedUserDisplayName: String
 
 }

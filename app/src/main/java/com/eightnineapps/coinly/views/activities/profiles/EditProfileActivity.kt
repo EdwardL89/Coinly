@@ -6,11 +6,15 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.databinding.ActivityEditProfileBinding
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.EditProfileViewModel
+import com.firebase.ui.auth.data.model.User
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 
 /**
@@ -19,13 +23,17 @@ import kotlinx.android.synthetic.main.activity_edit_profile.*
 class EditProfileActivity : AppCompatActivity() {
 
     private lateinit var editProfileViewModel: EditProfileViewModel
+    private lateinit var binding: ActivityEditProfileBinding
+    private lateinit var view: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        editProfileViewModel = ViewModelProvider(this).get(EditProfileViewModel::class.java)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_profile)
+        editProfileViewModel = ViewModelProvider(this).get(EditProfileViewModel::class.java)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_profile)
+        binding.editProfileViewModel = editProfileViewModel
+        view = binding.root
         addCoinlyActionBarTitle()
-        populateUserDetailFields()
+        loadProfilePicture()
         setUpButtons()
     }
 
@@ -60,12 +68,8 @@ class EditProfileActivity : AppCompatActivity() {
     /**
      * Populates all the editable fields of the user's profile with the existing information
      */
-    private fun populateUserDetailFields() {
-        val currentUser = editProfileViewModel.currentUser
-        Glide.with(this).load(currentUser.instance!!.profilePictureUri).into(user_profile_picture)
-        real_name_editText.setText(currentUser.instance!!.realName)
-        display_name_editText.setText(currentUser.instance!!.displayName)
-        bio_edit_text.setText(currentUser.instance!!.bio)
+    private fun loadProfilePicture() {
+        Glide.with(this).load(editProfileViewModel.currentUser.instance!!.profilePictureUri).into(user_profile_picture)
     }
 
     /**
