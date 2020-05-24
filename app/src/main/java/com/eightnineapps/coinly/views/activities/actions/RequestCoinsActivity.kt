@@ -7,8 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.databinding.ActivityRequestBinding
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.actions.RequestCoinsViewModel
 import kotlinx.android.synthetic.main.activity_request.*
 
@@ -18,12 +21,18 @@ import kotlinx.android.synthetic.main.activity_request.*
 class RequestCoinsActivity : AppCompatActivity() {
 
     private lateinit var requestCoinsViewModel: RequestCoinsViewModel
+    private lateinit var binding: ActivityRequestBinding
+    private lateinit var view: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        requestCoinsViewModel = ViewModelProvider(this).get(RequestCoinsViewModel::class.java)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_request)
+        requestCoinsViewModel = ViewModelProvider(this).get(RequestCoinsViewModel::class.java)
+        requestCoinsViewModel.observedUserDisplayName = intent.getSerializableExtra("display_name") as String
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_request)
+        binding.requestCoinsViewModel = requestCoinsViewModel
+        view = binding.root
         addCoinlyActionBarTitle()
+        loadProfilePicture()
         setUpButtons()
     }
 
@@ -34,6 +43,14 @@ class RequestCoinsActivity : AppCompatActivity() {
         super.finish()
         overridePendingTransition(0, 0)
     }
+
+    /**
+     * Loads the observe user's profile picture
+     */
+    private fun loadProfilePicture() {
+        Glide.with(view).load(intent.getSerializableExtra("profile_picture_uri") as String).into(view.findViewById(R.id.user_profile_picture))
+    }
+
     /**
      * Sets the title of the action bar to the app name in the custom font through an image view
      */

@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.activity_little_profile.*
 class LittleProfileActivity : AppCompatActivity() {
 
     private lateinit var littleProfileViewModel: LittleProfileViewModel
+    private lateinit var observedUserInstance: User
     private lateinit var binding: ActivityLittleProfileBinding
     private lateinit var view: View
 
@@ -32,6 +33,7 @@ class LittleProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         littleProfileViewModel = ViewModelProvider(this).get(LittleProfileViewModel::class.java)
         littleProfileViewModel.observedUserInstance = intent.getSerializableExtra("observed_user") as User
+        observedUserInstance = littleProfileViewModel.observedUserInstance
         binding = DataBindingUtil.setContentView(this, R.layout.activity_little_profile)
         binding.littleProfileViewModel = littleProfileViewModel
         view = binding.root
@@ -60,10 +62,16 @@ class LittleProfileActivity : AppCompatActivity() {
      */
     private fun setUpButtons() {
         give_coins_button.setOnClickListener {
-            startActivity(Intent(this, GiveCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+            startActivity(Intent(this, GiveCoinsActivity::class.java)
+                .putExtra("profile_picture_uri", observedUserInstance.profilePictureUri)
+                .putExtra("display_name", observedUserInstance.displayName)
+                .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
         }
         revoke_coins_button.setOnClickListener {
-            startActivity(Intent(this, RevokeCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+            startActivity(Intent(this, RevokeCoinsActivity::class.java)
+                .putExtra("profile_picture_uri", observedUserInstance.profilePictureUri)
+                .putExtra("display_name", observedUserInstance.displayName)
+                .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
         }
         remove_little_button.setOnClickListener {
             littleProfileViewModel.removeLittleAndSendBack(this)

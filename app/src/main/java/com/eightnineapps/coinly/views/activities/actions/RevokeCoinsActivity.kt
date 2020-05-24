@@ -7,9 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.viewmodels.activityviewmodels.actions.RevokeCoins
+import com.eightnineapps.coinly.databinding.ActivityRevokeCoinsBinding
+import com.eightnineapps.coinly.viewmodels.activityviewmodels.actions.RevokeCoinsViewModel
 import kotlinx.android.synthetic.main.activity_revoke_coins.*
 
 /**
@@ -17,13 +20,20 @@ import kotlinx.android.synthetic.main.activity_revoke_coins.*
  */
 class RevokeCoinsActivity : AppCompatActivity() {
 
-    private lateinit var revokeCoins: RevokeCoins
+    private lateinit var revokeCoinsViewModel: RevokeCoinsViewModel
+    private lateinit var binding: ActivityRevokeCoinsBinding
+    private lateinit var view: View
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        revokeCoins = ViewModelProvider(this).get(RevokeCoins::class.java)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_revoke_coins)
+        revokeCoinsViewModel = ViewModelProvider(this).get(RevokeCoinsViewModel::class.java)
+        revokeCoinsViewModel.observedUserDisplayName = intent.getSerializableExtra("display_name") as String
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_revoke_coins)
+        binding.revokeCoinsViewModel = revokeCoinsViewModel
+        view = binding.root
         addCoinlyActionBarTitle()
+        loadProfilePicture()
         setUpButtons()
     }
 
@@ -33,6 +43,13 @@ class RevokeCoinsActivity : AppCompatActivity() {
     override fun finish() {
         super.finish()
         overridePendingTransition(0, 0)
+    }
+
+    /**
+     * Loads the observe user's profile picture
+     */
+    private fun loadProfilePicture() {
+        Glide.with(view).load(intent.getSerializableExtra("profile_picture_uri") as String).into(view.findViewById(R.id.user_profile_picture))
     }
 
     /**
