@@ -8,9 +8,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.objects.User
+import com.eightnineapps.coinly.databinding.ActivityLittleProfileBinding
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LittleProfileViewModel
 import com.eightnineapps.coinly.views.activities.actions.GiveCoinsActivity
 import com.eightnineapps.coinly.views.activities.actions.RevokeCoinsActivity
@@ -22,12 +25,17 @@ import kotlinx.android.synthetic.main.activity_little_profile.*
 class LittleProfileActivity : AppCompatActivity() {
 
     private lateinit var littleProfileViewModel: LittleProfileViewModel
+    private lateinit var binding: ActivityLittleProfileBinding
+    private lateinit var view: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         littleProfileViewModel = ViewModelProvider(this).get(LittleProfileViewModel::class.java)
         littleProfileViewModel.observedUserInstance = intent.getSerializableExtra("observed_user") as User
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_little_profile)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_little_profile)
+        binding.littleProfileViewModel = littleProfileViewModel
+        view = binding.root
+        loadProfilePicture()
         setUpButtons()
         addCoinlyActionBarTitle()
     }
@@ -38,6 +46,13 @@ class LittleProfileActivity : AppCompatActivity() {
     override fun finish() {
         super.finish()
         overridePendingTransition(0, 0)
+    }
+
+    /**
+     * Loads the observe user's profile picture
+     */
+    private fun loadProfilePicture() {
+        Glide.with(view).load(littleProfileViewModel.observedUserInstance.profilePictureUri).into(view.findViewById(R.id.user_profile_picture))
     }
 
     /**
