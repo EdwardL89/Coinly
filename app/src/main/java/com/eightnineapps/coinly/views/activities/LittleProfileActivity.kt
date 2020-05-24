@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.User
-import com.eightnineapps.coinly.viewmodels.LittleProfileViewModel
+import com.eightnineapps.coinly.viewmodels.activityviewmodels.LittleProfileViewModel
 import kotlinx.android.synthetic.main.activity_little_profile.*
 
 /**
@@ -43,12 +43,10 @@ class LittleProfileActivity : AppCompatActivity() {
      */
     private fun setUpButtons() {
         give_coins_button.setOnClickListener {
-            val intent = Intent(this, GiveCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            startActivity(intent)
+            startActivity(Intent(this, GiveCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
         }
         revoke_coins_button.setOnClickListener {
-            val intent = Intent(this, RevokeCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            startActivity(intent)
+            startActivity(Intent(this, RevokeCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
         }
         remove_little_button.setOnClickListener {
             littleProfileViewModel.removeLittleAndSendBack(this)

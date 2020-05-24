@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.adapters.ViewPagerAdapter
 import com.eightnineapps.coinly.classes.AuthHelper
-import com.eightnineapps.coinly.viewmodels.HomeViewModel
+import com.eightnineapps.coinly.viewmodels.activityviewmodels.HomeViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.firestore.FirebaseFirestore

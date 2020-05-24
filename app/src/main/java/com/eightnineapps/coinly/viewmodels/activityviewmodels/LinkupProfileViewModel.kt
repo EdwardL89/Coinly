@@ -1,4 +1,4 @@
-package com.eightnineapps.coinly.viewmodels
+package com.eightnineapps.coinly.viewmodels.activityviewmodels
 
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.classes.Notification
@@ -7,8 +7,6 @@ import com.eightnineapps.coinly.classes.User
 import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentSnapshot
 
 class LinkupProfileViewModel: ViewModel() {
 

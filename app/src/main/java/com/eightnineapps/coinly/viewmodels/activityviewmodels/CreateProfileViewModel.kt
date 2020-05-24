@@ -1,4 +1,4 @@
-package com.eightnineapps.coinly.viewmodels
+package com.eightnineapps.coinly.viewmodels.activityviewmodels
 
 import android.content.Context
 import android.content.Intent

@@ -3,7 +3,7 @@
     <data>
         <variable
             name="linkupProfileViewModel"
-            type="com.eightnineapps.coinly.viewmodels.LinkupProfileViewModel" />
+            type="com.eightnineapps.coinly.viewmodels.activityviewmodels.LinkupProfileViewModel" />
     </data>
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

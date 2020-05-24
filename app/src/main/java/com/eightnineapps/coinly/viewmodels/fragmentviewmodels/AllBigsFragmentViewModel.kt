@@ -1,19 +1,19 @@
-package com.eightnineapps.coinly.viewmodels
+package com.eightnineapps.coinly.viewmodels.fragmentviewmodels
 
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import com.eightnineapps.coinly.classes.TabLayoutFragmentViewModel
 import com.eightnineapps.coinly.models.CurrentUser
 
-class AllLittlesFragmentViewModel: TabLayoutFragmentViewModel() {
+class AllBigsFragmentViewModel: TabLayoutFragmentViewModel() {
 
     private var hasLoadedData = false
 
-    fun addAllLittlesToRecyclerView(recyclerView: RecyclerView, context: Context?) {
+    fun addAllBigsToRecyclerView(recyclerView: RecyclerView, context: Context?) {
         setupRecycler(recyclerView)
         addSpaceBetweenItems(context)
         if (!hasLoadedData) {
-            addUsersToRecyclerView(CurrentUser.instance!!.littles, context)
+            addUsersToRecyclerView(CurrentUser.instance!!.bigs, context)
             hasLoadedData = true
         } else {
             updateRecyclerViewAdapterAndLayoutManager(context)

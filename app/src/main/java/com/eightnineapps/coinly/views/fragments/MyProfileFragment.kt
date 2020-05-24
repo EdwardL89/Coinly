@@ -11,22 +11,22 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.databinding.FragmentMyProfileBinding
-import com.eightnineapps.coinly.viewmodels.MyProfileViewModel
+import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.MyProfileFragmentViewModel
 import com.eightnineapps.coinly.views.activities.EditProfileActivity
 import kotlinx.android.synthetic.main.fragment_my_profile.view.*
 
 class MyProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentMyProfileBinding
-    private lateinit var myProfileViewModel: MyProfileViewModel
+    private lateinit var myProfileFragmentViewModel: MyProfileFragmentViewModel
     private lateinit var fragmentView: View
     /**
      * Inflates the my profile fragment
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        myProfileViewModel = ViewModelProvider(this).get(MyProfileViewModel::class.java)
+        myProfileFragmentViewModel = ViewModelProvider(this).get(MyProfileFragmentViewModel::class.java)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_profile, container, false)
-        binding.myProfileViewModel = myProfileViewModel
+        binding.myProfileViewModel = myProfileFragmentViewModel
         fragmentView = binding.root
         displayEmptyRecyclerViewImages()
         setUpEditProfileButton()
@@ -57,7 +57,7 @@ class MyProfileFragment : Fragment() {
      * Attaches observers to the User live data to update the fragment UI
      */
     private fun setUpObservers() {
-        val currentUserInstance = myProfileViewModel.currentUser
+        val currentUserInstance = myProfileFragmentViewModel.currentUser
 
         currentUserInstance.bio.observe(viewLifecycleOwner, Observer {
             if (it != null) binding.bioTextView.text = it
@@ -90,15 +90,15 @@ class MyProfileFragment : Fragment() {
     private fun displayEmptyRecyclerViewImages() {
         val emptyPrizesImage = fragmentView.findViewById<ImageView>(R.id.no_prizes_image)
         val emptyNotificationsImage = fragmentView.findViewById<ImageView>(R.id.no_notifications_image)
-        if (myProfileViewModel.currentUser.instance!!.prizesClaimed.isEmpty()) emptyPrizesImage.visibility = View.VISIBLE else emptyPrizesImage.visibility = View.INVISIBLE
-        if (myProfileViewModel.currentUser.instance!!.notifications.isEmpty()) emptyNotificationsImage.visibility = View.VISIBLE else emptyNotificationsImage.visibility = View.INVISIBLE
+        if (myProfileFragmentViewModel.currentUser.instance!!.prizesClaimed.isEmpty()) emptyPrizesImage.visibility = View.VISIBLE else emptyPrizesImage.visibility = View.INVISIBLE
+        if (myProfileFragmentViewModel.currentUser.instance!!.notifications.isEmpty()) emptyNotificationsImage.visibility = View.VISIBLE else emptyNotificationsImage.visibility = View.INVISIBLE
     }
 
     /**
      * Sets the adapter and layout manager for the notifications recycler view
      */
     private fun setupNotifications() {
-        myProfileViewModel.updateNotifications(fragmentView.findViewById(R.id.notificationsRecyclerView), context)
+        myProfileFragmentViewModel.updateNotifications(fragmentView.findViewById(R.id.notificationsRecyclerView), context)
     }
 
     /**
@@ -114,6 +114,6 @@ class MyProfileFragment : Fragment() {
      * Loads the profile picture
      */
     private fun loadProfilePicture() {
-        Glide.with(activity!!).load(myProfileViewModel.currentUser.profilePictureUri.value).into(fragmentView.findViewById(R.id.my_profile_picture))
+        Glide.with(activity!!).load(myProfileFragmentViewModel.currentUser.profilePictureUri.value).into(fragmentView.findViewById(R.id.my_profile_picture))
     }
 }

@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.viewmodels.activityviewmodels.AppealViewModel
 import kotlinx.android.synthetic.main.activity_appeal.*
 
 /**
@@ -15,7 +17,10 @@ import kotlinx.android.synthetic.main.activity_appeal.*
  */
 class AppealActivity : AppCompatActivity() {
 
+    private lateinit var appealViewModel: AppealViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        appealViewModel = ViewModelProvider(this).get(AppealViewModel::class.java)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appeal)
         addCoinlyActionBarTitle()

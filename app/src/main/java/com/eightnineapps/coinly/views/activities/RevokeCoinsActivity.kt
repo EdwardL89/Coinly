@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.viewmodels.activityviewmodels.RevokeCoins
 import kotlinx.android.synthetic.main.activity_revoke_coins.*
 
 /**
@@ -15,7 +17,10 @@ import kotlinx.android.synthetic.main.activity_revoke_coins.*
  */
 class RevokeCoinsActivity : AppCompatActivity() {
 
+    private lateinit var revokeCoins: RevokeCoins
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        revokeCoins = ViewModelProvider(this).get(RevokeCoins::class.java)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_revoke_coins)
         addCoinlyActionBarTitle()

@@ -6,7 +6,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.viewmodels.LinkupFragmentViewModel
+import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.LinkupFragmentViewModel
 
 
 class LinkupFragment : Fragment() {

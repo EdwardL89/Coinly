@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.viewmodels.EditProfileViewModel
+import com.eightnineapps.coinly.viewmodels.activityviewmodels.EditProfileViewModel
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 
 /**

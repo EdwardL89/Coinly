@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.viewmodels.activityviewmodels.RequestCoinsViewModel
 import kotlinx.android.synthetic.main.activity_request.*
 
 /**
@@ -15,7 +17,10 @@ import kotlinx.android.synthetic.main.activity_request.*
  */
 class RequestCoinsActivity : AppCompatActivity() {
 
+    private lateinit var requestCoinsViewModel: RequestCoinsViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        requestCoinsViewModel = ViewModelProvider(this).get(RequestCoinsViewModel::class.java)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_request)
         addCoinlyActionBarTitle()

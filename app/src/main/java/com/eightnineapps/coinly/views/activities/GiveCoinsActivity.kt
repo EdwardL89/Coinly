@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.viewmodels.activityviewmodels.GiveCoinsViewModel
 import kotlinx.android.synthetic.main.activity_give_coins.*
 
 /**
@@ -15,7 +17,10 @@ import kotlinx.android.synthetic.main.activity_give_coins.*
  */
 class GiveCoinsActivity : AppCompatActivity() {
 
+    private lateinit var giveCoinsViewModel: GiveCoinsViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        giveCoinsViewModel = ViewModelProvider(this).get(GiveCoinsViewModel::class.java)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_give_coins)
         addCoinlyActionBarTitle()

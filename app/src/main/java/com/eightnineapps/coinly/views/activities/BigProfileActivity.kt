@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.User
-import com.eightnineapps.coinly.viewmodels.BigProfileViewModel
+import com.eightnineapps.coinly.viewmodels.activityviewmodels.BigProfileViewModel
 import kotlinx.android.synthetic.main.activity_big_profile.*
 
 /**

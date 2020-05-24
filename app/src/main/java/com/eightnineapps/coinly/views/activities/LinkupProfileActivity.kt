@@ -18,7 +18,7 @@ import com.eightnineapps.coinly.databinding.ActivityLinkupProfileBinding
 import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_BIG
 import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_LITTLE
-import com.eightnineapps.coinly.viewmodels.LinkupProfileViewModel
+import com.eightnineapps.coinly.viewmodels.activityviewmodels.LinkupProfileViewModel
 import kotlinx.android.synthetic.main.activity_linkup_profile.*
 
 /**

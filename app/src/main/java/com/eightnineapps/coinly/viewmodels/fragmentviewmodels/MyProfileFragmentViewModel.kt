@@ -1,4 +1,4 @@
-package com.eightnineapps.coinly.viewmodels
+package com.eightnineapps.coinly.viewmodels.fragmentviewmodels
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.eightnineapps.coinly.adapters.NotificationsRecyclerViewAdapter
 import com.eightnineapps.coinly.models.CurrentUser
 
-class MyProfileViewModel: ViewModel() {
+class MyProfileFragmentViewModel: ViewModel() {
 
     var currentUser = CurrentUser
         private set

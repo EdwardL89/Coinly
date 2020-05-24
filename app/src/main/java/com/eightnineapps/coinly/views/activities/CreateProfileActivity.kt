@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.viewmodels.CreateProfileViewModel
+import com.eightnineapps.coinly.viewmodels.activityviewmodels.CreateProfileViewModel
 import kotlinx.android.synthetic.main.activity_create_profile.*
 
 
