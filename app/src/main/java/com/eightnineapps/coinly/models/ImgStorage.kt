@@ -1,7 +1,7 @@
 package com.eightnineapps.coinly.models
 
 import android.net.Uri
-import com.eightnineapps.coinly.classes.User
+import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.interfaces.Repository
 import com.google.android.gms.tasks.Task
 import com.google.firebase.ktx.Firebase

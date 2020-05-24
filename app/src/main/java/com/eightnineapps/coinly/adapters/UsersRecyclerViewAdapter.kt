@@ -10,11 +10,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.classes.User
-import com.eightnineapps.coinly.views.activities.BigProfileActivity
-import com.eightnineapps.coinly.views.activities.HomeActivity.Companion.tabLayout
-import com.eightnineapps.coinly.views.activities.LinkupProfileActivity
-import com.eightnineapps.coinly.views.activities.LittleProfileActivity
+import com.eightnineapps.coinly.classes.objects.User
+import com.eightnineapps.coinly.views.activities.profiles.BigProfileActivity
+import com.eightnineapps.coinly.views.activities.startup.HomeActivity.Companion.tabLayout
+import com.eightnineapps.coinly.views.activities.profiles.LinkupProfileActivity
+import com.eightnineapps.coinly.views.activities.profiles.LittleProfileActivity
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.android.synthetic.main.user_list_view_layout.view.*
 

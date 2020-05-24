@@ -3,7 +3,7 @@
     <data>
         <variable
             name="linkupProfileViewModel"
-            type="com.eightnineapps.coinly.viewmodels.activityviewmodels.LinkupProfileViewModel" />
+            type="com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LinkupProfileViewModel" />
     </data>
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -26,7 +26,7 @@
             android:orientation="vertical"
             android:paddingEnd="5dp"
             android:background="@drawable/my_profile_rounded_background"
-            tools:context=".views.activities.CreateProfileActivity"
+            tools:context=".views.activities.profiles.CreateProfileActivity"
             tools:ignore="RtlSymmetry,UselessParent"
             android:clipToPadding="false">
 

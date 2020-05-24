@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.databinding.FragmentMyProfileBinding
 import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.MyProfileFragmentViewModel
-import com.eightnineapps.coinly.views.activities.EditProfileActivity
+import com.eightnineapps.coinly.views.activities.profiles.EditProfileActivity
 import kotlinx.android.synthetic.main.fragment_my_profile.view.*
 
 class MyProfileFragment : Fragment() {

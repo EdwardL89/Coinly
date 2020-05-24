@@ -1,8 +1,8 @@
 package com.eightnineapps.coinly.models
 
 import androidx.lifecycle.MutableLiveData
-import com.eightnineapps.coinly.classes.Notification
-import com.eightnineapps.coinly.classes.User
+import com.eightnineapps.coinly.classes.objects.Notification
+import com.eightnineapps.coinly.classes.objects.User
 
 /**
  * Model that provides access to the current user of the app. Can only have 1 current user

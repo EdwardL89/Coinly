@@ -2,7 +2,6 @@ package com.eightnineapps.coinly.viewmodels.fragmentviewmodels
 
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
-import com.eightnineapps.coinly.classes.TabLayoutFragmentViewModel
 import com.eightnineapps.coinly.models.CurrentUser
 
 class AllLittlesFragmentViewModel: TabLayoutFragmentViewModel() {
