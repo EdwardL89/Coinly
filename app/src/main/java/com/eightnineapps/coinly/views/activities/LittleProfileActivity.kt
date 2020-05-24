@@ -4,13 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.User
+import com.eightnineapps.coinly.viewmodels.LittleProfileViewModel
 import kotlinx.android.synthetic.main.activity_little_profile.*
 
 /**
@@ -18,14 +19,13 @@ import kotlinx.android.synthetic.main.activity_little_profile.*
  */
 class LittleProfileActivity : AppCompatActivity() {
 
-    private lateinit var currentUser: User
-    private lateinit var observedUser: User
+    private lateinit var littleProfileViewModel: LittleProfileViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        littleProfileViewModel = ViewModelProvider(this).get(LittleProfileViewModel::class.java)
+        littleProfileViewModel.observedUserInstance = intent.getSerializableExtra("observed_user") as User
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_little_profile)
-        currentUser = intent.getSerializableExtra("current_user") as User
-        observedUser = intent.getSerializableExtra("observed_user") as User
         setUpButtons()
         addCoinlyActionBarTitle()
     }
@@ -51,27 +51,8 @@ class LittleProfileActivity : AppCompatActivity() {
             startActivity(intent)
         }
         remove_little_button.setOnClickListener {
-            removeLittleAndSendBack()
+            littleProfileViewModel.removeLittleAndSendBack(this)
         }
-    }
-
-    /**
-     * Removes the observed Little and navigates to the previous page
-     */
-    private fun removeLittleAndSendBack() {
-        currentUser.littles.remove(observedUser.email)
-        HomeActivity.database.collection("users").document(currentUser.email!!).update("littles", currentUser.littles)
-        HomeActivity.database.collection("users").document(observedUser.email!!).get().addOnCompleteListener {
-                task ->
-            if (task.isSuccessful) {
-                val mostUpdatedObservedUser = task.result!!.toObject(User::class.java)!!
-                val successfullyRemoved = mostUpdatedObservedUser.bigs.remove(currentUser.email.toString())
-                if (successfullyRemoved) HomeActivity.database.collection("users").document(observedUser.email!!).update("bigs", mostUpdatedObservedUser.bigs)
-            }
-        }
-        Toast.makeText(this, "Removed ${observedUser.displayName} as a little", Toast.LENGTH_SHORT).show()
-        //TODO: add a listener to the littles recycler view to refresh it after the removal
-        finish()
     }
 
     /**

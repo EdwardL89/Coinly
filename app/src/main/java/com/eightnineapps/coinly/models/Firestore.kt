@@ -29,6 +29,10 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
         return database.collection("users").document(user.email!!).update("notifications", user.notifications)
     }
 
+    fun updateList(user: User, field: String, list: MutableList<String>): Task<Void> {
+        return database.collection("users").document(user.email!!).update(field, list)
+    }
+
     fun getInstance() = database
 
 }

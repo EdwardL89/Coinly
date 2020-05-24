@@ -7,10 +7,11 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.User
+import com.eightnineapps.coinly.viewmodels.BigProfileViewModel
 import kotlinx.android.synthetic.main.activity_big_profile.*
 
 /**
@@ -18,16 +19,15 @@ import kotlinx.android.synthetic.main.activity_big_profile.*
  */
 class BigProfileActivity : AppCompatActivity() {
 
-    private lateinit var currentUser: User
-    private lateinit var observedUser: User
+    private lateinit var bigProfileViewModel: BigProfileViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        bigProfileViewModel = ViewModelProvider(this).get(BigProfileViewModel::class.java)
+        bigProfileViewModel.observedUserInstance = intent.getSerializableExtra("observed_user") as User
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_big_profile)
-        currentUser = intent.getSerializableExtra("current_user") as User
-        observedUser = intent.getSerializableExtra("observed_user") as User
-        setUpButtons()
         addCoinlyActionBarTitle()
+        setUpButtons()
     }
 
     /**
@@ -43,35 +43,14 @@ class BigProfileActivity : AppCompatActivity() {
      */
     private fun setUpButtons() {
         appeal_button.setOnClickListener {
-            val intent = Intent(this, AppealActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            startActivity(intent)
+            startActivity(Intent(this, AppealActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
         }
         request_coins_button.setOnClickListener {
-            val intent = Intent(this, RequestCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            startActivity(intent)
+            startActivity(Intent(this, RequestCoinsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
         }
         remove_big_button.setOnClickListener {
-            removeBigAndSendBack()
+            bigProfileViewModel.removeBigAndSendBack(this)
         }
-    }
-
-    /**
-     * Removes the observed Big and navigates to the previous page
-     */
-    private fun removeBigAndSendBack() {
-        currentUser.bigs.remove(observedUser.email)
-        HomeActivity.database.collection("users").document(currentUser.email!!).update("bigs", currentUser.bigs)
-        HomeActivity.database.collection("users").document(observedUser.email!!).get().addOnCompleteListener {
-                task ->
-                    if (task.isSuccessful) {
-                        val mostUpdatedObservedUser = task.result!!.toObject(User::class.java)!!
-                        val successfullyRemoved = mostUpdatedObservedUser.littles.remove(currentUser.email.toString())
-                        if (successfullyRemoved) HomeActivity.database.collection("users").document(observedUser.email!!).update("littles", mostUpdatedObservedUser.littles)
-                    }
-        }
-        Toast.makeText(this, "Removed ${observedUser.displayName} as a big", Toast.LENGTH_SHORT).show()
-        //TODO: add a listener to the bigs recycler view to refresh it after the removal
-        finish()
     }
 
     /**
