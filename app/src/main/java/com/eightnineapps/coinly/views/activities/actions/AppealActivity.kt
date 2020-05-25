@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -31,6 +32,7 @@ class AppealActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_appeal)
         binding.appealViewModel = appealViewModel
         view = binding.root
+        addBackArrowToActionBar()
         addCoinlyActionBarTitle()
         loadProfilePicture()
         setUpButtons()
@@ -43,6 +45,19 @@ class AppealActivity : AppCompatActivity() {
         super.finish()
         overridePendingTransition(0, 0)
     }
+
+    /**
+     * Determines actions based on what items in the action bar are selected
+     */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
 
     /**
      * Loads the observe user's profile picture
@@ -69,7 +84,15 @@ class AppealActivity : AppCompatActivity() {
      */
     private fun setUpButtons() {
         cancel_appeal_coins_button.setOnClickListener {
-            finish()
+            onBackPressed()
         }
+    }
+
+    /**
+     * Adds a back arrow to navigate back to the previous activity
+     */
+    private fun addBackArrowToActionBar() {
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.arrow_back)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 }

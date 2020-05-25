@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -33,6 +34,7 @@ class EditProfileActivity : AppCompatActivity() {
         binding.editProfileViewModel = editProfileViewModel
         view = binding.root
         addCoinlyActionBarTitle()
+        addBackArrowToActionBar()
         loadProfilePicture()
         setUpButtons()
     }
@@ -43,6 +45,18 @@ class EditProfileActivity : AppCompatActivity() {
     override fun finish() {
         super.finish()
         overridePendingTransition(0, 0)
+    }
+
+    /**
+     * Determines actions based on what items in the action bar are selected
+     */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
     }
 
     /**
@@ -77,7 +91,7 @@ class EditProfileActivity : AppCompatActivity() {
      */
     private fun setUpButtons() {
         cancel_edit_profile_button.setOnClickListener {
-            finish()
+            onBackPressed()
         }
         done_edit_profile_button.setOnClickListener {
             editProfileViewModel.updateUserFields(real_name_editText, display_name_editText, bio_edit_text)
@@ -86,5 +100,13 @@ class EditProfileActivity : AppCompatActivity() {
         add_profile_picture_button.setOnClickListener {
             editProfileViewModel.imgUploadHelper.chooseImageFromGallery(this)
         }
+    }
+
+    /**
+     * Adds a back arrow to navigate back to the previous activity
+     */
+    private fun addBackArrowToActionBar() {
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.arrow_back)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 }

@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -35,9 +36,10 @@ class LinkupProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_linkup_profile)
         binding.linkupProfileViewModel = linkupProfileViewModel
-        setupButtons()
         addCoinlyActionBarTitle()
+        addBackArrowToActionBar()
         loadProfilePictureAndPrizesGiven()
+        setupButtons()
     }
 
     /**
@@ -46,6 +48,18 @@ class LinkupProfileActivity : AppCompatActivity() {
     override fun finish() {
         super.finish()
         overridePendingTransition(0, 0)
+    }
+
+    /**
+     * Determines actions based on what items in the action bar are selected
+     */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
     }
 
     /**
@@ -186,5 +200,13 @@ class LinkupProfileActivity : AppCompatActivity() {
     private fun displayPrizesGiven() {
         if (prizesGivenRecyclerView.visibility == View.VISIBLE) linkupProfileViewModel.prizeLoader.loadAllPrizesGiven(prizesGivenRecyclerView)
         if (prizesClaimedRecyclerView.visibility == View.VISIBLE) linkupProfileViewModel.prizeLoader.loadAllPrizesClaimed(prizesClaimedRecyclerView)
+    }
+
+    /**
+     * Adds a back arrow to navigate back to the previous activity
+     */
+    private fun addBackArrowToActionBar() {
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.arrow_back)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 }

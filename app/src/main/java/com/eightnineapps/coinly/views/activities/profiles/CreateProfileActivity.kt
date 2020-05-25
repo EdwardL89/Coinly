@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
@@ -27,9 +28,10 @@ class CreateProfileActivity : AppCompatActivity() {
         createProfileViewModel = ViewModelProvider(this).get(CreateProfileViewModel::class.java)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_profile)
+        setupAddProfilePictureButton()
+        addBackArrowToActionBar()
         addCoinlyActionBarTitle()
         setupDoneButton()
-        setupAddProfilePictureButton()
     }
 
     /**
@@ -54,6 +56,18 @@ class CreateProfileActivity : AppCompatActivity() {
     override fun finish() {
         super.finish()
         overridePendingTransition(0, 0)
+    }
+
+    /**
+     * Determines actions based on what items in the action bar are selected
+     */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
     }
 
     /**
@@ -84,5 +98,13 @@ class CreateProfileActivity : AppCompatActivity() {
         done_button.setOnClickListener {
             createProfileViewModel.verifyProfileCreationIsComplete(this, real_name_editText, display_name_editText, bio_edit_text)
         }
+    }
+
+    /**
+     * Adds a back arrow to navigate back to the previous activity
+     */
+    private fun addBackArrowToActionBar() {
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.arrow_back)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 }
