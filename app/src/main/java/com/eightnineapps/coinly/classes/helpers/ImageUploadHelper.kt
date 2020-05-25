@@ -32,6 +32,10 @@ class ImageUploadHelper {
         return byteArrayOutputStream.toByteArray()
     }
 
+    fun generateId(): String {
+        return "" //TODO
+    }
+
     /**
      * Converts a Uri to a Bitmap
      */

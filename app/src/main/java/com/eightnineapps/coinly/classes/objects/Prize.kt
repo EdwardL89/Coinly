@@ -1,8 +1,9 @@
 package com.eightnineapps.coinly.classes.objects
 
-class Prize(_name: String, _price: Int) {
+class Prize(_id: String, _name: String, _price: Int, _uri: String) {
 
-    //Properties
+    var id = _id
+    var uri = _uri
     var price = _price
     var name = _name
     var winner: User? = null

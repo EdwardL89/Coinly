@@ -77,4 +77,8 @@
     <string name="change">Change</string>
     <string name="zero">0</string>
     <string name="back_arrow">back arrow</string>
+    <string name="quick_actions">Quick Actions</string>
+    <string name="set_prize">Set Prize</string>
+    <string name="title">Title</string>
+    <string name="price">Price</string>
 </resources>

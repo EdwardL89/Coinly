@@ -16,8 +16,9 @@ class User(_realName: String = "", _displayName: String = "", _id: String = "", 
     var displayName = _displayName
     var bigs: MutableList<String> = mutableListOf()
     var littles: MutableList<String> = mutableListOf()
-    var prizesClaimed: MutableList<String> = mutableListOf()
+    var prizesSet: MutableList<String> = mutableListOf()
     var prizesGiven: MutableList<String> = mutableListOf()
+    var prizesClaimed: MutableList<String> = mutableListOf()
     var notifications: MutableList<Notification> = mutableListOf()
     var profilePictureUri: String = ""
 

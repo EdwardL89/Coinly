@@ -65,6 +65,14 @@ class LittleProfileActivity : AppCompatActivity() {
     }
 
     /**
+     * Catches the result of the intent that opens the gallery to select a profile picture image
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        littleProfileViewModel.handleGallerySelectionCompletion(requestCode, resultCode, data, applicationContext, this, user_profile_picture)
+    }
+
+    /**
      * Loads the observe user's profile picture
      */
     private fun loadProfilePicture() {
@@ -90,6 +98,9 @@ class LittleProfileActivity : AppCompatActivity() {
         remove_little_button.setOnClickListener {
             littleProfileViewModel.removeLittleAndSendBack(this)
         }
+        set_prize_button.setOnClickListener {
+            littleProfileViewModel.imageUploadHelper.chooseImageFromGallery(this)
+        }
     }
 
     /**
@@ -97,7 +108,7 @@ class LittleProfileActivity : AppCompatActivity() {
      */
     @SuppressLint("InflateParams")
     private fun addCoinlyActionBarTitle() {
-        val actionBar = this.supportActionBar!!
+        val actionBar = supportActionBar!!
         actionBar.setDisplayShowCustomEnabled(true)
         actionBar.setDisplayShowTitleEnabled(false)
         val v: View = LayoutInflater.from(this).inflate(R.layout.app_bar_title, null)
