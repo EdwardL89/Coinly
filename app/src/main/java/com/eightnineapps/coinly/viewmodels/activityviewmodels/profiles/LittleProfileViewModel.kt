@@ -3,13 +3,9 @@ package com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
-import com.bumptech.glide.Glide
-import com.eightnineapps.coinly.classes.dialogues.SetNewPrizeDialogue
 import com.eightnineapps.coinly.classes.helpers.ImageUploadHelper
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.models.CurrentUser
@@ -46,20 +42,10 @@ class LittleProfileViewModel: ViewModel() {
     /**
      * Loads selected image to an image view and prepares the image to be uploaded to Storage
      */
-    fun handleGallerySelectionCompletion(requestCode: Int, resultCode: Int, data: Intent?, appContext: Context, context: Context, profilePictureImgView: ImageView) {
+    fun handleGallerySelectionCompletion(requestCode: Int, resultCode: Int, data: Intent?, context: Context) {
         if (requestCode == 1 && resultCode == AppCompatActivity.RESULT_OK) {
-            Glide.with(appContext).load(data!!.data).into(profilePictureImgView)
             pictureOfNewPrizeSetByteData = imageUploadHelper.prepareForFirebaseStorageUpload(data, context)
-            openDialogue(context)
         }
-    }
-
-    /**
-     * Open a dialogue for the user to set the title and price of the new prize
-     */
-    private fun openDialogue(context: Context) {
-        val dialog = SetNewPrizeDialogue()
-        dialog.show((context as FragmentActivity).supportFragmentManager, "Set New Prize Dialog")
     }
 
     /**

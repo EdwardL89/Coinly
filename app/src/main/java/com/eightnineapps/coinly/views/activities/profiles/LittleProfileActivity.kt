@@ -1,6 +1,8 @@
 package com.eightnineapps.coinly.views.activities.profiles
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -8,6 +10,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +24,7 @@ import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LittlePro
 import com.eightnineapps.coinly.views.activities.actions.GiveCoinsActivity
 import com.eightnineapps.coinly.views.activities.actions.RevokeCoinsActivity
 import kotlinx.android.synthetic.main.activity_little_profile.*
+import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.view.*
 
 /**
  * Displays the prizes the little has claim from you as well as the prizes you have set for the little
@@ -69,7 +75,46 @@ class LittleProfileActivity : AppCompatActivity() {
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        littleProfileViewModel.handleGallerySelectionCompletion(requestCode, resultCode, data, applicationContext, this, user_profile_picture)
+        littleProfileViewModel.handleGallerySelectionCompletion(requestCode, resultCode, data, this)
+        openDialogue(this, applicationContext, data)
+    }
+
+    /**
+     * Open a dialogue for the user to set the title and price of the new prize
+     */
+    private fun openDialogue(context: Context, appContext: Context, data: Intent?) {
+        val builder = AlertDialog.Builder(context)
+        val view = (context as Activity).layoutInflater.inflate(R.layout.set_new_prize_dialogue_layout, null)
+        Glide.with(appContext).load(data!!.data).into(view.new_prize_picture)
+        builder.setView(view)
+        val dialog = builder.create()
+        setUpDialogButtons(view, dialog)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+        dialog.window!!.attributes = setDialogDimensions(dialog)
+    }
+
+    /**
+     * Sets the actions the buttons in the set new prize dialog will do
+     */
+    private fun setUpDialogButtons(view: View, dialog: AlertDialog) {
+        view.cancel_button.setOnClickListener {
+            dialog.cancel()
+        }
+        view.set_button.setOnClickListener {
+            Toast.makeText(this, "New Prize Set!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /**
+     * Sets the dimensions of the set new prize dialogue
+     */
+    private fun setDialogDimensions(dialog: AlertDialog): WindowManager.LayoutParams {
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(dialog.window!!.attributes)
+        layoutParams.width = 900
+        layoutParams.height = 1200
+        return layoutParams
     }
 
     /**

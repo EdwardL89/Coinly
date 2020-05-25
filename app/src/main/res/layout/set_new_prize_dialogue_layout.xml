@@ -2,13 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/my_profile_rounded_background"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/set_new_prize_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_new_prize"
+        android:fontFamily="sans-serif"
+        android:layout_marginTop="10dp"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        android:layout_centerHorizontal="true" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/new_prize_cardView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_margin="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/set_new_prize_title"
         android:layout_gravity="center"
         android:layout_centerHorizontal="true"
         app:cardCornerRadius="100dp">
@@ -27,6 +41,8 @@
         android:layout_below="@+id/new_prize_cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:inputType="text"
         android:autofillHints="@string/title"/>
 
@@ -36,8 +52,46 @@
         android:layout_below="@id/prize_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:layout_alignParentStart="true"
         android:inputType="text"
         android:autofillHints="@string/price"/>
+
+    <LinearLayout
+        android:id="@+id/action_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/prize_price"
+        android:paddingBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:clipToPadding="false">
+        <Button
+            android:id="@+id/set_button"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_button_green"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="5dp"
+            android:textSize="12sp"
+            android:text="@string/set"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_weight="1"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/rounded_button_light_gray"
+            android:layout_marginTop="2dp"
+            android:textSize="12sp"
+            android:text="@string/cancel"
+            tools:ignore="ButtonStyle" />
+    </LinearLayout>
 
 </RelativeLayout>
