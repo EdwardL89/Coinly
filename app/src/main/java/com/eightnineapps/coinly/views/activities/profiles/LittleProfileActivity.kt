@@ -24,6 +24,7 @@ import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LittlePro
 import com.eightnineapps.coinly.views.activities.actions.GiveCoinsActivity
 import com.eightnineapps.coinly.views.activities.actions.RevokeCoinsActivity
 import kotlinx.android.synthetic.main.activity_little_profile.*
+import kotlinx.android.synthetic.main.activity_little_profile.view.*
 import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.view.*
 
 /**
@@ -44,6 +45,7 @@ class LittleProfileActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_little_profile)
         binding.littleProfileViewModel = littleProfileViewModel
         view = binding.root
+        littleProfileViewModel.loadSetPrizes(view.setPrizesRecyclerView, this)
         addCoinlyActionBarTitle()
         addBackArrowToActionBar()
         loadProfilePicture()
@@ -102,7 +104,16 @@ class LittleProfileActivity : AppCompatActivity() {
             dialog.cancel()
         }
         view.set_button.setOnClickListener {
-            Toast.makeText(this, "New Prize Set!", Toast.LENGTH_SHORT).show()
+            val prizeTitle = view.prize_title.text.toString()
+            val prizePriceString = view.prize_price.text.toString()
+
+            if (prizeTitle == "" || prizePriceString == "") {
+                Toast.makeText(this, "Please add a title and price", Toast.LENGTH_SHORT).show()
+            } else {
+                littleProfileViewModel.uploadNewSetPrize(prizeTitle, Integer.parseInt(prizePriceString), this)
+                Toast.makeText(this, "New Prize Set!", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
         }
     }
 

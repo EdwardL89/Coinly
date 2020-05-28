@@ -1,6 +1,5 @@
 package com.eightnineapps.coinly.classes.objects
 
-import com.eightnineapps.coinly.classes.objects.Notification
 import java.io.Serializable
 
 /**
@@ -16,9 +15,9 @@ class User(_realName: String = "", _displayName: String = "", _id: String = "", 
     var displayName = _displayName
     var bigs: MutableList<String> = mutableListOf()
     var littles: MutableList<String> = mutableListOf()
-    var prizesSet: MutableList<String> = mutableListOf()
-    var prizesGiven: MutableList<String> = mutableListOf()
-    var prizesClaimed: MutableList<String> = mutableListOf()
+    var prizesSet: MutableList<Prize> = mutableListOf()
+    var prizesGiven: MutableList<Prize> = mutableListOf()
+    var prizesClaimed: MutableList<Prize> = mutableListOf()
     var notifications: MutableList<Notification> = mutableListOf()
     var profilePictureUri: String = ""
 

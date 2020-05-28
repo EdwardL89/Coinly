@@ -9,11 +9,14 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import java.io.ByteArrayOutputStream
+import kotlin.random.Random
 
 /**
  * Class with helper methods to upload an image to Firebase storage
  */
 class ImageUploadHelper {
+
+    private val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
     /**
      * Opens the gallery app and returns the selected image
@@ -32,8 +35,11 @@ class ImageUploadHelper {
         return byteArrayOutputStream.toByteArray()
     }
 
+    /**
+     * Generates a random 30 character, alphanumerical id for each user
+     */
     fun generateId(): String {
-        return "" //TODO
+        return (1..30).map { Random.nextInt(0, charPool.size) }.map(charPool::get).joinToString("")
     }
 
     /**
