@@ -8,11 +8,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
+import javax.inject.Inject
 
 /**
  * Model that provides access to the authenticated user
  */
-class AuthHelper {
+class AuthHelper @Inject constructor() {
 
     private val authenticatedUser = FirebaseAuth.getInstance()
 

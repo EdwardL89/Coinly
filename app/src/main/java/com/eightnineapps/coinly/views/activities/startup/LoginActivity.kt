@@ -8,28 +8,29 @@ import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.startup.LoginViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_login.*
+import javax.inject.Inject
 import kotlin.system.exitProcess
 
 /**
  * Allows the user to login either through google or email & password
  */
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var loginViewModel: LoginViewModel
+    @Inject
+    lateinit var loginViewModelFactory: LoginViewModel.Factory
 
-    companion object {
-        var auth = FirebaseAuth.getInstance()
-    }
+    private lateinit var loginViewModel: LoginViewModel
 
     /**
      * Initializes sign-in flow
      */
     override fun onCreate(savedInstanceState: Bundle?) {
-        loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
-        loginViewModel.updateUI(this)
         super.onCreate(savedInstanceState)
+        loginViewModel = ViewModelProvider(this, loginViewModelFactory).get(LoginViewModel::class.java)
+        loginViewModel.updateUI(this)
         setContentView(R.layout.activity_login)
         setupSignInButton()
     }

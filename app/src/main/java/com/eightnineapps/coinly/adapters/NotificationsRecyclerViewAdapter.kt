@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.views.activities.startup.HomeActivity.Companion.database
-import com.eightnineapps.coinly.views.activities.startup.LoginActivity.Companion.auth
 import com.eightnineapps.coinly.classes.objects.Notification
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.notification_layout.view.*
 
 /**
@@ -23,6 +23,7 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
 
     private var notificationList = _notifications as MutableList<Notification>
     private var context = _context
+    private var auth = FirebaseAuth.getInstance()
 
     /**
      * Explicitly defines the UI elements belonging to a single list element in the recycler view
