@@ -27,3 +27,11 @@ On the Linkup page, you can create new connections by finding new Bigs or Little
 The last tab shows your profile where you can see the prizes you've claimed, how many coins you've earned, and how many Bigs and Littles you have. There's also an "Edit profile" button where you can make changes such as adding a new profile picture or editing your bio.
 
 ## How do coin transactions work?
+For Littles: <br/>
+You can only receive coins from your Big. If a Big sees you do something good, or a task they assigned you, like taking out the trash, they can award you coins. If you do something good, but your Big is not around, you can go to their profile and tap, "Request Coins". However, Bigs can also revoke coins from you for, lets say, forgetting to do a task or purposely doing something bad. As a Little, you can go to the Big's profile, however, and tap "Appeal" if you feel your coins have been revoked unfairly.
+
+For Bigs: <br/>
+You can give and revoke coins to your littles. Give coins when you see them do something good. Revoke otherwise. Complete these actions by going to the Little's profile and tapping the "Give" or "Revoke" buttons, respectively. 
+
+## Claiming Prizes
+Once you have earned enough coins, go to one of your Big's profile to see their prizes. Tap on a prize to claim it, make sure you have enough coins. Once you tap on the prize, the Big will have 24 hours to award you that prize. You must confirm in the app whether or not you've received the prize. If the Big has not awarded you the prize within 24 hours, the Big's coin count will be set to 0, with an account suspension of 1 month.
