@@ -1,18 +1,11 @@
 package com.eightnineapps.coinly.views.fragments.profiles.big
 
-import android.annotation.SuppressLint
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
@@ -31,31 +24,16 @@ class BigProfileFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //viewModel.observedUserInstance = intent.getSerializableExtra("observed_user") as User
-        //observedUserInstance = bigProfileViewModel.observedUserInstance
-        //binding = DataBindingUtil.setContentView(this, R.layout.fragment_big_profile)
-        //binding.observedUserInstance = observedUserInstance
+        bigProfileViewModel.observedUserInstance = activity!!.intent.getSerializableExtra("observed_user") as User
         loadProfilePicture()
         setUpButtons()
-    }
-
-    /**
-     * Determines actions based on what items in the action bar are selected
-     */
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == android.R.id.home) {
-            //onBackPressed()
-            true
-        } else {
-            super.onOptionsItemSelected(item)
-        }
     }
 
     /**
      * Loads the observe user's profile picture
      */
     private fun loadProfilePicture() {
-        //Glide.with(view).load(observedUserInstance.profilePictureUri).into(view.findViewById(R.id.user_profile_picture))
+        Glide.with(view!!).load(bigProfileViewModel.observedUserInstance.profilePictureUri).into(view!!.findViewById(R.id.user_profile_picture))
     }
 
     /**
@@ -69,7 +47,7 @@ class BigProfileFragment: Fragment() {
             findNavController().navigate(R.id.action_bigProfileFragment_to_requestCoinsFragment, null)
         }
         remove_big_button.setOnClickListener {
-           //bigProfileViewModel.removeBigAndSendBack(this)
+           bigProfileViewModel.removeBigAndSendBack(context!!)
         }
     }
 
