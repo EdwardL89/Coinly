@@ -174,7 +174,7 @@
             android:layout_below="@id/notifications_title"
             android:layout_above="@id/claimed_prizes_title"
             android:layout_alignStart="@id/notifications_title"
-            tools:context=".views.fragments.AllBigsFragment"/>
+            tools:context=".views.fragments.tablayout.AllBigsFragment"/>
 
         <ImageView
             android:id="@+id/no_notifications_image"

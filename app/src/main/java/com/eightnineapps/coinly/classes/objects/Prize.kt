@@ -5,8 +5,6 @@ class Prize(_name: String, _price: Int) {
     //Properties
     var price = _price
     var name = _name
-    var winner: User? = null
-    var setter: User? = null
-    var hasBeenAwarded = false
+    var claimed = false
 
 }
