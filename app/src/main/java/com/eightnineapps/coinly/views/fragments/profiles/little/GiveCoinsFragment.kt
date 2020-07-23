@@ -1,4 +1,4 @@
-package com.eightnineapps.coinly.views.activities.actions
+package com.eightnineapps.coinly.views.fragments.profiles.little
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -12,26 +12,17 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.databinding.ActivityRequestBinding
-import com.eightnineapps.coinly.viewmodels.activityviewmodels.actions.RequestCoinsViewModel
-import kotlinx.android.synthetic.main.activity_request.*
+import kotlinx.android.synthetic.main.activity_give_coins.*
 
 /**
- * Allows a little send a request to a big for coins
+ * Lets a big give a chosen number of coins to a little
  */
-class RequestCoinsActivity : AppCompatActivity() {
+class GiveCoinsFragment : AppCompatActivity() {
 
-    private lateinit var requestCoinsViewModel: RequestCoinsViewModel
-    private lateinit var binding: ActivityRequestBinding
     private lateinit var view: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestCoinsViewModel = ViewModelProvider(this).get(RequestCoinsViewModel::class.java)
-        requestCoinsViewModel.observedUserDisplayName = intent.getSerializableExtra("display_name") as String
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_request)
-        binding.requestCoinsViewModel = requestCoinsViewModel
-        view = binding.root
         addBackArrowToActionBar()
         addCoinlyActionBarTitle()
         loadProfilePicture()
@@ -82,7 +73,7 @@ class RequestCoinsActivity : AppCompatActivity() {
      * Sets the on click listeners of all buttons of this activity
      */
     private fun setUpButtons() {
-        cancel_request_coins_button.setOnClickListener {
+        cancel_give_coins_button.setOnClickListener {
             onBackPressed()
         }
     }

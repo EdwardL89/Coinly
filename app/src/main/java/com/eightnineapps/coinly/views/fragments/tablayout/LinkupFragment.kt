@@ -1,4 +1,4 @@
-package com.eightnineapps.coinly.views.fragments
+package com.eightnineapps.coinly.views.fragments.tablayout
 
 import android.os.Bundle
 import android.view.*
@@ -6,19 +6,20 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.AllBigsFragmentViewModel
+import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.LinkupFragmentViewModel
 
-class AllBigsFragment : Fragment() {
 
-    private lateinit var allBigsFragmentViewModel: AllBigsFragmentViewModel
+class LinkupFragment : Fragment() {
+
+    private lateinit var linkupFragmentViewModel: LinkupFragmentViewModel
 
     /**
-     * Inflates the all bigs fragment
+     * Inflates the my profile fragment
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        allBigsFragmentViewModel = ViewModelProvider(this).get(AllBigsFragmentViewModel::class.java)
-        val view = inflater.inflate(R.layout.fragment_bigs, container, false)
-        return createBigsTab(view)
+        linkupFragmentViewModel = ViewModelProvider(this).get(LinkupFragmentViewModel::class.java)
+        val view = inflater.inflate(R.layout.fragment_linkup, container, false)
+        return createLinkupTab(view)
     }
 
     /**
@@ -28,7 +29,7 @@ class AllBigsFragment : Fragment() {
         inflater.inflate(R.menu.home_fragments_app_bar_menu, menu)
         val searchIcon = menu.findItem(R.id.menu_search)
         searchIcon.isVisible = true
-        allBigsFragmentViewModel.setUpSearchView(searchIcon.actionView as SearchView)
+        linkupFragmentViewModel.setUpSearchView(searchIcon.actionView as SearchView)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -41,10 +42,10 @@ class AllBigsFragment : Fragment() {
     }
 
     /**
-     * Sets up the big tab fragment for the user
+     * Sets up the linkup tab fragment for the user
      */
-    private fun createBigsTab(view: View): View {
-        allBigsFragmentViewModel.addAllBigsToRecyclerView(view.findViewById(R.id.allBigsRecyclerView), context)
+    private fun createLinkupTab(view: View): View {
+        linkupFragmentViewModel.addAllUsersToRecyclerView(view.findViewById(R.id.allUsersRecyclerView), context)
         return view
     }
 }

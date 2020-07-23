@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <data>
-        <variable
-            name="appealViewModel"
-            type="com.eightnineapps.coinly.viewmodels.activityviewmodels.actions.AppealViewModel" />
-    </data>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -62,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="@{appealViewModel.observedUserDisplayName, default = @string/display_name}"
+                android:text="@string/display_name"
                 android:textSize="15sp"
                 android:textColor="@color/black"
                 android:layout_centerHorizontal="true"
@@ -156,4 +150,3 @@
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
-</layout>

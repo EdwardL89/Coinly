@@ -1,4 +1,4 @@
-package com.eightnineapps.coinly.views.activities.actions
+package com.eightnineapps.coinly.views.fragments.profiles.little
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -12,27 +12,19 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.databinding.ActivityRevokeCoinsBinding
-import com.eightnineapps.coinly.viewmodels.activityviewmodels.actions.RevokeCoinsViewModel
 import kotlinx.android.synthetic.main.activity_revoke_coins.*
 
 /**
  * Allows a big to revoke a specified number of coins from a little
  */
-class RevokeCoinsActivity : AppCompatActivity() {
+class RevokeCoinsFragment : AppCompatActivity() {
 
-    private lateinit var revokeCoinsViewModel: RevokeCoinsViewModel
-    private lateinit var binding: ActivityRevokeCoinsBinding
+
     private lateinit var view: View
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        revokeCoinsViewModel = ViewModelProvider(this).get(RevokeCoinsViewModel::class.java)
-        revokeCoinsViewModel.observedUserDisplayName = intent.getSerializableExtra("display_name") as String
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_revoke_coins)
-        binding.revokeCoinsViewModel = revokeCoinsViewModel
-        view = binding.root
         addBackArrowToActionBar()
         addCoinlyActionBarTitle()
         loadProfilePicture()
