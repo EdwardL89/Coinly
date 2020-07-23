@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.fragment_big_profile.*
 class BigProfileFragment: Fragment() {
 
     private val bigProfileViewModel: BigProfileViewModel by activityViewModels()
-    private lateinit var observedUserInstance: User
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_big_profile, container, false)
@@ -25,15 +24,21 @@ class BigProfileFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bigProfileViewModel.observedUserInstance = activity!!.intent.getSerializableExtra("observed_user") as User
-        loadProfilePicture()
+        loadProfile()
         setUpButtons()
     }
 
     /**
      * Loads the observe user's profile picture
      */
-    private fun loadProfilePicture() {
-        Glide.with(view!!).load(bigProfileViewModel.observedUserInstance.profilePictureUri).into(view!!.findViewById(R.id.user_profile_picture))
+    private fun loadProfile() {
+        val observedUser = bigProfileViewModel.observedUserInstance
+        Glide.with(view!!).load(observedUser.profilePictureUri).into(view!!.findViewById(R.id.user_profile_picture))
+        my_display_name_textView.text = observedUser.displayName
+        bio_text_view.text = observedUser.bio
+        coin_count.text = observedUser.coins.toString()
+        bigs_count.text = observedUser.bigs.size.toString()
+        littles_count.text = observedUser.littles.size.toString()
     }
 
     /**

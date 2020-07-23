@@ -8,13 +8,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
-import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.classes.objects.User
-import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.BigProfileViewModel
-import kotlinx.android.synthetic.main.fragment_big_profile.*
 
 /**
  * Displays the prizes a little can claim from this big as well as the prizes already claimed
@@ -26,7 +20,6 @@ class BigProfileHost : AppCompatActivity() {
         setContentView(R.layout.activity_big_profile_host)
         addCoinlyActionBarTitle()
         addBackArrowToActionBar()
-        loadProfilePicture()
     }
 
     /**
@@ -47,13 +40,6 @@ class BigProfileHost : AppCompatActivity() {
         } else {
             super.onOptionsItemSelected(item)
         }
-    }
-
-    /**
-     * Loads the observe user's profile picture
-     */
-    private fun loadProfilePicture() {
-        //Glide.with(view).load(observedUserInstance.profilePictureUri).into(view.findViewById(R.id.user_profile_picture))
     }
 
     /**

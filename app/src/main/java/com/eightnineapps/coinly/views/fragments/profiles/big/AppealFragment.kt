@@ -32,7 +32,9 @@ class AppealFragment : Fragment() {
      * Loads the observe user's profile picture
      */
     private fun loadProfilePicture() {
-        Glide.with(view!!).load(bigProfileViewModel.observedUserInstance.profilePictureUri).into(view!!.findViewById(R.id.user_profile_picture))
+        val observedUser = bigProfileViewModel.observedUserInstance
+        Glide.with(view!!).load(observedUser.profilePictureUri).into(view!!.findViewById(R.id.user_profile_picture))
+        display_name_text_view.text = observedUser.displayName
     }
 
     /**

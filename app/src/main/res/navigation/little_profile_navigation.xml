@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/little_profile_navigation"
+    app:startDestination="@id/littleProfileFragment">
+
+    <fragment
+        android:id="@+id/littleProfileFragment"
+        android:name="com.eightnineapps.coinly.views.fragments.profiles.little.LittleProfileFragment"
+        android:label="LittleProfileFragment"
+        tools:layout="@layout/fragment_little_profile">
+        <action
+            android:id="@+id/action_littleProfileFragment_to_revokeCoinsFragment"
+            app:destination="@id/revokeCoinsFragment" />
+        <action
+            android:id="@+id/action_littleProfileFragment_to_giveCoinsFragment"
+            app:destination="@id/giveCoinsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/revokeCoinsFragment"
+        android:name="com.eightnineapps.coinly.views.fragments.profiles.little.RevokeCoinsFragment"
+        android:label="RevokeCoinsFragment"
+        tools:layout="@layout/fragment_revoke_coins"/>
+    <fragment
+        android:id="@+id/giveCoinsFragment"
+        android:name="com.eightnineapps.coinly.views.fragments.profiles.little.GiveCoinsFragment"
+        android:label="GiveCoinsFragment"
+        tools:layout="@layout/fragment_give_coins"/>
+</navigation>
