@@ -1,4 +1,4 @@
-package com.eightnineapps.coinly.views.fragments
+package com.eightnineapps.coinly.views.fragments.tablayout
 
 import android.os.Bundle
 import android.view.*
@@ -6,19 +6,19 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.AllLittlesFragmentViewModel
+import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.AllBigsFragmentViewModel
 
-class AllLittlesFragment : Fragment() {
+class AllBigsFragment : Fragment() {
 
-    private lateinit var allLittlesFragmentViewModel: AllLittlesFragmentViewModel
+    private lateinit var allBigsFragmentViewModel: AllBigsFragmentViewModel
 
     /**
-     * Inflates the my profile fragment
+     * Inflates the all bigs fragment
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        allLittlesFragmentViewModel = ViewModelProvider(this).get(AllLittlesFragmentViewModel::class.java)
-        val view = inflater.inflate(R.layout.fragment_littles, container, false)
-        return createLittlesTab(view)
+        allBigsFragmentViewModel = ViewModelProvider(this).get(AllBigsFragmentViewModel::class.java)
+        val view = inflater.inflate(R.layout.fragment_bigs, container, false)
+        return createBigsTab(view)
     }
 
     /**
@@ -28,7 +28,7 @@ class AllLittlesFragment : Fragment() {
         inflater.inflate(R.menu.home_fragments_app_bar_menu, menu)
         val searchIcon = menu.findItem(R.id.menu_search)
         searchIcon.isVisible = true
-        allLittlesFragmentViewModel.setUpSearchView(searchIcon.actionView as SearchView)
+        allBigsFragmentViewModel.setUpSearchView(searchIcon.actionView as SearchView)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -41,10 +41,10 @@ class AllLittlesFragment : Fragment() {
     }
 
     /**
-     * Sets up the little tab fragment for the user
+     * Sets up the big tab fragment for the user
      */
-    private fun createLittlesTab(view: View): View {
-        allLittlesFragmentViewModel.addAllLittlesToRecyclerView(view.findViewById(R.id.allLittlesRecyclerView), context)
+    private fun createBigsTab(view: View): View {
+        allBigsFragmentViewModel.addAllBigsToRecyclerView(view.findViewById(R.id.allBigsRecyclerView), context)
         return view
     }
 }

@@ -1,4 +1,4 @@
-package com.eightnineapps.coinly.views.fragments
+package com.eightnineapps.coinly.views.fragments.tablayout
 
 import android.content.Intent
 import android.os.Bundle

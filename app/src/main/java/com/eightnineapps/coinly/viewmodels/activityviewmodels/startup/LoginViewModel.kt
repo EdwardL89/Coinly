@@ -6,6 +6,7 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.classes.helpers.AuthHelper
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.models.Firestore
@@ -18,11 +19,15 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.DocumentSnapshot
+import javax.inject.Inject
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel constructor(private val authHelper: AuthHelper) : ViewModel() {
 
-    private val authHelper =
-        AuthHelper()
+    class Factory @Inject constructor(private val authHelper: AuthHelper): ViewModelProvider.NewInstanceFactory() {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return  LoginViewModel(authHelper) as T
+        }
+    }
 
     /**
      * Goes to the main activity page if sign in was successful
