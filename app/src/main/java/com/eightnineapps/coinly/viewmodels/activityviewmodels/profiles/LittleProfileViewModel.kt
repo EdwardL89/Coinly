@@ -61,15 +61,19 @@ class LittleProfileViewModel: ViewModel() {
      * Uploads image to storage nad updates the user's Uri
      */
     fun uploadNewSetPrize(prizeTitle: String, prizePrice: Int, context: Context) {
-        /*val prizeId = imageUploadHelper.generateId()
+        val prizeId = imageUploadHelper.generateId()
         val prizePath = "set_prizes/${currentUserInstance!!.id}/${observedUserInstance.id}/prizeId"
         ImgStorage.insert(pictureOfNewPrizeSetByteData, prizePath).addOnSuccessListener {
             ImgStorage.read(prizePath).addOnSuccessListener {
-                uri -> currentUserInstance.prizesSet.add(Prize(prizeId, prizeTitle, prizePrice, uri.toString()))
-                updateRecyclerViewAdapterAndLayoutManager(context)
-                //TODO: Update the user since there's now a new prize set
+                uri -> Firestore.getLittles(currentUserInstance.email!!).document(observedUserInstance.email!!)
+                .collection("Bigs")
+                .document(currentUserInstance.email!!)
+                .collection("Prizes")
+                .document(uri.toString()).set(Prize(prizeTitle, prizePrice, uri.toString())).addOnCompleteListener {
+                    updateRecyclerViewAdapterAndLayoutManager(context)
+                }
             }
-        }*/
+        }
     }
 
     fun loadSetPrizes(recyclerView: RecyclerView, context: Context) {
@@ -82,14 +86,21 @@ class LittleProfileViewModel: ViewModel() {
      * Assigns the given recycler view's layout manager and adapter using the list whose data is being displayed
      */
     private fun updateRecyclerViewAdapterAndLayoutManager(context: Context?) {
-        /*setPrizesRecyclerView.layoutManager = LinearLayoutManager(context)
-        //In the future, instead of grabbing all of the prizes set from the current user, you're going to
-        //have to filter for the prizes set just for the little user being currently observed
-        setPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(currentUserInstance!!.prizesSet, context!!)
-        if (currentUserInstance.prizesSet.isNotEmpty()) {
-            (context as Activity).no_prizes_set_image.visibility = View.INVISIBLE
-        } else {
-            (context as Activity).no_prizes_set_image.visibility = View.VISIBLE
-        }*/
+        setPrizesRecyclerView.layoutManager = LinearLayoutManager(context)
+        Firestore.getLittles(currentUserInstance?.email!!).document(observedUserInstance.email!!)
+            .collection("Bigs")
+            .document(currentUserInstance.email!!)
+            .collection("Prizes").get().addOnSuccessListener {
+                var allPrizesSet = mutableListOf<Prize>()
+                for (document in it) {
+                    allPrizesSet.add(document.toObject(Prize::class.java))
+                }
+                setPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(allPrizesSet, context!!)
+                if (allPrizesSet.isNotEmpty()) {
+                    (context as Activity).no_prizes_set_image.visibility = View.INVISIBLE
+                } else {
+                    (context as Activity).no_prizes_set_image.visibility = View.VISIBLE
+                }
+            }
     }
 }

@@ -69,11 +69,27 @@ class LinkupProfileActivity : AppCompatActivity() {
         linkupProfileViewModel.getUpdatedObservedUser(linkupProfileViewModel.observedUserInstance).addOnCompleteListener {
             if (it.isSuccessful) {
                 linkupProfileViewModel.observedUserInstance = it.result?.toObject(User::class.java)!!
-                setUpAddAsButtons(true)
-                setUpAddAsButtons(false)
+                linkupProfileViewModel.retrieveObservedUserBigs().addOnSuccessListener {
+                    it2 -> for (doc in it2) {
+                        linkupProfileViewModel.observedUserInstanceBigs.add(doc["email"].toString())
+                    }
+                    linkupProfileViewModel.retrieveObservedUserLittles().addOnSuccessListener {
+                        it3 -> for (doc in it3) {
+                            linkupProfileViewModel.observedUserInstanceLittles.add(doc["email"].toString())
+                        }
+                        setUpAddAsButtons(true)
+                        setUpAddAsButtons(false)
+                    }
+                }
                 //hideOrShowPrizesGiven()
                 //hideOrShowPrizesClaimed()
             }
+        }
+    }
+
+    private fun setUpAddAsBigButton() {
+        add_as_big_button.setOnClickListener {
+
         }
     }
 
@@ -93,7 +109,7 @@ class LinkupProfileActivity : AppCompatActivity() {
      * Sets up the add as buttons based on the status between the current and observed user
      */
     private fun setUpAddAsButtons(asBig: Boolean) {
-        /*val addStatus = linkupProfileViewModel.getAddStatus(asBig)
+        val addStatus = linkupProfileViewModel.getAddStatus(asBig)
         if (!addStatus.first && !addStatus.second && !addStatus.third)
             (if (asBig) add_as_big_button else add_as_little_button).setOnClickListener {
                 linkupProfileViewModel.sendAddNotification(asBig)
@@ -101,7 +117,7 @@ class LinkupProfileActivity : AppCompatActivity() {
             }
         else if (addStatus.first) showRequested(if (asBig) add_as_big_button else add_as_little_button)
         else if (addStatus.second) showAdded(asBig, if (asBig) add_as_big_button else add_as_little_button)
-        else updateButtonsForPendingRequests(if (asBig) ADDING_AS_LITTLE else ADDING_AS_BIG)*/
+        else updateButtonsForPendingRequests(if (asBig) ADDING_AS_LITTLE else ADDING_AS_BIG)
     }
 
     /**

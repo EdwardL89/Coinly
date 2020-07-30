@@ -48,11 +48,11 @@ class Notification: Serializable {
             if (!it.result!!.exists()) {
                 toAddUser.numOfLittles += 1
                 database.collection("users").document(toAddUser.email!!).update("numOfLittles", toAddUser.numOfLittles)
-                database.collection("users").document(toAddUser.email!!).collection("Littles").document(addingToUser.email!!).set(addingToUser)
+                    database.collection("users").document(toAddUser.email!!).collection("Littles").document(addingToUser.email!!).set(mapOf("email" to addingToUser.email!!))
 
                 addingToUser.numOfBigs += 1
                 database.collection("users").document(addingToUser.email!!).update("numOfBigs", addingToUser.numOfBigs)
-                database.collection("users").document(addingToUser.email!!).collection("Bigs").document(toAddUser.email!!).set(toAddUser)
+                database.collection("users").document(addingToUser.email!!).collection("Bigs").document(toAddUser.email!!).set(mapOf("email" to toAddUser.email!!))
             }
         }
     }

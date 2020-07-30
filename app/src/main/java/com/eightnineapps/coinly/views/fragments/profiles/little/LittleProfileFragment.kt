@@ -1,9 +1,20 @@
 package com.eightnineapps.coinly.views.fragments.profiles.little
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -12,6 +23,7 @@ import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LittleProfileViewModel
 import kotlinx.android.synthetic.main.fragment_little_profile.*
+import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.view.*
 
 class LittleProfileFragment: Fragment() {
 
@@ -38,8 +50,8 @@ class LittleProfileFragment: Fragment() {
         my_display_name_textView.text = observedUser.displayName
         bio_text_view.text = observedUser.bio
         coin_count.text = observedUser.coins.toString()
-        bigs_count.text = observedUser.bigs.size.toString()
-        littles_count.text = observedUser.littles.size.toString()
+        bigs_count.text = observedUser.numOfBigs.toString()
+        littles_count.text = observedUser.numOfLittles.toString()
     }
 
     /**
@@ -55,6 +67,59 @@ class LittleProfileFragment: Fragment() {
         remove_little_button.setOnClickListener {
             littleProfileViewModel.removeLittleAndSendBack(context!!)
         }
+        set_prize_button.setOnClickListener {
+            val openGallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            startActivityForResult(openGallery, 1)
+        }
+    }
+
+    /**
+     * Catches the result of the intent that opens the gallery to select a profile picture image
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        littleProfileViewModel.handleGallerySelectionCompletion(requestCode, resultCode, data, context!!)
+        Log.w("INFOOOOOOOO", "OnActivityResultCalled!")
+        openDialogue(context!!, context!!.applicationContext, data)
+    }
+
+    /**
+     * Open a dialogue for the user to set the title and price of the new prize
+     */
+    @SuppressLint("InflateParams")
+    private fun openDialogue(context: Context, appContext: Context, data: Intent?) {
+        val builder = AlertDialog.Builder(context)
+        val view = (context as Activity).layoutInflater.inflate(R.layout.set_new_prize_dialogue_layout, null)
+        Glide.with(appContext).load(data!!.data).into(view.new_prize_picture)
+        builder.setView(view)
+        val dialog = builder.create()
+        setUpDialogButtons(view, dialog)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+        dialog.window!!.attributes = setDialogDimensions(dialog)
+    }
+
+    /**
+     * Sets the actions the buttons in the set new prize dialog will do
+     */
+    private fun setUpDialogButtons(view: View, dialog: AlertDialog) {
+        view.cancel_button.setOnClickListener {
+            dialog.cancel()
+        }
+        view.set_button.setOnClickListener {
+            Toast.makeText(context!!, "New Prize Set!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /**
+     * Sets the dimensions of the set new prize dialogue
+     */
+    private fun setDialogDimensions(dialog: AlertDialog): WindowManager.LayoutParams {
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(dialog.window!!.attributes)
+        layoutParams.width = 900
+        layoutParams.height = 1200
+        return layoutParams
     }
 
 }
