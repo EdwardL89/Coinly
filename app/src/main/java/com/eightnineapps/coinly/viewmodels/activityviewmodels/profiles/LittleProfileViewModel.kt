@@ -16,7 +16,7 @@ import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.models.ImgStorage
-import kotlinx.android.synthetic.main.activity_little_profile.*
+import kotlinx.android.synthetic.main.fragment_little_profile.*
 import java.io.ByteArrayOutputStream
 
 class LittleProfileViewModel: ViewModel() {
@@ -33,7 +33,7 @@ class LittleProfileViewModel: ViewModel() {
      * Removes the observed Big and navigates to the previous page
      */
     fun removeLittleAndSendBack(context: Context) {
-        currentUserInstance!!.littles.remove(observedUserInstance.email)
+        /*currentUserInstance!!.littles.remove(observedUserInstance.email)
         Firestore.updateList(currentUserInstance, "littles", currentUserInstance.littles)
         Firestore.read(observedUserInstance).get().addOnCompleteListener {
                 task ->
@@ -45,7 +45,7 @@ class LittleProfileViewModel: ViewModel() {
         }
         Toast.makeText(context, "Removed ${observedUserInstance.displayName} as a little", Toast.LENGTH_SHORT).show()
         //TODO: add a listener to the bigs recycler view to refresh it after the removal
-        (context as Activity).finish()
+        (context as Activity).finish()*/
     }
 
     /**
@@ -61,7 +61,7 @@ class LittleProfileViewModel: ViewModel() {
      * Uploads image to storage nad updates the user's Uri
      */
     fun uploadNewSetPrize(prizeTitle: String, prizePrice: Int, context: Context) {
-        val prizeId = imageUploadHelper.generateId()
+        /*val prizeId = imageUploadHelper.generateId()
         val prizePath = "set_prizes/${currentUserInstance!!.id}/${observedUserInstance.id}/prizeId"
         ImgStorage.insert(pictureOfNewPrizeSetByteData, prizePath).addOnSuccessListener {
             ImgStorage.read(prizePath).addOnSuccessListener {
@@ -69,7 +69,7 @@ class LittleProfileViewModel: ViewModel() {
                 updateRecyclerViewAdapterAndLayoutManager(context)
                 //TODO: Update the user since there's now a new prize set
             }
-        }
+        }*/
     }
 
     fun loadSetPrizes(recyclerView: RecyclerView, context: Context) {
@@ -82,7 +82,7 @@ class LittleProfileViewModel: ViewModel() {
      * Assigns the given recycler view's layout manager and adapter using the list whose data is being displayed
      */
     private fun updateRecyclerViewAdapterAndLayoutManager(context: Context?) {
-        setPrizesRecyclerView.layoutManager = LinearLayoutManager(context)
+        /*setPrizesRecyclerView.layoutManager = LinearLayoutManager(context)
         //In the future, instead of grabbing all of the prizes set from the current user, you're going to
         //have to filter for the prizes set just for the little user being currently observed
         setPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(currentUserInstance!!.prizesSet, context!!)
@@ -90,6 +90,6 @@ class LittleProfileViewModel: ViewModel() {
             (context as Activity).no_prizes_set_image.visibility = View.INVISIBLE
         } else {
             (context as Activity).no_prizes_set_image.visibility = View.VISIBLE
-        }
+        }*/
     }
 }

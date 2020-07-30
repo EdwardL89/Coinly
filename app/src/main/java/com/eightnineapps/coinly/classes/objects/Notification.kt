@@ -2,6 +2,7 @@ package com.eightnineapps.coinly.classes.objects
 
 import com.eightnineapps.coinly.views.activities.startup.HomeActivity.Companion.database
 import com.eightnineapps.coinly.enums.NotificationType
+import com.eightnineapps.coinly.models.Firestore
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import java.io.Serializable
@@ -42,11 +43,17 @@ class Notification: Serializable {
     private fun addAsBig(toAddUserTask: Task<DocumentSnapshot>, addingToUserTask: Task<DocumentSnapshot>) {
         val toAddUser = toAddUserTask.result!!.toObject(User::class.javaObjectType)!!
         val addingToUser = addingToUserTask.result!!.toObject(User::class.javaObjectType)!!
-        if (!toAddUser.littles.contains(addingToUser.email!!)) {
-            toAddUser.littles.add(addingToUser.email!!)
-            database.collection("users").document(toAddUser.email!!).update("littles", toAddUser.littles)
-            addingToUser.bigs.add(toAddUser.email!!)
-            database.collection("users").document(addingToUser.email!!).update("bigs", addingToUser.bigs)
+
+        Firestore.getLittles(toAddUserEmail).document(addingToUser.email!!).get().addOnCompleteListener {
+            if (!it.result!!.exists()) {
+                toAddUser.numOfLittles += 1
+                database.collection("users").document(toAddUser.email!!).update("numOfLittles", toAddUser.numOfLittles)
+                database.collection("users").document(toAddUser.email!!).collection("Littles").document(addingToUser.email!!).set(addingToUser)
+
+                addingToUser.numOfBigs += 1
+                database.collection("users").document(addingToUser.email!!).update("numOfBigs", addingToUser.numOfBigs)
+                database.collection("users").document(addingToUser.email!!).collection("Bigs").document(toAddUser.email!!).set(toAddUser)
+            }
         }
     }
 
@@ -68,11 +75,17 @@ class Notification: Serializable {
     private fun addAsLittle(toAddUserTask: Task<DocumentSnapshot>, addingToUserTask: Task<DocumentSnapshot>) {
         val toAddUser = toAddUserTask.result!!.toObject(User::class.javaObjectType)!!
         val addingToUser = addingToUserTask.result!!.toObject(User::class.javaObjectType)!!
-        if (!toAddUser.bigs.contains(addingToUser.email!!)) { // For when both users request and accept eachother
-            toAddUser.bigs.add(addingToUser.email!!)
-            database.collection("users").document(toAddUser.email!!).update("bigs", toAddUser.bigs)
-            addingToUser.littles.add(toAddUser.email!!)
-            database.collection("users").document(addingToUser.email!!).update("littles", addingToUser.littles)
+
+        Firestore.getBigs(toAddUserEmail).document(addingToUser.email!!).get().addOnCompleteListener {
+            if (!it.result!!.exists()) {
+                toAddUser.numOfBigs += 1
+                database.collection("users").document(toAddUser.email!!).update("numOfBigs", toAddUser.numOfBigs)
+                database.collection("users").document(toAddUser.email!!).collection("Bigs").document(addingToUser.email!!).set(addingToUser)
+
+                addingToUser.numOfLittles += 1
+                database.collection("users").document(addingToUser.email!!).update("numOfLittles", addingToUser.numOfLittles)
+                database.collection("users").document(addingToUser.email!!).collection("Littles").document(toAddUser.email!!).set(toAddUser)
+            }
         }
     }
 }

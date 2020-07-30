@@ -19,7 +19,7 @@ class LinkupProfileViewModel: ViewModel() {
     /**
      * Get request status for current and observe user
      */
-    fun getAddStatus(asBig: Boolean) = Triple(alreadyRequested(asBig), alreadyAdded(asBig), alreadyReceivedRequest(asBig))
+    //fun getAddStatus(asBig: Boolean) = Triple(alreadyRequested(asBig), alreadyAdded(asBig), alreadyReceivedRequest(asBig))
 
     /**
      * Determines if the current user as already request the observed user to be added as a big/little
@@ -32,13 +32,13 @@ class LinkupProfileViewModel: ViewModel() {
     /**
      * Checks to see if the two users have already been added to eachother
      */
-    private fun alreadyAdded(asBig: Boolean): Boolean {
+    /*private fun alreadyAdded(asBig: Boolean): Boolean {
         return if (asBig) {
             observedUserInstance.littles.contains(currentUserInstance.email)
         } else {
             observedUserInstance.bigs.contains(currentUserInstance.email)
         }
-    }
+    }*/
 
     /**
      * Checks if the current user has already received the respective notification from the observed user

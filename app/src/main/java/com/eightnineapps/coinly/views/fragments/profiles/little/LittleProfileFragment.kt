@@ -26,6 +26,7 @@ class LittleProfileFragment: Fragment() {
         littleProfileViewModel.observedUserInstance = activity!!.intent.getSerializableExtra("observed_user") as User
         loadProfile()
         setUpButtons()
+        littleProfileViewModel.loadSetPrizes(setPrizesRecyclerView, context!!)
     }
 
     /**

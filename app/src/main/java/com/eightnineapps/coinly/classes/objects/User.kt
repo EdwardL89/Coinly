@@ -10,14 +10,11 @@ class User(_realName: String = "", _displayName: String = "", _id: String = "", 
     var coins = 0
     var id = _id
     var bio = _bio
+    var numOfBigs: Int = 0
+    var numOfLittles: Int = 0
     var email = _email
     var realName = _realName
     var displayName = _displayName
-    var bigs: MutableList<String> = mutableListOf()
-    var littles: MutableList<String> = mutableListOf()
-    var prizesSet: MutableList<Prize> = mutableListOf()
-    var prizesGiven: MutableList<Prize> = mutableListOf()
-    var prizesClaimed: MutableList<Prize> = mutableListOf()
     var notifications: MutableList<Notification> = mutableListOf()
     var profilePictureUri: String = ""
 

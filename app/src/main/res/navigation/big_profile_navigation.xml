@@ -17,11 +17,14 @@
             android:id="@+id/action_bigProfileFragment_to_requestCoinsFragment"
             app:destination="@id/requestCoinsFragment" />
     </fragment>
+
+
     <fragment
         android:id="@+id/appealFragment"
         android:name="com.eightnineapps.coinly.views.fragments.profiles.big.AppealFragment"
         android:label="AppealFragment"
         tools:layout="@layout/fragment_appeal"/>
+
     <fragment
         android:id="@+id/requestCoinsFragment"
         android:name="com.eightnineapps.coinly.views.fragments.profiles.big.RequestCoinsFragment"
