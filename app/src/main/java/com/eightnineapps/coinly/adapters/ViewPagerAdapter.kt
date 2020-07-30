@@ -3,10 +3,10 @@ package com.eightnineapps.coinly.adapters
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.eightnineapps.coinly.views.fragments.AllBigsFragment
-import com.eightnineapps.coinly.views.fragments.AllLittlesFragment
-import com.eightnineapps.coinly.views.fragments.LinkupFragment
-import com.eightnineapps.coinly.views.fragments.MyProfileFragment
+import com.eightnineapps.coinly.views.fragments.tablayout.AllBigsFragment
+import com.eightnineapps.coinly.views.fragments.tablayout.AllLittlesFragment
+import com.eightnineapps.coinly.views.fragments.tablayout.LinkupFragment
+import com.eightnineapps.coinly.views.fragments.tablayout.MyProfileFragment
 
 /**
  * Gets and displays the fragments within the tab layout on the home activity

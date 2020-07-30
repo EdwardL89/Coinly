@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <data>
-        <variable
-            name="giveCoinsViewModel"
-            type="com.eightnineapps.coinly.viewmodels.activityviewmodels.actions.GiveCoinsViewModel" />
-    </data>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -29,10 +23,10 @@
             android:clipToPadding="false">
 
             <TextView
-                android:id="@+id/giving_coins_title_textView"
+                android:id="@+id/appealing_to_title_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/giving_coins_to"
+                android:text="@string/appealing_to"
                 android:fontFamily="sans-serif"
                 android:layout_marginTop="10dp"
                 android:textSize="15sp"
@@ -46,7 +40,7 @@
                 android:layout_height="100dp"
                 app:cardCornerRadius="100dp"
                 android:layout_centerHorizontal="true"
-                android:layout_below="@id/giving_coins_title_textView">
+                android:layout_below="@id/appealing_to_title_textView">
 
                 <ImageView
                     android:id="@+id/user_profile_picture"
@@ -62,17 +56,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="@{giveCoinsViewModel.observedUserDisplayName, default = @string/display_name}"
+                android:text="@string/display_name"
                 android:textSize="15sp"
                 android:textColor="@color/black"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/cardView"/>
 
             <TextView
-                android:id="@+id/coins_giving_textView"
+                android:id="@+id/case_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/coins_giving"
+                android:text="@string/case_title"
                 android:fontFamily="sans-serif"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="20dp"
@@ -81,42 +75,41 @@
                 android:textColor="@color/black" />
 
             <EditText
-                android:id="@+id/coins_giving_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edit_text_background"
-                android:autofillHints=""
-                android:layout_marginEnd="15dp"
-                android:layout_marginStart="150dp"
-                android:layout_toEndOf="@+id/coins_giving_textView"
-                android:layout_alignTop="@+id/coins_giving_textView"
-                android:layout_alignBottom="@+id/coins_giving_textView"
-                android:inputType="text"
-                android:gravity="top|start"
-                tools:ignore="LabelFor" />
-
-            <TextView
-                android:id="@+id/optional_note_title_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add_a_note_optional"
-                android:fontFamily="sans-serif"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="20dp"
-                android:textSize="15sp"
-                android:layout_below="@id/coins_giving_textView"
-                android:textColor="@color/black" />
-
-            <EditText
-                android:id="@+id/optional_note_edit_text"
+                android:id="@+id/case_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:background="@drawable/edit_text_background"
                 android:autofillHints=""
                 android:layout_marginEnd="15dp"
                 android:layout_marginTop="10dp"
-                android:layout_alignStart="@id/optional_note_title_textView"
-                android:layout_below="@id/optional_note_title_textView"
+                android:layout_alignStart="@id/case_textView"
+                android:layout_below="@id/case_textView"
+                android:inputType="text"
+                android:gravity="top|start"
+                tools:ignore="LabelFor" />
+
+            <TextView
+                android:id="@+id/desired_actions_title_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/desired_actions"
+                android:fontFamily="sans-serif"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:textSize="15sp"
+                android:layout_below="@id/case_edit_text"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/desired_actions_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@drawable/edit_text_background"
+                android:autofillHints=""
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_alignStart="@id/case_textView"
+                android:layout_below="@id/desired_actions_title_textView"
                 android:inputType="text"
                 android:gravity="top|start"
                 tools:ignore="LabelFor" />
@@ -125,14 +118,14 @@
                 android:id="@+id/action_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/optional_note_edit_text"
-                android:layout_alignStart="@id/optional_note_edit_text"
+                android:layout_below="@+id/desired_actions_edit_text"
+                android:layout_alignStart="@id/desired_actions_edit_text"
                 android:paddingBottom="10dp"
                 android:layout_marginTop="30dp"
                 android:clipToPadding="false"
-                android:layout_alignEnd="@id/optional_note_edit_text">
+                android:layout_alignEnd="@id/desired_actions_edit_text">
                 <Button
-                    android:id="@+id/give_coins_button"
+                    android:id="@+id/appeal_button"
                     android:layout_width="0dp"
                     android:layout_height="25dp"
                     android:layout_weight="1"
@@ -140,11 +133,11 @@
                     android:layout_marginTop="2dp"
                     android:layout_marginEnd="5dp"
                     android:textSize="12sp"
-                    android:text="@string/give_coins"
+                    android:text="@string/send_appeal"
                     tools:ignore="ButtonStyle" />
 
                 <Button
-                    android:id="@+id/cancel_give_coins_button"
+                    android:id="@+id/cancel_appeal_coins_button"
                     android:layout_width="0dp"
                     android:layout_height="25dp"
                     android:layout_weight="1"
@@ -155,8 +148,5 @@
                     android:text="@string/cancel"
                     tools:ignore="ButtonStyle" />
             </LinearLayout>
-
         </RelativeLayout>
-
     </LinearLayout>
-</layout>

@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
-    <data>
-        <variable
-            name="observedUserInstance"
-            type="com.eightnineapps.coinly.classes.objects.User" />
-    </data>
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@drawable/login_screen_gradient"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:id="@+id/profile_background"
-        android:clipToPadding="false">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@drawable/login_screen_gradient"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:id="@+id/profile_background"
+    android:clipToPadding="false">
         <RelativeLayout
             android:id="@+id/user_profile_body"
             android:layout_width="match_parent"
@@ -52,7 +46,7 @@
                 android:layout_alignStart="@+id/user_profile_cardView"
                 android:layout_below="@+id/user_profile_cardView"
                 android:layout_gravity="center"
-                android:text="@{observedUserInstance.displayName, default = @string/display_name}"
+                android:text="@string/display_name"
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"/>
@@ -62,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="15dp"
-                android:text="@{observedUserInstance.bio, default = @string/bio}"
+                android:text="@string/bio"
                 android:textColor="@color/black"
                 android:fontFamily="sans-serif-thin"
                 android:layout_alignStart="@id/my_display_name_textView"
@@ -192,7 +186,7 @@
                 android:id="@+id/spending_power"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{String.valueOf(observedUserInstance.coins), default = @string/zero}"
+                android:text="@string/zero"
                 android:layout_below="@id/no_prizes_claimed_image"
                 android:layout_toEndOf="@id/your_spending_power"
                 android:textColor="@color/black"
@@ -226,7 +220,7 @@
                     android:id="@+id/coin_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(observedUserInstance.coins), default = @string/zero}"
+                    android:text="@string/zero"
                     android:fontFamily="sans-serif"
                     android:textSize="15sp"
                     android:textStyle="bold"
@@ -246,7 +240,7 @@
                     android:id="@+id/bigs_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(observedUserInstance.bigs.size()), default = @string/zero}"
+                    android:text="@string/zero"
                     android:layout_alignTop="@id/coin_count"
                     android:fontFamily="sans-serif"
                     android:textSize="15sp"
@@ -271,7 +265,7 @@
                     android:id="@+id/littles_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(observedUserInstance.littles.size()), default = @string/zero}"
+                    android:text="@string/zero"
                     android:layout_alignTop="@id/bigs_count"
                     android:fontFamily="sans-serif"
                     android:textStyle="bold"
@@ -308,4 +302,3 @@
         </RelativeLayout>
 
     </LinearLayout>
-</layout>

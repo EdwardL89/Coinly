@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.objects.User
-import com.eightnineapps.coinly.views.activities.profiles.BigProfileActivity
+import com.eightnineapps.coinly.views.activities.profiles.BigProfileHost
 import com.eightnineapps.coinly.views.activities.startup.HomeActivity.Companion.tabLayout
 import com.eightnineapps.coinly.views.activities.profiles.LinkupProfileActivity
-import com.eightnineapps.coinly.views.activities.profiles.LittleProfileActivity
+import com.eightnineapps.coinly.views.activities.profiles.LittleProfileHost
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.android.synthetic.main.user_list_view_layout.view.*
 
@@ -58,8 +58,8 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
          */
         private fun launchAppropriateActivity(currentTab: Int, observedUser: User) {
             val intent = when (currentTab) {
-                0 -> Intent(context, BigProfileActivity::class.java)
-                1 -> Intent(context, LittleProfileActivity::class.java)
+                0 -> Intent(context, BigProfileHost::class.java)
+                1 -> Intent(context, LittleProfileHost::class.java)
                 else -> Intent(context, LinkupProfileActivity::class.java)
             }
             intent.putExtra("observed_user", observedUser)
