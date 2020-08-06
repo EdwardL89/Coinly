@@ -20,8 +20,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
+import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LittleProfileViewModel
+import com.eightnineapps.coinly.views.activities.startup.HomeActivity
 import kotlinx.android.synthetic.main.fragment_little_profile.*
 import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.view.*
 
@@ -79,7 +82,6 @@ class LittleProfileFragment: Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         littleProfileViewModel.handleGallerySelectionCompletion(requestCode, resultCode, data, context!!)
-        Log.w("INFOOOOOOOO", "OnActivityResultCalled!")
         openDialogue(context!!, context!!.applicationContext, data)
     }
 
@@ -107,7 +109,14 @@ class LittleProfileFragment: Fragment() {
             dialog.cancel()
         }
         view.set_button.setOnClickListener {
-            Toast.makeText(context!!, "New Prize Set!", Toast.LENGTH_SHORT).show()
+            val title = view.prize_title.text.toString()
+            val price = view.prize_price.text.toString()
+            if (title == "" || price == "") {
+                Toast.makeText(context!!, "Missing Fields", Toast.LENGTH_SHORT).show()
+            } else {
+                littleProfileViewModel.uploadNewSetPrize(title, Integer.parseInt(price), context!!)
+                dialog.dismiss()
+            }
         }
     }
 

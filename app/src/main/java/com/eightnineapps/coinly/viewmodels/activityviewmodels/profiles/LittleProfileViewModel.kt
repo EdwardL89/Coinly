@@ -65,12 +65,13 @@ class LittleProfileViewModel: ViewModel() {
         val prizePath = "set_prizes/${currentUserInstance!!.id}/${observedUserInstance.id}/prizeId"
         ImgStorage.insert(pictureOfNewPrizeSetByteData, prizePath).addOnSuccessListener {
             ImgStorage.read(prizePath).addOnSuccessListener {
-                uri -> Firestore.getLittles(currentUserInstance.email!!).document(observedUserInstance.email!!)
+                uri -> Firestore.read(observedUserInstance)
                 .collection("Bigs")
                 .document(currentUserInstance.email!!)
                 .collection("Prizes")
-                .document(uri.toString()).set(Prize(prizeTitle, prizePrice, uri.toString())).addOnCompleteListener {
+                .document(prizeId).set(Prize(prizeTitle, prizePrice, uri.toString(), prizeId)).addOnCompleteListener {
                     updateRecyclerViewAdapterAndLayoutManager(context)
+                    Toast.makeText(context, "Prize Set!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -87,11 +88,11 @@ class LittleProfileViewModel: ViewModel() {
      */
     private fun updateRecyclerViewAdapterAndLayoutManager(context: Context?) {
         setPrizesRecyclerView.layoutManager = LinearLayoutManager(context)
-        Firestore.getLittles(currentUserInstance?.email!!).document(observedUserInstance.email!!)
+        Firestore.read(observedUserInstance)
             .collection("Bigs")
-            .document(currentUserInstance.email!!)
+            .document(currentUserInstance?.email!!)
             .collection("Prizes").get().addOnSuccessListener {
-                var allPrizesSet = mutableListOf<Prize>()
+                val allPrizesSet = mutableListOf<Prize>()
                 for (document in it) {
                     allPrizesSet.add(document.toObject(Prize::class.java))
                 }
