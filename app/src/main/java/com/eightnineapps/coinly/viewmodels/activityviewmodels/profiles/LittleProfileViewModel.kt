@@ -87,7 +87,7 @@ class LittleProfileViewModel: ViewModel() {
      * Assigns the given recycler view's layout manager and adapter using the list whose data is being displayed
      */
     private fun updateRecyclerViewAdapterAndLayoutManager(context: Context?) {
-        setPrizesRecyclerView.layoutManager = LinearLayoutManager(context)
+        setPrizesRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         Firestore.read(observedUserInstance)
             .collection("Bigs")
             .document(currentUserInstance?.email!!)
