@@ -33,19 +33,17 @@ class LittleProfileViewModel: ViewModel() {
      * Removes the observed Big and navigates to the previous page
      */
     fun removeLittleAndSendBack(context: Context) {
-        /*currentUserInstance!!.littles.remove(observedUserInstance.email)
-        Firestore.updateList(currentUserInstance, "littles", currentUserInstance.littles)
-        Firestore.read(observedUserInstance).get().addOnCompleteListener {
-                task ->
-            if (task.isSuccessful) {
-                val mostUpdatedObservedUser = task.result!!.toObject(User::class.java)!!
-                val successfullyRemoved = mostUpdatedObservedUser.bigs.remove(currentUserInstance.email.toString())
-                if (successfullyRemoved) Firestore.updateList(currentUserInstance, "bigs", mostUpdatedObservedUser.bigs)
-            }
-        }
+        currentUserInstance!!.numOfLittles -= 1
+        Firestore.update(currentUserInstance!!, "numOfLittles", currentUserInstance.numOfLittles.toString())
+        Firestore.removeLittle(currentUserInstance.email!!, observedUserInstance.email!!)
+
+        observedUserInstance.numOfBigs -= 1
+        Firestore.update(observedUserInstance, "numOfBigs", observedUserInstance.numOfBigs.toString())
+        Firestore.removeBig(observedUserInstance.email!!, currentUserInstance.email!!)
+
         Toast.makeText(context, "Removed ${observedUserInstance.displayName} as a little", Toast.LENGTH_SHORT).show()
         //TODO: add a listener to the bigs recycler view to refresh it after the removal
-        (context as Activity).finish()*/
+        (context as Activity).finish()
     }
 
     /**
