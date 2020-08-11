@@ -19,6 +19,8 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
     }
 
     override fun update(user: User, field: String, value: String): Task<Void> {
+        if (field == "numOfLittles" || field == "numOfLittles" || field == "coins")
+            return database.collection("users").document(user.email!!).update(field, Integer.parseInt(value))
         return database.collection("users").document(user.email!!).update(field, value)
     }
 
@@ -26,20 +28,12 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
         return database.collection("users").document(user.email!!)
     }
 
+    fun read(email: String): DocumentReference {
+        return database.collection("users").document(email)
+    }
+
     fun updateNotifications(user: User): Task<Void> {
         return database.collection("users").document(user.email!!).update("notifications", user.notifications)
-    }
-
-    fun updateList(user: User, field: String, list: MutableList<String>): Task<Void> {
-        return database.collection("users").document(user.email!!).update(field, list)
-    }
-
-    fun insertBig(littleEmail: String, big: User): Task<Void> {
-        return database.collection("users").document(littleEmail).collection("Bigs").document(big.email!!).set(big)
-    }
-
-    fun insertLittle(bigEmail: String, little: User): Task<Void> {
-        return database.collection("users").document(bigEmail).collection("Littles").document(little.email!!).set(little)
     }
 
     fun getBigs(littleEmail: String): CollectionReference {
@@ -48,6 +42,14 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
 
     fun getLittles(bigsEmail: String): CollectionReference {
         return database.collection("users").document(bigsEmail).collection("Littles")
+    }
+
+    fun addBig(littleEmail: String, bigEmail: String) {
+        database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).set(mapOf("email" to bigEmail))
+    }
+
+    fun addLittle(bigEmail: String, littleEmail: String) {
+        database.collection("users").document(bigEmail).collection("Littles").document(littleEmail).set(mapOf("email" to littleEmail))
     }
 
     fun removeBig(littleEmail: String, bigEmail: String) {

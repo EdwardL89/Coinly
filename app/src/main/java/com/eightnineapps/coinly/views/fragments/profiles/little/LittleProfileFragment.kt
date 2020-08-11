@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,11 +19,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
-import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LittleProfileViewModel
-import com.eightnineapps.coinly.views.activities.startup.HomeActivity
 import kotlinx.android.synthetic.main.fragment_little_profile.*
 import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.view.*
 

@@ -1,6 +1,5 @@
 package com.eightnineapps.coinly.classes.objects
 
-import com.eightnineapps.coinly.views.activities.startup.HomeActivity.Companion.database
 import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.models.Firestore
 import com.google.android.gms.tasks.Task
@@ -29,9 +28,9 @@ class Notification: Serializable {
      * Queries the database to retrieve the bigs and littles list of both users to complete the request
      */
     private fun executeAddAsBig() {
-        database.collection("users").document(toAddUserEmail).get().addOnCompleteListener {
+        Firestore.read(toAddUserEmail).get().addOnCompleteListener {
             toAddUserTask ->
-                database.collection("users").document(addingToUserEmail).get().addOnCompleteListener {
+                Firestore.read(addingToUserEmail).get().addOnCompleteListener {
                     addingToUserTask -> addAsBig(toAddUserTask, addingToUserTask)
                 }
         }
@@ -47,12 +46,12 @@ class Notification: Serializable {
         Firestore.getLittles(toAddUserEmail).document(addingToUser.email!!).get().addOnCompleteListener {
             if (!it.result!!.exists()) {
                 toAddUser.numOfLittles += 1
-                database.collection("users").document(toAddUser.email!!).update("numOfLittles", toAddUser.numOfLittles)
-                database.collection("users").document(toAddUser.email!!).collection("Littles").document(addingToUser.email!!).set(mapOf("email" to addingToUser.email!!))
+                Firestore.update(toAddUser, "numOfLittles", toAddUser.numOfLittles.toString())
+                Firestore.addLittle(toAddUser.email!!, addingToUser.email!!)
 
                 addingToUser.numOfBigs += 1
-                database.collection("users").document(addingToUser.email!!).update("numOfBigs", addingToUser.numOfBigs)
-                database.collection("users").document(addingToUser.email!!).collection("Bigs").document(toAddUser.email!!).set(mapOf("email" to toAddUser.email!!))
+                Firestore.update(addingToUser, "numOfBigs", addingToUser.numOfBigs.toString())
+                Firestore.addBig(addingToUser.email!!, toAddUser.email!!)
             }
         }
     }
@@ -61,9 +60,9 @@ class Notification: Serializable {
      * Queries the database to retrieve the bigs and littles list of both users to complete the request
      */
     private fun executeAddAsLittle() {
-        database.collection("users").document(toAddUserEmail).get().addOnCompleteListener {
+        Firestore.read(toAddUserEmail).get().addOnCompleteListener {
                 toAddUserTask ->
-            database.collection("users").document(addingToUserEmail).get().addOnCompleteListener {
+            Firestore.read(addingToUserEmail).get().addOnCompleteListener {
                     addingToUserTask -> addAsLittle(toAddUserTask, addingToUserTask)
             }
         }
@@ -79,12 +78,12 @@ class Notification: Serializable {
         Firestore.getBigs(toAddUserEmail).document(addingToUser.email!!).get().addOnCompleteListener {
             if (!it.result!!.exists()) {
                 toAddUser.numOfBigs += 1
-                database.collection("users").document(toAddUser.email!!).update("numOfBigs", toAddUser.numOfBigs)
-                database.collection("users").document(toAddUser.email!!).collection("Bigs").document(addingToUser.email!!).set(addingToUser)
+                Firestore.update(toAddUser, "numOfBigs", toAddUser.numOfBigs.toString())
+                Firestore.addBig(toAddUser.email!!, addingToUser.email!!)
 
                 addingToUser.numOfLittles += 1
-                database.collection("users").document(addingToUser.email!!).update("numOfLittles", addingToUser.numOfLittles)
-                database.collection("users").document(addingToUser.email!!).collection("Littles").document(toAddUser.email!!).set(toAddUser)
+                Firestore.update(addingToUser, "numOfLittles", addingToUser.numOfLittles.toString())
+                Firestore.addLittle(addingToUser.email!!, toAddUser.email!!)
             }
         }
     }
