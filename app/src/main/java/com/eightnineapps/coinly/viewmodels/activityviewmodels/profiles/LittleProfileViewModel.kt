@@ -27,7 +27,7 @@ class LittleProfileViewModel: ViewModel() {
 
     lateinit var observedUserInstance: User
 
-    val imageUploadHelper = ImageUploadHelper()
+    private val imageUploadHelper = ImageUploadHelper()
 
     /**
      * Removes the observed Big and navigates to the previous page
@@ -63,11 +63,8 @@ class LittleProfileViewModel: ViewModel() {
         val prizePath = "set_prizes/${currentUserInstance!!.id}/${observedUserInstance.id}/prizeId"
         ImgStorage.insert(pictureOfNewPrizeSetByteData, prizePath).addOnSuccessListener {
             ImgStorage.read(prizePath).addOnSuccessListener {
-                uri -> Firestore.read(observedUserInstance)
-                .collection("Bigs")
-                .document(currentUserInstance.email!!)
-                .collection("Prizes")
-                .document(prizeId).set(Prize(prizeTitle, prizePrice, uri.toString(), prizeId)).addOnCompleteListener {
+                uri -> Firestore.setNewPrize(observedUserInstance.email!!, currentUserInstance.email!!, Prize(prizeTitle, prizePrice, uri.toString(), prizeId))
+                .addOnCompleteListener {
                     updateRecyclerViewAdapterAndLayoutManager(context)
                     Toast.makeText(context, "Prize Set!", Toast.LENGTH_SHORT).show()
                 }
@@ -86,20 +83,17 @@ class LittleProfileViewModel: ViewModel() {
      */
     private fun updateRecyclerViewAdapterAndLayoutManager(context: Context?) {
         setPrizesRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        Firestore.read(observedUserInstance)
-            .collection("Bigs")
-            .document(currentUserInstance?.email!!)
-            .collection("Prizes").get().addOnSuccessListener {
-                val allPrizesSet = mutableListOf<Prize>()
-                for (document in it) {
-                    allPrizesSet.add(document.toObject(Prize::class.java))
-                }
-                setPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(allPrizesSet, context!!)
-                if (allPrizesSet.isNotEmpty()) {
-                    (context as Activity).no_prizes_set_image.visibility = View.INVISIBLE
-                } else {
-                    (context as Activity).no_prizes_set_image.visibility = View.VISIBLE
-                }
+        Firestore.getPrizesYouSet(observedUserInstance.email!!, currentUserInstance!!.email!!).get().addOnSuccessListener {
+            val allPrizesSet = mutableListOf<Prize>()
+            for (document in it) {
+                allPrizesSet.add(document.toObject(Prize::class.java))
             }
+            setPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(allPrizesSet, context!!)
+            if (allPrizesSet.isNotEmpty()) {
+                (context as Activity).no_prizes_set_image.visibility = View.INVISIBLE
+            } else {
+                (context as Activity).no_prizes_set_image.visibility = View.VISIBLE
+            }
+        }
     }
 }

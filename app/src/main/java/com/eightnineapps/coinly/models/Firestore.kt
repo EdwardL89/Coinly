@@ -1,5 +1,6 @@
 package com.eightnineapps.coinly.models
 
+import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.interfaces.Repository
 import com.google.android.gms.tasks.Task
@@ -58,6 +59,14 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
 
     fun removeLittle(bigEmail: String, littleEmail: String) {
         database.collection("users").document(bigEmail).collection("Littles").document(littleEmail).delete()
+    }
+
+    fun getPrizesYouSet(littleEmail: String, bigEmail: String): CollectionReference {
+        return database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).collection("Prizes")
+    }
+
+    fun setNewPrize(littleEmail: String, bigEmail: String, prize: Prize): Task<Void> {
+        return getPrizesYouSet(littleEmail, bigEmail).document(prize.id).set(prize)
     }
 
     fun getInstance() = database
