@@ -2,14 +2,21 @@ package com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles
 
 import android.app.Activity
 import android.content.Context
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
+import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
+import kotlinx.android.synthetic.main.fragment_big_profile.*
 
 class BigProfileViewModel: ViewModel() {
 
+    private lateinit var setPrizesRecyclerView: RecyclerView
     lateinit var observedUserInstance: User
     private val currentUserInstance = CurrentUser.instance
 
@@ -30,4 +37,28 @@ class BigProfileViewModel: ViewModel() {
         (context as Activity).finish()
     }
 
+    fun loadSetPrizes(recyclerView: RecyclerView, context: Context) {
+        setPrizesRecyclerView = recyclerView
+        setPrizesRecyclerView.removeAllViews()
+        updateRecyclerViewAdapterAndLayoutManager(context)
+    }
+
+    /**
+     * Assigns the given recycler view's layout manager and adapter using the list whose data is being displayed
+     */
+    private fun updateRecyclerViewAdapterAndLayoutManager(context: Context?) {
+        setPrizesRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        Firestore.getPrizesSet(currentUserInstance!!.email!!, observedUserInstance.email!!).get().addOnSuccessListener {
+            val allPrizesSet = mutableListOf<Prize>()
+            for (document in it) {
+                allPrizesSet.add(document.toObject(Prize::class.java))
+            }
+            setPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(allPrizesSet, context!!)
+            if (allPrizesSet.isNotEmpty()) {
+                (context as Activity).no_prizes_set_by_big_image.visibility = View.INVISIBLE
+            } else {
+                (context as Activity).no_prizes_set_by_big_image.visibility = View.VISIBLE
+            }
+        }
+    }
 }
