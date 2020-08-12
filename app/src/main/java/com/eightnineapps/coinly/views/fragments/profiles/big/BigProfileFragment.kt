@@ -37,8 +37,8 @@ class BigProfileFragment: Fragment() {
         my_display_name_textView.text = observedUser.displayName
         bio_text_view.text = observedUser.bio
         coin_count.text = observedUser.coins.toString()
-        bigs_count.text = observedUser.bigs.size.toString()
-        littles_count.text = observedUser.littles.size.toString()
+        bigs_count.text = observedUser.numOfBigs.toString()
+        littles_count.text = observedUser.numOfLittles.toString()
     }
 
     /**

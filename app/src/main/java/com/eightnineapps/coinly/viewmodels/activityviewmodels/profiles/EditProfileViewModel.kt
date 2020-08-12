@@ -62,7 +62,7 @@ class EditProfileViewModel: ViewModel() {
      * Uploads image to storage nad updates the user's Uri
      */
     private fun updateProfilePicture() {
-        ImgStorage.insert(userProfilePictureByteData, currentUser.instance!!.id).addOnSuccessListener {
+        ImgStorage.insert(userProfilePictureByteData, "profile_pictures/${currentUser.instance!!.id}").addOnSuccessListener {
             ImgStorage.read(currentUser.instance!!).addOnSuccessListener {
                             uri -> currentUser.profilePictureUri.value = uri.toString()
                             Firestore.update(currentUser.instance!!, "profilePictureUri", currentUser.profilePictureUri.value!!)

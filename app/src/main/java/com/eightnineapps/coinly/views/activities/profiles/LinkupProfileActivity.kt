@@ -69,11 +69,27 @@ class LinkupProfileActivity : AppCompatActivity() {
         linkupProfileViewModel.getUpdatedObservedUser(linkupProfileViewModel.observedUserInstance).addOnCompleteListener {
             if (it.isSuccessful) {
                 linkupProfileViewModel.observedUserInstance = it.result?.toObject(User::class.java)!!
-                setUpAddAsButtons(true)
-                setUpAddAsButtons(false)
-                hideOrShowPrizesGiven()
-                hideOrShowPrizesClaimed()
+                linkupProfileViewModel.retrieveObservedUserBigs().addOnSuccessListener {
+                    it2 -> for (doc in it2) {
+                        linkupProfileViewModel.observedUserInstanceBigs.add(doc["email"].toString())
+                    }
+                    linkupProfileViewModel.retrieveObservedUserLittles().addOnSuccessListener {
+                        it3 -> for (doc in it3) {
+                            linkupProfileViewModel.observedUserInstanceLittles.add(doc["email"].toString())
+                        }
+                        setUpAddAsButtons(true)
+                        setUpAddAsButtons(false)
+                    }
+                }
+                //hideOrShowPrizesGiven()
+                //hideOrShowPrizesClaimed()
             }
+        }
+    }
+
+    private fun setUpAddAsBigButton() {
+        add_as_big_button.setOnClickListener {
+
         }
     }
 
@@ -168,7 +184,7 @@ class LinkupProfileActivity : AppCompatActivity() {
      * Determines whether we need to hide the prizes given info of the observed user
      */
     private fun hideOrShowPrizesGiven() {
-        if (add_as_big_button.text == "Added as big") {
+        /*if (add_as_big_button.text == "Added as big") {
             prizes_given_lock.visibility = View.INVISIBLE
             prizesGivenRecyclerView.visibility = View.VISIBLE
             if (linkupProfileViewModel.observedUserInstance.prizesGiven.size == 0) no_prizes_given_image.visibility = View.VISIBLE
@@ -176,14 +192,14 @@ class LinkupProfileActivity : AppCompatActivity() {
             prizes_given_lock.visibility = View.VISIBLE
             no_prizes_given_image.visibility = View.INVISIBLE
             prizesGivenRecyclerView.visibility = View.INVISIBLE
-        }
+        }*/
     }
 
     /**
      * Determines whether we need to hide the prizes claimed info of the observed user
      */
     private fun hideOrShowPrizesClaimed() {
-        if (add_as_little_button.text == "Added as little") {
+        /*if (add_as_little_button.text == "Added as little") {
             prizes_claimed_lock.visibility = View.INVISIBLE
             prizesClaimedRecyclerView.visibility = View.VISIBLE
             if (linkupProfileViewModel.observedUserInstance.prizesClaimed.size == 0) no_prizes_claimed_image.visibility = View.VISIBLE
@@ -191,7 +207,7 @@ class LinkupProfileActivity : AppCompatActivity() {
             prizes_claimed_lock.visibility = View.VISIBLE
             no_prizes_claimed_image.visibility = View.INVISIBLE
             prizesClaimedRecyclerView.visibility = View.INVISIBLE
-        }
+        }*/
     }
 
     /**

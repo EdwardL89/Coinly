@@ -1,8 +1,10 @@
 package com.eightnineapps.coinly.viewmodels.fragmentviewmodels
 
 import android.content.Context
+import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.eightnineapps.coinly.models.CurrentUser
+import com.eightnineapps.coinly.models.Firestore
 
 class AllLittlesFragmentViewModel: TabLayoutFragmentViewModel() {
 
@@ -12,8 +14,15 @@ class AllLittlesFragmentViewModel: TabLayoutFragmentViewModel() {
         setupRecycler(recyclerView)
         addSpaceBetweenItems(context)
         if (!hasLoadedData) {
-            addUsersToRecyclerView(CurrentUser.instance!!.littles, context)
-            hasLoadedData = true
+            Firestore.getLittles(CurrentUser.instance!!.email!!).get().addOnSuccessListener {
+                val littles = mutableListOf<String>()
+                for (doc in it) {
+                    Log.w("INFO", doc["email"].toString())
+                    littles.add(doc["email"].toString())
+                }
+                addUsersToRecyclerView(littles, context)
+                hasLoadedData = true
+            }
         } else {
             updateRecyclerViewAdapterAndLayoutManager(context)
         }

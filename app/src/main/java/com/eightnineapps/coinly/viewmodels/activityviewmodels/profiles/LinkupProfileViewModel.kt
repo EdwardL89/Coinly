@@ -7,11 +7,16 @@ import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.QuerySnapshot
 
 class LinkupProfileViewModel: ViewModel() {
 
     val prizeLoader = PrizeLoader()
     lateinit var observedUserInstance: User
+    var observedUserInstanceLittles = mutableListOf<String>()
+    var observedUserInstanceBigs = mutableListOf<String>()
     private val currentUserInstance = CurrentUser.instance!!
 
     fun getUpdatedObservedUser(observedUser: User) = Firestore.read(observedUser).get()
@@ -34,9 +39,9 @@ class LinkupProfileViewModel: ViewModel() {
      */
     private fun alreadyAdded(asBig: Boolean): Boolean {
         return if (asBig) {
-            observedUserInstance.littles.contains(currentUserInstance.email)
+            observedUserInstanceLittles.contains(currentUserInstance.email)
         } else {
-            observedUserInstance.bigs.contains(currentUserInstance.email)
+            observedUserInstanceBigs.contains(currentUserInstance.email)
         }
     }
 
@@ -87,5 +92,13 @@ class LinkupProfileViewModel: ViewModel() {
         newNotification.profilePictureUri = currentUserInstance.profilePictureUri
         newNotification.message = "${currentUserInstance.displayName} wants to add you as a ${if (sendingToBig) "big" else "little"}!"
         return newNotification
+    }
+
+    fun retrieveObservedUserBigs(): Task<QuerySnapshot> {
+        return Firestore.getBigs(observedUserInstance.email!!).get()
+    }
+
+    fun retrieveObservedUserLittles(): Task<QuerySnapshot> {
+        return Firestore.getLittles(observedUserInstance.email!!).get()
     }
 }

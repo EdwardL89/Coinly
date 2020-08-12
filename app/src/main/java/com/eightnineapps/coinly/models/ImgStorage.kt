@@ -16,7 +16,7 @@ object ImgStorage : Repository<ByteArray, Uri, Task<Uri>, UploadTask> {
     private val imageStorage = Firebase.storage
 
     override fun insert(data: ByteArray, path: String): UploadTask {
-        return imageStorage.reference.child("profile_pictures").child(path).putBytes(data)
+        return imageStorage.reference.child(path).putBytes(data)
     }
 
     override fun update(user: User, field: String, value: String): Task<Uri> {
@@ -27,4 +27,7 @@ object ImgStorage : Repository<ByteArray, Uri, Task<Uri>, UploadTask> {
         return imageStorage.reference.child("profile_pictures").child(user.id).downloadUrl
     }
 
+    fun read(path: String): Task<Uri> {
+        return imageStorage.reference.child(path).downloadUrl
+    }
 }

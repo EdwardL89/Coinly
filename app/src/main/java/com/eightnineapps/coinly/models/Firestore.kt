@@ -1,8 +1,10 @@
 package com.eightnineapps.coinly.models
 
+import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.interfaces.Repository
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -18,6 +20,8 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
     }
 
     override fun update(user: User, field: String, value: String): Task<Void> {
+        if (field == "numOfBigs" || field == "numOfLittles" || field == "coins")
+            return database.collection("users").document(user.email!!).update(field, Integer.parseInt(value))
         return database.collection("users").document(user.email!!).update(field, value)
     }
 
@@ -25,12 +29,44 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
         return database.collection("users").document(user.email!!)
     }
 
+    fun read(email: String): DocumentReference {
+        return database.collection("users").document(email)
+    }
+
     fun updateNotifications(user: User): Task<Void> {
         return database.collection("users").document(user.email!!).update("notifications", user.notifications)
     }
 
-    fun updateList(user: User, field: String, list: MutableList<String>): Task<Void> {
-        return database.collection("users").document(user.email!!).update(field, list)
+    fun getBigs(littleEmail: String): CollectionReference {
+        return database.collection("users").document(littleEmail).collection("Bigs")
+    }
+
+    fun getLittles(bigsEmail: String): CollectionReference {
+        return database.collection("users").document(bigsEmail).collection("Littles")
+    }
+
+    fun addBig(littleEmail: String, bigEmail: String) {
+        database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).set(mapOf("email" to bigEmail))
+    }
+
+    fun addLittle(bigEmail: String, littleEmail: String) {
+        database.collection("users").document(bigEmail).collection("Littles").document(littleEmail).set(mapOf("email" to littleEmail))
+    }
+
+    fun removeBig(littleEmail: String, bigEmail: String) {
+        database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).delete()
+    }
+
+    fun removeLittle(bigEmail: String, littleEmail: String) {
+        database.collection("users").document(bigEmail).collection("Littles").document(littleEmail).delete()
+    }
+
+    fun getPrizesYouSet(littleEmail: String, bigEmail: String): CollectionReference {
+        return database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).collection("Prizes")
+    }
+
+    fun setNewPrize(littleEmail: String, bigEmail: String, prize: Prize): Task<Void> {
+        return getPrizesYouSet(littleEmail, bigEmail).document(prize.id).set(prize)
     }
 
     fun getInstance() = database
