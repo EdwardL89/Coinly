@@ -26,6 +26,7 @@ class BigProfileFragment: Fragment() {
         bigProfileViewModel.observedUserInstance = activity!!.intent.getSerializableExtra("observed_user") as User
         loadProfile()
         setUpButtons()
+        bigProfileViewModel.loadSetPrizes(prizesToClaimRecyclerView, context!!)
     }
 
     /**
