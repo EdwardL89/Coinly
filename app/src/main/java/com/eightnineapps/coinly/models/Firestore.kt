@@ -61,12 +61,12 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
         database.collection("users").document(bigEmail).collection("Littles").document(littleEmail).delete()
     }
 
-    fun getPrizesYouSet(littleEmail: String, bigEmail: String): CollectionReference {
+    fun getPrizesSet(littleEmail: String, bigEmail: String): CollectionReference {
         return database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).collection("Prizes")
     }
 
     fun setNewPrize(littleEmail: String, bigEmail: String, prize: Prize): Task<Void> {
-        return getPrizesYouSet(littleEmail, bigEmail).document(prize.id).set(prize)
+        return getPrizesSet(littleEmail, bigEmail).document(prize.id).set(prize)
     }
 
     fun getInstance() = database

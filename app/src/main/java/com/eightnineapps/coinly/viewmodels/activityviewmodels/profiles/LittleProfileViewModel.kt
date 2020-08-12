@@ -20,13 +20,11 @@ import kotlinx.android.synthetic.main.fragment_little_profile.*
 import java.io.ByteArrayOutputStream
 
 class LittleProfileViewModel: ViewModel() {
+
     private lateinit var setPrizesRecyclerView: RecyclerView
     private val currentUserInstance = CurrentUser.instance
-
     private var pictureOfNewPrizeSetByteData = ByteArrayOutputStream().toByteArray()
-
     lateinit var observedUserInstance: User
-
     private val imageUploadHelper = ImageUploadHelper()
 
     /**
@@ -83,7 +81,7 @@ class LittleProfileViewModel: ViewModel() {
      */
     private fun updateRecyclerViewAdapterAndLayoutManager(context: Context?) {
         setPrizesRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        Firestore.getPrizesYouSet(observedUserInstance.email!!, currentUserInstance!!.email!!).get().addOnSuccessListener {
+        Firestore.getPrizesSet(observedUserInstance.email!!, currentUserInstance!!.email!!).get().addOnSuccessListener {
             val allPrizesSet = mutableListOf<Prize>()
             for (document in it) {
                 allPrizesSet.add(document.toObject(Prize::class.java))
