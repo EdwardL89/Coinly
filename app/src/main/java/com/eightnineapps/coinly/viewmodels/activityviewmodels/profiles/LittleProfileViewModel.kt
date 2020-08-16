@@ -86,7 +86,7 @@ class LittleProfileViewModel: ViewModel() {
             for (document in it) {
                 allPrizesSet.add(document.toObject(Prize::class.java))
             }
-            setPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(allPrizesSet, context!!)
+            setPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(allPrizesSet, context!!, false)
             if (allPrizesSet.isNotEmpty()) {
                 (context as Activity).no_prizes_set_image.visibility = View.INVISIBLE
             } else {

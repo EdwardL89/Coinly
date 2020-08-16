@@ -83,4 +83,6 @@
     <string name="price">Price</string>
     <string name="set_new_prize">Set New Prize</string>
     <string name="set">Set</string>
+    <string name="claim_prize">Claim Prize</string>
+    <string name="claim">Claim</string>
 </resources>

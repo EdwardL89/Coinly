@@ -53,7 +53,7 @@ class BigProfileViewModel: ViewModel() {
             for (document in it) {
                 allPrizesSet.add(document.toObject(Prize::class.java))
             }
-            setPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(allPrizesSet, context!!)
+            setPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(allPrizesSet, context!!, true)
             if (allPrizesSet.isNotEmpty()) {
                 (context as Activity).no_prizes_set_by_big_image.visibility = View.INVISIBLE
             } else {
