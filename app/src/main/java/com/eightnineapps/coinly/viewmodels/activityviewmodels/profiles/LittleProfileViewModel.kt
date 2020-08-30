@@ -13,6 +13,7 @@ import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.helpers.ImageUploadHelper
 import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
+import com.eightnineapps.coinly.enums.PrizeTapLocation
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.models.ImgStorage
@@ -29,6 +30,7 @@ class LittleProfileViewModel: ViewModel() {
 
     /**
      * Removes the observed Big and navigates to the previous page
+     * TODO: Delete the set prizes you have associated with this little from the Firestore
      */
     fun removeLittleAndSendBack(context: Context) {
         currentUserInstance!!.numOfLittles -= 1
@@ -86,7 +88,7 @@ class LittleProfileViewModel: ViewModel() {
             for (document in it) {
                 allPrizesSet.add(document.toObject(Prize::class.java))
             }
-            setPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(allPrizesSet, context!!, false)
+            setPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(allPrizesSet, context!!, PrizeTapLocation.LITTLE_PRIZES_SET, currentUserInstance, observedUserInstance)
             if (allPrizesSet.isNotEmpty()) {
                 (context as Activity).no_prizes_set_image.visibility = View.INVISIBLE
             } else {

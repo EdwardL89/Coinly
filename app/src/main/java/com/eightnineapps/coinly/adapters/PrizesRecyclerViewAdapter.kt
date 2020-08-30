@@ -3,11 +3,8 @@ package com.eightnineapps.coinly.adapters
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,24 +16,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.objects.Prize
+import com.eightnineapps.coinly.classes.objects.User
+import com.eightnineapps.coinly.enums.PrizeTapLocation
 import kotlinx.android.synthetic.main.claim_prize_dialogue_layout.view.*
-import kotlinx.android.synthetic.main.prize_list_view_layout.view.*
+import kotlinx.android.synthetic.main.prize_info_dialogue_layout.view.*
 import kotlinx.android.synthetic.main.prize_list_view_layout.view.prize_picture
-import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.view.*
+import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.view.cancel_button
 
-class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _claimable: Boolean): RecyclerView.Adapter<PrizesRecyclerViewAdapter.ViewHolder>() {
+class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTapLocation: PrizeTapLocation, _currentUser: User, _observedUser: User): RecyclerView.Adapter<PrizesRecyclerViewAdapter.ViewHolder>() {
 
     private var prizeList = _items
-    private var claimablePrizes = _claimable
+    private var prizeTapLocation = _prizeTapLocation
     private var recyclerView: RecyclerView? = null
+    private var currentUser = _currentUser
+    private var observedUser = _observedUser
     var context = _context
 
-    class ViewHolder(_view: View, _items: List<Prize>, _claimable: Boolean, _recyclerView: RecyclerView): RecyclerView.ViewHolder(_view), View.OnClickListener {
+    class ViewHolder(_view: View, _items: List<Prize>, _prizeTapLocation: PrizeTapLocation, _recyclerView: RecyclerView, _currentUser: User, _observedUser: User): RecyclerView.ViewHolder(_view), View.OnClickListener {
 
         private var context: Context = _view.context
-        private var claimablePrizes = _claimable
+        private var prizeTapLocation = _prizeTapLocation
         private var viewHolderPrizeList = _items
         private var recyclerView = _recyclerView
+        private var currentUser = _currentUser
+        private var observedUser = _observedUser
 
         val singlePrizePictureImageView: ImageView = _view.prize_picture
 
@@ -50,24 +53,43 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _claimab
          * they want to take on a prize
          */
         override fun onClick(v: View?) {
-            if (claimablePrizes) {
-                val pos = recyclerView.getChildLayoutPosition(v!!)
-                Log.d("INFO", pos.toString())
-                openDialogue(context, context.applicationContext, viewHolderPrizeList[pos])
+            when (prizeTapLocation) {
+                PrizeTapLocation.BIG_PRIZES_SET -> openDialogueToClaimPrize(context, viewHolderPrizeList[recyclerView.getChildLayoutPosition(v!!)])
+                PrizeTapLocation.BIG_PRIZES_CLAIMED -> openDialogueToShowPrizeInfo(context, viewHolderPrizeList[recyclerView.getChildLayoutPosition(v!!)])
+                PrizeTapLocation.LITTLE_PRIZES_SET -> openDialogueToShowPrizeInfo(context, viewHolderPrizeList[recyclerView.getChildLayoutPosition(v!!)])
+                else -> openDialogueToShowPrizeInfo(context, viewHolderPrizeList[recyclerView.getChildLayoutPosition(v!!)])
             }
+        }
+
+        /**
+         * Open a dialogue to show the prize title and price, with no other functionality
+         */
+        @SuppressLint("InflateParams")
+        private fun openDialogueToShowPrizeInfo(context: Context, prize: Prize) {
+            val builder = AlertDialog.Builder(context)
+            val view = (context as Activity).layoutInflater.inflate(R.layout.prize_info_dialogue_layout, null)
+            Glide.with(context.applicationContext).load(prize.uri).into(view.prize_picture)
+            builder.setView(view)
+            val dialog = builder.create()
+            view.cancel_button.setOnClickListener { dialog.cancel() }
+            view.prize_info_name.text = prize.name
+            view.prize_info_price.text = prize.price.toString()
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+            dialog.window!!.attributes = setDialogDimensions(dialog)
         }
 
         /**
          * Open a dialogue for the user to set the title and price of the new prize
          */
         @SuppressLint("InflateParams")
-        private fun openDialogue(context: Context, appContext: Context, prize: Prize) {
+        private fun openDialogueToClaimPrize(context: Context, prize: Prize) {
             val builder = AlertDialog.Builder(context)
             val view = (context as Activity).layoutInflater.inflate(R.layout.claim_prize_dialogue_layout, null)
-            Glide.with(appContext).load(prize.uri).into(view.prize_picture)
+            Glide.with(context.applicationContext).load(prize.uri).into(view.prize_picture)
             builder.setView(view)
             val dialog = builder.create()
-            setUpDialogButtons(view, dialog)
+            setUpDialogButtons(view, dialog, prize)
             view.claimed_prize_title.text = prize.name
             view.claimed_prize_price.text = prize.price.toString()
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -78,13 +100,18 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _claimab
         /**
          * Sets the actions the buttons in the set new prize dialog will do
          */
-        private fun setUpDialogButtons(view: View, dialog: AlertDialog) {
+        private fun setUpDialogButtons(view: View, dialog: AlertDialog, prize: Prize) {
             view.claim_button.setOnClickListener {
-
+                if (currentUser.coins >= prize.price) claimPrize(prize)
+                else Toast.makeText(context, "Not enough coins!", Toast.LENGTH_SHORT).show()
             }
             view.cancel_claim_button.setOnClickListener {
                 dialog.cancel()
             }
+        }
+
+        private fun claimPrize(prize: Prize) {
+
         }
 
         /**
@@ -106,7 +133,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _claimab
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater
             .from(context)
-            .inflate(R.layout.prize_list_view_layout, parent, false), prizeList, claimablePrizes, recyclerView!!)
+            .inflate(R.layout.prize_list_view_layout, parent, false), prizeList, prizeTapLocation, recyclerView!!, currentUser, observedUser)
     }
 
     /**

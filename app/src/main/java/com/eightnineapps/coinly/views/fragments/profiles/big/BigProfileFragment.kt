@@ -27,6 +27,7 @@ class BigProfileFragment: Fragment() {
         loadProfile()
         setUpButtons()
         bigProfileViewModel.loadSetPrizes(prizesToClaimRecyclerView, context!!)
+        bigProfileViewModel.loadClaimedPrizes(prizesYouveClaimedRecyclerView, context!!)
     }
 
     /**

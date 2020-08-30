@@ -85,4 +85,5 @@
     <string name="set">Set</string>
     <string name="claim_prize">Claim Prize</string>
     <string name="claim">Claim</string>
+    <string name="prize_info">Prize Info</string>
 </resources>
