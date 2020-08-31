@@ -18,6 +18,7 @@ import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.enums.PrizeTapLocation
+import com.eightnineapps.coinly.models.Firestore
 import kotlinx.android.synthetic.main.claim_prize_dialogue_layout.view.*
 import kotlinx.android.synthetic.main.prize_info_dialogue_layout.view.*
 import kotlinx.android.synthetic.main.prize_list_view_layout.view.prize_picture
@@ -102,16 +103,27 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
          */
         private fun setUpDialogButtons(view: View, dialog: AlertDialog, prize: Prize) {
             view.claim_button.setOnClickListener {
-                if (currentUser.coins >= prize.price) claimPrize(prize)
-                else Toast.makeText(context, "Not enough coins!", Toast.LENGTH_SHORT).show()
+                if (currentUser.coins >= prize.price) {
+                    claimPrize(prize)
+                    dialog.cancel()
+                } else {
+                    Toast.makeText(context, "Not enough coins!", Toast.LENGTH_SHORT).show()
+                }
             }
             view.cancel_claim_button.setOnClickListener {
                 dialog.cancel()
             }
         }
 
+        /**
+         * Places a prize document in the little's claimed list and deletes it from the big's set list
+         */
         private fun claimPrize(prize: Prize) {
-
+            Firestore.claimNewPrize(currentUser.email!!, observedUser.email!!, prize).addOnSuccessListener {
+                Firestore.deletePrize(currentUser.email!!, observedUser.email!!, prize.id).addOnSuccessListener {
+                    Toast.makeText(context, "Congratulations! You claimed prize!", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         /**
