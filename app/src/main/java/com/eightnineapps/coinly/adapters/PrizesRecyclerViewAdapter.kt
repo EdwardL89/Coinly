@@ -34,14 +34,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
     private var observedUser = _observedUser
     var context = _context
 
-    class ViewHolder(_view: View, _items: List<Prize>, _prizeTapLocation: PrizeTapLocation, _recyclerView: RecyclerView, _currentUser: User, _observedUser: User): RecyclerView.ViewHolder(_view), View.OnClickListener {
-
-        private var context: Context = _view.context
-        private var prizeTapLocation = _prizeTapLocation
-        private var viewHolderPrizeList = _items
-        private var recyclerView = _recyclerView
-        private var currentUser = _currentUser
-        private var observedUser = _observedUser
+    inner class ViewHolder(_view: View): RecyclerView.ViewHolder(_view), View.OnClickListener {
 
         val singlePrizePictureImageView: ImageView = _view.prize_picture
 
@@ -56,10 +49,10 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
          */
         override fun onClick(v: View?) {
             when (prizeTapLocation) {
-                PrizeTapLocation.BIG_PRIZES_SET -> openDialogueToClaimPrize(context, viewHolderPrizeList[recyclerView.getChildLayoutPosition(v!!)])
-                PrizeTapLocation.BIG_PRIZES_CLAIMED -> openDialogueToShowPrizeInfo(context, viewHolderPrizeList[recyclerView.getChildLayoutPosition(v!!)])
-                PrizeTapLocation.LITTLE_PRIZES_SET -> openDialogueToShowPrizeInfo(context, viewHolderPrizeList[recyclerView.getChildLayoutPosition(v!!)])
-                else -> openDialogueToShowPrizeInfo(context, viewHolderPrizeList[recyclerView.getChildLayoutPosition(v!!)])
+                PrizeTapLocation.BIG_PRIZES_SET -> openDialogueToClaimPrize(context, prizeList[recyclerView!!.getChildLayoutPosition(v!!)])
+                PrizeTapLocation.BIG_PRIZES_CLAIMED -> openDialogueToShowPrizeInfo(context, prizeList[recyclerView!!.getChildLayoutPosition(v!!)])
+                PrizeTapLocation.LITTLE_PRIZES_SET -> openDialogueToShowPrizeInfo(context, prizeList[recyclerView!!.getChildLayoutPosition(v!!)])
+                else -> openDialogueToShowPrizeInfo(context, prizeList[recyclerView!!.getChildLayoutPosition(v!!)])
             }
         }
 
@@ -106,7 +99,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
             view.claim_button.setOnClickListener {
                 if (currentUser.coins >= prize.price) {
                     claimPrize(prize)
-                    //TODO: Subtract coints
+                    //TODO: Subtract coins
                     dialog.cancel()
                 } else {
                     Toast.makeText(context, "Not enough coins!", Toast.LENGTH_SHORT).show()
@@ -126,7 +119,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
                     Toast.makeText(context, "Congratulations! You claimed prize!", Toast.LENGTH_SHORT).show()
                     (context as Activity).no_prizes_claimed_image.visibility = View.INVISIBLE
                     ((context as Activity).prizesYouveClaimedRecyclerView.adapter as PrizesRecyclerViewAdapter).addItem(prize)
-                    //Now you just need to call THIS adapter's remove method to remove the claimed item from the set prizes list
+                    removeItem(prize.id)
                 }
             }
         }
@@ -150,7 +143,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater
             .from(context)
-            .inflate(R.layout.prize_list_view_layout, parent, false), prizeList, prizeTapLocation, recyclerView!!, currentUser, observedUser)
+            .inflate(R.layout.prize_list_view_layout, parent, false))
     }
 
     /**
