@@ -66,6 +66,11 @@ class BigProfileViewModel: ViewModel() {
             }
             claimedPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(allPrizesClaimed,
                 context, PrizeTapLocation.BIG_PRIZES_CLAIMED, currentUserInstance, observedUserInstance)
+            if (allPrizesClaimed.isNotEmpty()) {
+                (context as Activity).no_prizes_claimed_image.visibility = View.INVISIBLE
+            } else {
+                (context as Activity).no_prizes_claimed_image.visibility = View.VISIBLE
+            }
         }
     }
 

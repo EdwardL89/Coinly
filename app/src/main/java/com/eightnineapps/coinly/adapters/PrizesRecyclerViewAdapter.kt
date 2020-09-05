@@ -20,13 +20,14 @@ import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.enums.PrizeTapLocation
 import com.eightnineapps.coinly.models.Firestore
 import kotlinx.android.synthetic.main.claim_prize_dialogue_layout.view.*
+import kotlinx.android.synthetic.main.fragment_big_profile.*
 import kotlinx.android.synthetic.main.prize_info_dialogue_layout.view.*
 import kotlinx.android.synthetic.main.prize_list_view_layout.view.prize_picture
 import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.view.cancel_button
 
 class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTapLocation: PrizeTapLocation, _currentUser: User, _observedUser: User): RecyclerView.Adapter<PrizesRecyclerViewAdapter.ViewHolder>() {
 
-    private var prizeList = _items
+    private var prizeList = _items.toMutableList()
     private var prizeTapLocation = _prizeTapLocation
     private var recyclerView: RecyclerView? = null
     private var currentUser = _currentUser
@@ -105,6 +106,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
             view.claim_button.setOnClickListener {
                 if (currentUser.coins >= prize.price) {
                     claimPrize(prize)
+                    //TODO: Subtract coints
                     dialog.cancel()
                 } else {
                     Toast.makeText(context, "Not enough coins!", Toast.LENGTH_SHORT).show()
@@ -122,6 +124,9 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
             Firestore.claimNewPrize(currentUser.email!!, observedUser.email!!, prize).addOnSuccessListener {
                 Firestore.deletePrize(currentUser.email!!, observedUser.email!!, prize.id).addOnSuccessListener {
                     Toast.makeText(context, "Congratulations! You claimed prize!", Toast.LENGTH_SHORT).show()
+                    (context as Activity).no_prizes_claimed_image.visibility = View.INVISIBLE
+                    ((context as Activity).prizesYouveClaimedRecyclerView.adapter as PrizesRecyclerViewAdapter).addItem(prize)
+                    //Now you just need to call THIS adapter's remove method to remove the claimed item from the set prizes list
                 }
             }
         }
@@ -169,5 +174,15 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         this.recyclerView = recyclerView
+    }
+
+    fun removeItem(id: String) {
+        prizeList.remove(prizeList.first { it.id == id })
+        notifyDataSetChanged()
+    }
+
+    fun addItem(prize: Prize) {
+        prizeList.add(prize)
+        notifyDataSetChanged()
     }
 }
