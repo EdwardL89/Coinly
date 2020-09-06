@@ -87,12 +87,6 @@ class LinkupProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpAddAsBigButton() {
-        add_as_big_button.setOnClickListener {
-
-        }
-    }
-
     /**
      * Sets the title of the action bar to the app name in the custom font through an image view
      */
