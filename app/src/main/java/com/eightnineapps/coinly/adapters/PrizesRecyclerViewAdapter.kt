@@ -116,12 +116,23 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
         private fun claimPrize(prize: Prize) {
             Firestore.claimNewPrize(currentUser.email!!, observedUser.email!!, prize).addOnSuccessListener {
                 Firestore.deletePrize(currentUser.email!!, observedUser.email!!, prize.id).addOnSuccessListener {
+                    spendCoins(prize.price)
                     Toast.makeText(context, "Congratulations! You claimed prize!", Toast.LENGTH_SHORT).show()
                     (context as Activity).no_prizes_claimed_image.visibility = View.INVISIBLE
                     ((context as Activity).prizesYouveClaimedRecyclerView.adapter as PrizesRecyclerViewAdapter).addItem(prize)
                     removeItem(prize.id)
                 }
             }
+        }
+
+        /**
+         * Handles the coin transaction for when a user claims a prize
+         */
+        private fun spendCoins(price: Int) {
+            currentUser.coins -= price
+            observedUser.coins += price
+            Firestore.update(currentUser, "coins", currentUser.coins.toString())
+            Firestore.update(observedUser, "coins", observedUser.coins.toString())
         }
 
         /**

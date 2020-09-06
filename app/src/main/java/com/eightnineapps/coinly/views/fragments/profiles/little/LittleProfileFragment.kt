@@ -38,6 +38,7 @@ class LittleProfileFragment: Fragment() {
         loadProfile()
         setUpButtons()
         littleProfileViewModel.loadSetPrizes(setPrizesRecyclerView, context!!)
+        littleProfileViewModel.loadClaimedPrizes(claimedPrizesFromYouRecyclerView, context!!)
     }
 
     /**

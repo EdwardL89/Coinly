@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream
 class LittleProfileViewModel: ViewModel() {
 
     private lateinit var setPrizesRecyclerView: RecyclerView
+    private lateinit var claimedPrizesRecyclerView: RecyclerView
     private val currentUserInstance = CurrentUser.instance
     private var pictureOfNewPrizeSetByteData = ByteArrayOutputStream().toByteArray()
     lateinit var observedUserInstance: User
@@ -65,23 +66,54 @@ class LittleProfileViewModel: ViewModel() {
             ImgStorage.read(prizePath).addOnSuccessListener {
                 uri -> Firestore.setNewPrize(observedUserInstance.email!!, currentUserInstance.email!!, Prize(prizeTitle, prizePrice, uri.toString(), prizeId))
                 .addOnCompleteListener {
-                    updateRecyclerViewAdapterAndLayoutManager(context)
+                    updateSetRecyclerViewAdapterAndLayoutManager(context)
                     Toast.makeText(context, "Prize Set!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    fun loadSetPrizes(recyclerView: RecyclerView, context: Context) {
-        setPrizesRecyclerView = recyclerView
-        setPrizesRecyclerView.removeAllViews()
-        updateRecyclerViewAdapterAndLayoutManager(context)
+    /**
+     * Load the "Claimed prizes from you" recycler view with the appropriate prize items
+     */
+    fun loadClaimedPrizes(recyclerView: RecyclerView, context: Context) {
+        claimedPrizesRecyclerView = recyclerView
+        claimedPrizesRecyclerView.removeAllViews()
+        updateClaimedRecyclerViewAdapterAndLayoutManager(context)
     }
 
     /**
-     * Assigns the given recycler view's layout manager and adapter using the list whose data is being displayed
+     * Load the "Your set prizes" recycler view with the appropriate prize items
      */
-    private fun updateRecyclerViewAdapterAndLayoutManager(context: Context?) {
+    fun loadSetPrizes(recyclerView: RecyclerView, context: Context) {
+        setPrizesRecyclerView = recyclerView
+        setPrizesRecyclerView.removeAllViews()
+        updateSetRecyclerViewAdapterAndLayoutManager(context)
+    }
+
+    /**
+     * Assigns the "Claimed prizes from you" recycler view's layout manager and adapter using the list whose data is being displayed
+     */
+    private fun updateClaimedRecyclerViewAdapterAndLayoutManager(context: Context?) {
+        claimedPrizesRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        Firestore.getPrizesClaimed(observedUserInstance.email!!, currentUserInstance!!.email!!).get().addOnSuccessListener {
+            val allPrizesClaimed = mutableListOf<Prize>()
+            for (document in it) {
+                allPrizesClaimed.add(document.toObject(Prize::class.java))
+            }
+            claimedPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(allPrizesClaimed, context!!, PrizeTapLocation.LITTLE_PRIZES_CLAIMED, currentUserInstance, observedUserInstance)
+            if (allPrizesClaimed.isNotEmpty()) {
+                (context as Activity).no_prizes_claimed_from_you_image.visibility = View.INVISIBLE
+            } else {
+                (context as Activity).no_prizes_claimed_from_you_image.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    /**
+     * Assigns the "Your set prizes" recycler view's layout manager and adapter using the list whose data is being displayed
+     */
+    private fun updateSetRecyclerViewAdapterAndLayoutManager(context: Context?) {
         setPrizesRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         Firestore.getPrizesSet(observedUserInstance.email!!, currentUserInstance!!.email!!).get().addOnSuccessListener {
             val allPrizesSet = mutableListOf<Prize>()
