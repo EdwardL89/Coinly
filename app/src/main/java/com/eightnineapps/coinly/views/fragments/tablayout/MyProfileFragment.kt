@@ -88,9 +88,7 @@ class MyProfileFragment : Fragment() {
      * Populates the current User's profile activity tab
      */
     private fun displayEmptyRecyclerViewImages() {
-        val emptyPrizesImage = fragmentView.findViewById<ImageView>(R.id.no_prizes_image)
         val emptyNotificationsImage = fragmentView.findViewById<ImageView>(R.id.no_notifications_image)
-        //if (myProfileFragmentViewModel.currentUser.instance!!.prizesClaimed.isEmpty()) emptyPrizesImage.visibility = View.VISIBLE else emptyPrizesImage.visibility = View.INVISIBLE
         if (myProfileFragmentViewModel.currentUser.instance!!.notifications.isEmpty()) emptyNotificationsImage.visibility = View.VISIBLE else emptyNotificationsImage.visibility = View.INVISIBLE
     }
 
