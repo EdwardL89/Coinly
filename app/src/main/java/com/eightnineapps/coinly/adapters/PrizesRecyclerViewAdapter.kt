@@ -99,7 +99,6 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
             view.claim_button.setOnClickListener {
                 if (currentUser.coins >= prize.price) {
                     claimPrize(prize)
-                    //TODO: Subtract coins
                     dialog.cancel()
                 } else {
                     Toast.makeText(context, "Not enough coins!", Toast.LENGTH_SHORT).show()
