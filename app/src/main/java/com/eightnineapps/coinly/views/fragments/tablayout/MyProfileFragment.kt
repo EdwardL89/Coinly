@@ -152,6 +152,9 @@ class MyProfileFragment : Fragment() {
         animateValue(my_profile_average_price_of_prizes_claimed_value, myProfileFragmentViewModel.currentUser.instance!!.avgPriceOfPrizesClaimed)
     }
 
+    /**
+     * Implements the count-up animation for the given text view to the given end value
+     */
     private fun animateValue(textView: TextView?, end: Int) {
         val animator = ValueAnimator()
         animator.setObjectValues(0, end)

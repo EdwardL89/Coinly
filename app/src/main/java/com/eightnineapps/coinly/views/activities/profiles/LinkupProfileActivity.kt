@@ -1,5 +1,6 @@
 package com.eightnineapps.coinly.views.activities.profiles
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -7,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +22,7 @@ import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_BIG
 import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_LITTLE
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LinkupProfileViewModel
 import kotlinx.android.synthetic.main.activity_linkup_profile.*
+import kotlin.math.roundToInt
 
 /**
  * Represents the profile of a single user of the app the current user is observing
@@ -39,6 +42,7 @@ class LinkupProfileActivity : AppCompatActivity() {
         addBackArrowToActionBar()
         loadProfilePictureAndPrizesGiven()
         setupButtons()
+        loadStats()
     }
 
     /**
@@ -80,8 +84,6 @@ class LinkupProfileActivity : AppCompatActivity() {
                         setUpAddAsButtons(false)
                     }
                 }
-                //hideOrShowPrizesGiven()
-                //hideOrShowPrizesClaimed()
             }
         }
     }
@@ -178,5 +180,27 @@ class LinkupProfileActivity : AppCompatActivity() {
     private fun addBackArrowToActionBar() {
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.arrow_back)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+
+    /**
+     * Loads the statistics of the current user through a count-up animation
+     */
+    private fun loadStats() {
+        animateValue(linkup_prizes_given_value, linkupProfileViewModel.observedUserInstance.numOfPrizesGiven)
+        animateValue(linkup_prizes_claimed_value, linkupProfileViewModel.observedUserInstance.numOfPrizesClaimed)
+        animateValue(linkup_average_price_of_prizes_given_value, linkupProfileViewModel.observedUserInstance.avgPriceOfPrizesGiven)
+        animateValue(linkup_average_price_of_prizes_claimed_value, linkupProfileViewModel.observedUserInstance.avgPriceOfPrizesClaimed)
+    }
+
+    /**
+     * Implements the count-up animation for the given text view to the given end value
+     */
+    private fun animateValue(textView: TextView?, end: Int) {
+        val animator = ValueAnimator()
+        animator.setObjectValues(0, end)
+        animator.addUpdateListener { animation -> textView?.text = animation.animatedValue.toString() }
+        animator.setEvaluator { fraction, startValue, endValue -> (startValue as Int + fraction * (endValue as Int - startValue)).roundToInt() }
+        animator.duration = 2000
+        animator.start()
     }
 }
