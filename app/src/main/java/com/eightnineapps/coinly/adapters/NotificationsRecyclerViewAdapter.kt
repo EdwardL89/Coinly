@@ -1,5 +1,6 @@
 package com.eightnineapps.coinly.adapters
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.views.activities.startup.HomeActivity.Companion.database
 import com.eightnineapps.coinly.classes.objects.Notification
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.fragment_my_profile.*
 import kotlinx.android.synthetic.main.notification_layout.view.*
 
 /**
@@ -70,6 +72,7 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
         holder.acceptButton.setOnClickListener {
             notificationList[position].execute()
             removeNotification(position)
+            if (notificationList.isEmpty()) (context as Activity).no_notifications_image.visibility = View.VISIBLE
         }
     }
 
