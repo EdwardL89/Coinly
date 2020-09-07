@@ -86,4 +86,9 @@
     <string name="claim_prize">Claim Prize</string>
     <string name="claim">Claim</string>
     <string name="prize_info">Prize Info</string>
+    <string name="stats_title">Stats</string>
+    <string name="prizes_given">Prizes Given</string>
+    <string name="average_price_of_prizes_given_label">Average Price of Prizes Given</string>
+    <string name="prizes_claimed_label">Prizes Claimed</string>
+    <string name="average_price_of_prizes_claimed">Average Price of Prizes Claimed</string>
 </resources>
