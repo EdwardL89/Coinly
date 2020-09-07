@@ -6,7 +6,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -128,7 +127,6 @@ class LinkupProfileActivity : AppCompatActivity() {
      */
     private fun loadProfilePictureAndPrizesGiven() {
         Glide.with(this).load(linkupProfileViewModel.observedUserInstance.profilePictureUri).into(user_profile_picture)
-        displayPrizesGiven()
     }
 
     /**
@@ -172,44 +170,6 @@ class LinkupProfileActivity : AppCompatActivity() {
             add_as_big_button.text = getString(R.string.added_as_big)
             add_as_big_button.isEnabled = false
         }
-    }
-
-    /**
-     * Determines whether we need to hide the prizes given info of the observed user
-     */
-    private fun hideOrShowPrizesGiven() {
-        /*if (add_as_big_button.text == "Added as big") {
-            prizes_given_lock.visibility = View.INVISIBLE
-            prizesGivenRecyclerView.visibility = View.VISIBLE
-            if (linkupProfileViewModel.observedUserInstance.prizesGiven.size == 0) no_prizes_given_image.visibility = View.VISIBLE
-        } else {
-            prizes_given_lock.visibility = View.VISIBLE
-            no_prizes_given_image.visibility = View.INVISIBLE
-            prizesGivenRecyclerView.visibility = View.INVISIBLE
-        }*/
-    }
-
-    /**
-     * Determines whether we need to hide the prizes claimed info of the observed user
-     */
-    private fun hideOrShowPrizesClaimed() {
-        /*if (add_as_little_button.text == "Added as little") {
-            prizes_claimed_lock.visibility = View.INVISIBLE
-            prizesClaimedRecyclerView.visibility = View.VISIBLE
-            if (linkupProfileViewModel.observedUserInstance.prizesClaimed.size == 0) no_prizes_claimed_image.visibility = View.VISIBLE
-        } else {
-            prizes_claimed_lock.visibility = View.VISIBLE
-            no_prizes_claimed_image.visibility = View.INVISIBLE
-            prizesClaimedRecyclerView.visibility = View.INVISIBLE
-        }*/
-    }
-
-    /**
-     * Load all the prizes given by this user if the recycler view is visible
-     */
-    private fun displayPrizesGiven() {
-        if (prizesGivenRecyclerView.visibility == View.VISIBLE) linkupProfileViewModel.prizeLoader.loadAllPrizesGiven(prizesGivenRecyclerView)
-        if (prizesClaimedRecyclerView.visibility == View.VISIBLE) linkupProfileViewModel.prizeLoader.loadAllPrizesClaimed(prizesClaimedRecyclerView)
     }
 
     /**

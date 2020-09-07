@@ -68,89 +68,6 @@
                 android:layout_alignStart="@id/my_display_name_textView"
                 android:layout_below="@id/my_display_name_textView"/>
 
-            <TextView
-                android:id="@+id/prizes_given_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/all_prizes_given"
-                android:layout_below="@id/bio_text_view"
-                android:layout_alignStart="@id/bio_text_view"
-                android:textColor="@color/black"
-                android:layout_marginTop="10dp"
-                android:fontFamily="sans-serif"
-                android:textSize="15sp"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/prizesGivenRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@id/prizes_given_title"
-                android:layout_above="@id/prizes_claimed_title"
-                android:layout_below="@id/prizes_given_title"/>
-
-            <ImageView
-                android:id="@+id/no_prizes_given_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/no_prizes_given_icon"
-                android:layout_marginTop ="10dp"
-                android:alpha=".7"
-                android:layout_alignStart="@id/prizes_given_title"
-                android:layout_below="@id/prizes_given_title"
-                android:contentDescription="@string/shown_when_there_are_no_prizes" />
-
-            <ImageView
-                android:id="@+id/prizes_given_lock"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/lock_icon"
-                android:layout_marginTop ="10dp"
-                android:alpha=".7"
-                android:layout_alignStart="@id/prizes_given_title"
-                android:layout_below="@id/prizes_given_title"
-                android:contentDescription="@string/shown_when_there_are_no_prizes" />
-
-            <TextView
-                android:id="@+id/prizes_claimed_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/all_prizes_claimed"
-                android:layout_below="@id/no_prizes_given_image"
-                android:layout_alignStart="@id/bio_text_view"
-                android:textColor="@color/black"
-                android:layout_marginTop="10dp"
-                android:fontFamily="sans-serif"
-                android:textSize="15sp"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/prizesClaimedRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@id/prizes_claimed_title"
-                android:layout_below="@id/prizes_claimed_title"/>
-
-            <ImageView
-                android:id="@+id/no_prizes_claimed_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/no_prizes_icon"
-                android:layout_marginTop ="10dp"
-                android:alpha=".7"
-                android:layout_alignStart="@id/prizes_claimed_title"
-                android:layout_below="@id/prizes_claimed_title"
-                android:contentDescription="@string/shown_when_there_are_no_prizes" />
-
-            <ImageView
-                android:id="@+id/prizes_claimed_lock"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/lock_icon"
-                android:layout_marginTop ="10dp"
-                android:alpha=".7"
-                android:layout_alignStart="@id/prizes_claimed_title"
-                android:layout_below="@id/prizes_claimed_title"
-                android:contentDescription="@string/shown_when_there_are_no_prizes" />
-
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -252,6 +169,125 @@
                     android:text="@string/add_as_little"/>
 
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/stats_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_title"
+                android:layout_below="@id/bio_text_view"
+                android:layout_alignStart="@id/bio_text_view"
+                android:textColor="@color/black"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif"
+                android:textSize="15sp"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_alignStart="@+id/stats_title"
+                android:layout_alignEnd="@id/bio_text_view"
+                android:layout_below="@id/stats_title">
+
+                <TextView
+                    android:id="@+id/prizes_given_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="@string/zero"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:id="@+id/prizes_given_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/prizes_given"
+                    android:fontFamily="sans-serif-thin"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/average_price_of_prizes_given_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="@string/zero"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/prizes_claimed_value"/>
+
+                <TextView
+                    android:id="@+id/average_price_of_prizes_given_value_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/average_price_of_prizes_given_label"
+                    android:fontFamily="sans-serif-thin"
+                    app:layout_constraintTop_toTopOf="@id/average_price_of_prizes_given_value"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/prizes_claimed_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="@string/zero"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toBottomOf="@id/prizes_given_value"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <TextView
+                    android:id="@+id/prizes_claimed_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/prizes_claimed_label"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="sans-serif-thin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/prizes_given_label"/>
+
+                <TextView
+                    android:id="@+id/average_price_of_prizes_claimed_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="@string/zero"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toBottomOf="@id/average_price_of_prizes_given_value"
+                    app:layout_constraintStart_toStartOf="@id/average_price_of_prizes_given_value"/>
+
+                <TextView
+                    android:id="@+id/average_price_of_prizes_claimed_value_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/average_price_of_prizes_claimed"
+                    android:fontFamily="sans-serif-thin"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toBottomOf="@+id/average_price_of_prizes_given_value_label"
+                    app:layout_constraintStart_toStartOf="@id/average_price_of_prizes_given_value_label"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </RelativeLayout>
 
     </LinearLayout>
