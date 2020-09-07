@@ -17,7 +17,6 @@ class AllLittlesFragmentViewModel: TabLayoutFragmentViewModel() {
             Firestore.getLittles(CurrentUser.instance!!.email!!).get().addOnSuccessListener {
                 val littles = mutableListOf<String>()
                 for (doc in it) {
-                    Log.w("INFO", doc["email"].toString())
                     littles.add(doc["email"].toString())
                 }
                 addUsersToRecyclerView(littles, context)

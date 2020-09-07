@@ -12,6 +12,10 @@ class User(_realName: String = "", _displayName: String = "", _id: String = "", 
     var bio = _bio
     var numOfBigs = 0
     var numOfLittles = 0
+    var numOfPrizesGiven = 0
+    var numOfPrizesClaimed = 0
+    var avgPriceOfPrizesGiven = 0
+    var avgPriceOfPrizesClaimed = 0
     var email = _email
     var realName = _realName
     var displayName = _displayName

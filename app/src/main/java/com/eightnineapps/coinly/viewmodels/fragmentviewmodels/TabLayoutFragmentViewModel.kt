@@ -85,7 +85,6 @@ abstract class TabLayoutFragmentViewModel: ViewModel() {
      */
     fun updateRecyclerViewAdapterAndLayoutManager(context: Context?) {
         allAssociatesRecyclerViewList.layoutManager = LinearLayoutManager(context)
-        Log.w("INFO", allAssociatesToDisplay.toString())
         allAssociatesRecyclerViewList.adapter = UsersRecyclerViewAdapter(allAssociatesToDisplay, context!!)
     }
 

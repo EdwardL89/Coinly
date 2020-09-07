@@ -18,7 +18,6 @@ class AllBigsFragmentViewModel: TabLayoutFragmentViewModel() {
             Firestore.getBigs(CurrentUser.instance!!.email!!).get().addOnSuccessListener {
                 val bigs = mutableListOf<String>()
                 for (doc in it) {
-                    Log.w("INFO", doc["email"].toString())
                     bigs.add(doc["email"].toString())
                 }
                 addUsersToRecyclerView(bigs, context)

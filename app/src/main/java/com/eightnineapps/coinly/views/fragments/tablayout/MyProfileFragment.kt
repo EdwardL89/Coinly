@@ -1,9 +1,12 @@
 package com.eightnineapps.coinly.views.fragments.tablayout
 
+import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -13,7 +16,10 @@ import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.databinding.FragmentMyProfileBinding
 import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.MyProfileFragmentViewModel
 import com.eightnineapps.coinly.views.activities.profiles.EditProfileActivity
+import kotlinx.android.synthetic.main.fragment_my_profile.*
 import kotlinx.android.synthetic.main.fragment_my_profile.view.*
+import kotlin.math.roundToInt
+
 
 class MyProfileFragment : Fragment() {
 
@@ -23,7 +29,11 @@ class MyProfileFragment : Fragment() {
     /**
      * Inflates the my profile fragment
      */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         myProfileFragmentViewModel = ViewModelProvider(this).get(MyProfileFragmentViewModel::class.java)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_profile, container, false)
         binding.myProfileViewModel = myProfileFragmentViewModel
@@ -34,6 +44,11 @@ class MyProfileFragment : Fragment() {
         setupNotifications()
         setUpObservers()
         return fragmentView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadStats()
     }
 
     /**
@@ -96,7 +111,10 @@ class MyProfileFragment : Fragment() {
      * Sets the adapter and layout manager for the notifications recycler view
      */
     private fun setupNotifications() {
-        myProfileFragmentViewModel.updateNotifications(fragmentView.findViewById(R.id.notificationsRecyclerView), context)
+        myProfileFragmentViewModel.updateNotifications(
+            fragmentView.findViewById(R.id.notificationsRecyclerView),
+            context
+        )
     }
 
     /**
@@ -104,7 +122,12 @@ class MyProfileFragment : Fragment() {
      */
     private fun setUpEditProfileButton() {
         fragmentView.edit_profile_button.setOnClickListener {
-            startActivity(Intent(activity, EditProfileActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+            startActivity(
+                Intent(
+                    activity,
+                    EditProfileActivity::class.java
+                ).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            )
         }
     }
 
@@ -112,6 +135,29 @@ class MyProfileFragment : Fragment() {
      * Loads the profile picture
      */
     private fun loadProfilePicture() {
-        Glide.with(activity!!).load(myProfileFragmentViewModel.currentUser.instance!!.profilePictureUri).into(fragmentView.findViewById(R.id.my_profile_picture))
+        Glide.with(activity!!).load(myProfileFragmentViewModel.currentUser.instance!!.profilePictureUri).into(
+            fragmentView.findViewById(
+                R.id.my_profile_picture
+            )
+        )
+    }
+
+    /**
+     * Loads the statistics of the current user through a count-up animation
+     */
+    private fun loadStats() {
+        animateValue(my_profile_prizes_given_value, myProfileFragmentViewModel.currentUser.instance!!.numOfPrizesGiven)
+        animateValue(my_profile_prizes_claimed_value, myProfileFragmentViewModel.currentUser.instance!!.numOfPrizesClaimed)
+        animateValue(my_profile_average_price_of_prizes_given_value, myProfileFragmentViewModel.currentUser.instance!!.avgPriceOfPrizesGiven)
+        animateValue(my_profile_average_price_of_prizes_claimed_value, myProfileFragmentViewModel.currentUser.instance!!.avgPriceOfPrizesClaimed)
+    }
+
+    private fun animateValue(textView: TextView?, end: Int) {
+        val animator = ValueAnimator()
+        animator.setObjectValues(0, end)
+        animator.addUpdateListener { animation -> textView?.text = animation.animatedValue.toString() }
+        animator.setEvaluator { fraction, startValue, endValue -> (startValue as Int + fraction * (endValue as Int - startValue)).roundToInt() }
+        animator.duration = 2000
+        animator.start()
     }
 }
