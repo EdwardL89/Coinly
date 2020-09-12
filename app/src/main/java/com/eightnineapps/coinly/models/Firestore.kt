@@ -66,7 +66,7 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
     }
 
     fun getPrizesClaimed(littleEmail: String, bigEmail: String): CollectionReference {
-        return database.collection("users").document(bigEmail).collection("Littles").document(littleEmail).collection("Prizes")
+        return database.collection("users").document(littleEmail).collection("BigsYouClaimedFrom").document(bigEmail).collection("Prizes")
     }
 
     fun claimNewPrize(littleEmail: String, bigEmail: String, prize: Prize): Task<Void> {
