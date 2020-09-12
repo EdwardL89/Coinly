@@ -54,7 +54,12 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
     }
 
     fun removeBig(littleEmail: String, bigEmail: String) {
-        database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).delete()
+        database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).collection("Prizes").get().addOnSuccessListener {
+            for (document in it) { //Max of 10 prizes can be set
+                document.reference.delete()
+            }
+            database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).delete()
+        }
     }
 
     fun removeLittle(bigEmail: String, littleEmail: String) {
