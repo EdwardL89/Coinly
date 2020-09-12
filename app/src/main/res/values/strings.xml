@@ -91,4 +91,7 @@
     <string name="average_price_of_prizes_given_label">Average Price of Prizes Given</string>
     <string name="prizes_claimed_label">Prizes Claimed</string>
     <string name="average_price_of_prizes_claimed">Average Price of Prizes Claimed</string>
+    <string name="accept">Accept</string>
+    <string name="notification">Notification</string>
+    <string name="notification_content_placeholder">Notification content</string>
 </resources>
