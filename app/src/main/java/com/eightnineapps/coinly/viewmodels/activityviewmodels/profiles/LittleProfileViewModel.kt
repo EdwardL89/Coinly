@@ -31,7 +31,7 @@ class LittleProfileViewModel: ViewModel() {
 
     /**
      * Removes the observed Big and navigates to the previous page
-     * TODO: Delete the set prizes you have associated with this little from the Firestore
+     *
      */
     fun removeLittleAndSendBack(context: Context) {
         currentUserInstance!!.numOfLittles -= 1
