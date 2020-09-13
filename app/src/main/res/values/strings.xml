@@ -51,7 +51,6 @@
     <string name="actions">Actions</string>
     <string name="give_coins">Give Coins</string>
     <string name="remove_big">Remove Big</string>
-    <string name="appeal">Appeal</string>
     <string name="request_coins">Request Coins</string>
     <string name="prizes">Prizes</string>
     <string name="prizes_you_ve_claimed">Prizes You\'ve Claimed</string>
@@ -63,11 +62,8 @@
     <string name="revoking_coins_from">Revoking Coins From</string>
     <string name="coins_revoking">Coins Revoking</string>
     <string name="reason_for_revocation">Reason for Revocation</string>
-    <string name="revoke_coins">Revoke Coins</string>
-    <string name="appealing_to">Appealing To</string>
     <string name="case_title">Case</string>
     <string name="desired_actions">Desired Actions</string>
-    <string name="send_appeal">Send Appeal</string>
     <string name="requesting_coins_from">Requesting Coins From</string>
     <string name="coins_requesting">Coins Requesting</string>
     <string name="reason_for_request">Reason For Request</string>

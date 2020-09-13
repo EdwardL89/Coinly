@@ -75,6 +75,7 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
             return layoutParams
         }
 
+        //You'll probably need to change the notification layout stuff based on the notification type ENUM
         private fun setUpDialogButtons(dialogueView: View, dialog: AlertDialog, notificationView: View) {
             dialogueView.cancel_notification_button.setOnClickListener {
                 dialog.cancel()

@@ -84,18 +84,6 @@
                 android:clipToPadding="false"
                 android:layout_alignEnd="@id/bio_text_view">
                 <Button
-                    android:id="@+id/appeal_button"
-                    android:layout_width="0dp"
-                    android:layout_height="25dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/rounded_button_green"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="5dp"
-                    android:textSize="12sp"
-                    android:text="@string/appeal"
-                    tools:ignore="ButtonStyle" />
-
-                <Button
                     android:id="@+id/request_coins_button"
                     android:layout_width="0dp"
                     android:layout_height="25dp"

@@ -61,9 +61,6 @@ class LittleProfileFragment: Fragment() {
         give_coins_button.setOnClickListener {
             findNavController().navigate(R.id.action_littleProfileFragment_to_giveCoinsFragment, null)
         }
-        revoke_coins_button.setOnClickListener {
-            findNavController().navigate(R.id.action_littleProfileFragment_to_revokeCoinsFragment, null)
-        }
         remove_little_button.setOnClickListener {
             littleProfileViewModel.removeLittleAndSendBack(context!!)
         }

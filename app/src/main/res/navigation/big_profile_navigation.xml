@@ -11,19 +11,9 @@
         android:label="BigProfileFragment"
         tools:layout="@layout/fragment_big_profile">
         <action
-            android:id="@+id/action_bigProfileFragment_to_appealFragment"
-            app:destination="@id/appealFragment" />
-        <action
             android:id="@+id/action_bigProfileFragment_to_requestCoinsFragment"
             app:destination="@id/requestCoinsFragment" />
     </fragment>
-
-
-    <fragment
-        android:id="@+id/appealFragment"
-        android:name="com.eightnineapps.coinly.views.fragments.profiles.big.AppealFragment"
-        android:label="AppealFragment"
-        tools:layout="@layout/fragment_appeal"/>
 
     <fragment
         android:id="@+id/requestCoinsFragment"

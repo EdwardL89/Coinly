@@ -47,9 +47,6 @@ class BigProfileFragment: Fragment() {
      * Sets up the on click listeners for all buttons
      */
     private fun setUpButtons() {
-        appeal_button.setOnClickListener {
-            findNavController().navigate(R.id.action_bigProfileFragment_to_appealFragment, null)
-        }
         request_coins_button.setOnClickListener {
             findNavController().navigate(R.id.action_bigProfileFragment_to_requestCoinsFragment, null)
         }

@@ -20,8 +20,23 @@ class Notification: Serializable {
         when (type) {
             NotificationType.ADDING_AS_BIG -> executeAddAsBig()
             NotificationType.ADDING_AS_LITTLE -> executeAddAsLittle()
-            else -> return
+            NotificationType.GIVING_COINS -> addressCoinsGiven()
+            else -> acceptRequest()
         }
+    }
+
+    /**
+     * Clears the notification as an addressing of the coins given
+     */
+    private fun addressCoinsGiven() {
+
+    }
+
+    /**
+     * Start the coin transfer that fulfills the request by the Little
+     */
+    private fun acceptRequest() {
+
     }
 
     /**
