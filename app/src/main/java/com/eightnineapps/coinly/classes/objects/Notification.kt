@@ -11,7 +11,9 @@ class Notification: Serializable {
     var addingToUserEmail = ""
     var toAddUserEmail = ""
     var message = ""
+    var moreInformation = ""
     var profilePictureUri = ""
+    var coins = 0
 
     /**
      * Determines the type of notification and calls the appropriate method to handle the notification
@@ -29,7 +31,7 @@ class Notification: Serializable {
      * Clears the notification as an addressing of the coins given
      */
     private fun addressCoinsGiven() {
-
+        return
     }
 
     /**

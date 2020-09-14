@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.views.activities.startup.HomeActivity.Companion.database
 import com.eightnineapps.coinly.classes.objects.Notification
+import com.eightnineapps.coinly.enums.NotificationType
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_my_profile.*
 import kotlinx.android.synthetic.main.notification_dialogue_layout.view.*
@@ -54,11 +55,13 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
          */
         @SuppressLint("InflateParams")
         override fun onClick(view: View?) { //Go to review page when a notification is clicked on
+            val notification = notificationList[recyclerView!!.getChildLayoutPosition(view!!)]
             val builder = AlertDialog.Builder(context)
             val dialogueView = (context as Activity).layoutInflater.inflate(R.layout.notification_dialogue_layout, null)
+            dialogueView.notification_content.text = notification.message
             builder.setView(dialogueView)
             val dialog = builder.create()
-            setUpDialogButtons(dialogueView, dialog, view!!)
+            setUpDialogButtons(dialogueView, dialog, view)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()
             dialog.window!!.attributes = setDialogDimensions(dialog)
@@ -75,9 +78,11 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
             return layoutParams
         }
 
-        //You'll probably need to change the notification layout stuff based on the notification type ENUM
         private fun setUpDialogButtons(dialogueView: View, dialog: AlertDialog, notificationView: View) {
             dialogueView.cancel_notification_button.setOnClickListener {
+                val position = recyclerView!!.getChildLayoutPosition(notificationView)
+                removeNotification(position)
+                if (notificationList.isEmpty()) (context as Activity).no_notifications_image.visibility = View.VISIBLE
                 dialog.cancel()
             }
             dialogueView.accept_button.setOnClickListener {
@@ -85,6 +90,7 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
                 notificationList[position].execute()
                 removeNotification(position)
                 if (notificationList.isEmpty()) (context as Activity).no_notifications_image.visibility = View.VISIBLE
+                dialog.cancel()
             }
         }
     }

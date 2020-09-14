@@ -84,13 +84,13 @@ class LinkupProfileViewModel: ViewModel() {
      * Creates and returns a new notification object with its fields instantiated
      */
     private fun constructNotification(sendingToBig: Boolean): Notification {
-        val newNotification =
-            Notification()
+        val newNotification = Notification()
         newNotification.type = if (sendingToBig) NotificationType.ADDING_AS_BIG else NotificationType.ADDING_AS_LITTLE
         newNotification.addingToUserEmail = currentUserInstance.email!!
         newNotification.toAddUserEmail = observedUserInstance.email!!
         newNotification.profilePictureUri = currentUserInstance.profilePictureUri
         newNotification.message = "${currentUserInstance.displayName} wants to add you as a ${if (sendingToBig) "big" else "little"}!"
+        newNotification.moreInformation = "${currentUserInstance.displayName} wants to add you as a ${if (sendingToBig) "big" else "little"}!"
         return newNotification
     }
 
