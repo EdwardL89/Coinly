@@ -58,7 +58,7 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
             val notification = notificationList[recyclerView!!.getChildLayoutPosition(view!!)]
             val builder = AlertDialog.Builder(context)
             val dialogueView = (context as Activity).layoutInflater.inflate(R.layout.notification_dialogue_layout, null)
-            dialogueView.notification_content.text = notification.message
+            dialogueView.notification_content.text = notification.moreInformation
             builder.setView(dialogueView)
             val dialog = builder.create()
             setUpDialogButtons(dialogueView, dialog, view)

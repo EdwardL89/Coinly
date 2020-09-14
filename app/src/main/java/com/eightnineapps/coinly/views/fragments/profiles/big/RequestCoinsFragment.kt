@@ -48,9 +48,13 @@ class RequestCoinsFragment : Fragment() {
     private fun setUpButtons() {
         send_request_button.setOnClickListener {
             if (hasEnteredCoinsAndReason()) {
-                val notification = constructRequestNotification(Integer.parseInt(coins_requesting_edit_text.text.toString()), request_reason_edit_text.text.toString())
-                bigProfileViewModel.observedUserInstance.notifications.add((notification))
-                Firestore.updateNotifications(bigProfileViewModel.observedUserInstance)
+                if (hasEnoughCoins()) {
+                    val notification = constructRequestNotification(Integer.parseInt(coins_requesting_edit_text.text.toString()), request_reason_edit_text.text.toString())
+                    bigProfileViewModel.observedUserInstance.notifications.add(notification)
+                    Firestore.updateNotifications(bigProfileViewModel.observedUserInstance)
+                } else {
+                    Toast.makeText(context, "${bigProfileViewModel.observedUserInstance.displayName} doesn't have that many coins!", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 Toast.makeText(context, "Missing information!", Toast.LENGTH_SHORT).show()
             }
@@ -58,6 +62,10 @@ class RequestCoinsFragment : Fragment() {
         cancel_request_coins_button.setOnClickListener {
             activity!!.onBackPressed()
         }
+    }
+
+    private fun hasEnoughCoins(): Boolean {
+        return bigProfileViewModel.observedUserInstance.coins >= Integer.parseInt(coins_requesting_edit_text.text.toString())
     }
 
     /**
@@ -72,12 +80,14 @@ class RequestCoinsFragment : Fragment() {
      */
     private fun constructRequestNotification(coinsRequesting: Int, reasonForRequest: String): Notification {
         val notification = Notification()
+        val myDisplayName = CurrentUser.instance!!.displayName
         notification.coins = coinsRequesting
         notification.moreInformation = reasonForRequest
         notification.type = NotificationType.REQUESTING_COINS
-        notification.message = "${CurrentUser.displayName} requested coins"
-        notification.moreInformation = "${CurrentUser.displayName} is requesting $coinsRequesting coins. \n\n Reason:\n$reasonForRequest"
-        notification.profilePictureUri = CurrentUser.profilePictureUri.toString()
+        notification.message = "$myDisplayName requested coins"
+        notification.moreInformation = "$myDisplayName is requesting $coinsRequesting coins. \n\n Reason:\n$reasonForRequest"
+        notification.profilePictureUri = CurrentUser.instance!!.profilePictureUri
+        notification.addingToUserEmail = CurrentUser.instance!!.email!!
         return notification
     }
 }

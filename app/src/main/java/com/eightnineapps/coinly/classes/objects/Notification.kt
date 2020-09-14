@@ -1,6 +1,7 @@
 package com.eightnineapps.coinly.classes.objects
 
 import com.eightnineapps.coinly.enums.NotificationType
+import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
@@ -8,7 +9,7 @@ import java.io.Serializable
 
 class Notification: Serializable {
     var type = NotificationType.DEFAULT
-    var addingToUserEmail = ""
+    var addingToUserEmail = "" //Also requester's email
     var toAddUserEmail = ""
     var message = ""
     var moreInformation = ""
@@ -38,7 +39,13 @@ class Notification: Serializable {
      * Start the coin transfer that fulfills the request by the Little
      */
     private fun acceptRequest() {
-
+        Firestore.read(addingToUserEmail).get().addOnCompleteListener {
+            val requester = it.result!!.toObject(User::class.javaObjectType)!!
+            requester.coins += coins
+            CurrentUser.instance!!.coins -= coins
+            Firestore.update(requester, "coins", requester.coins.toString())
+            Firestore.update(CurrentUser.instance!!, "coins", CurrentUser.instance!!.coins.toString())
+        }
     }
 
     /**
