@@ -29,10 +29,17 @@ class Notification: Serializable {
     }
 
     /**
-     * Clears the notification as an addressing of the coins given
+     * Clears the notification as an addressing of the coins given. Keep in mind the giver will be executing the notification,
+     * not the receiver of the notification.
      */
     private fun addressCoinsGiven() {
-        return
+        CurrentUser.instance!!.coins -= coins
+        Firestore.read(toAddUserEmail).get().addOnCompleteListener {
+            val receiver = it.result!!.toObject(User::class.javaObjectType)!!
+            receiver.coins += coins
+            Firestore.update(CurrentUser.instance!!, "coins", CurrentUser.instance!!.coins.toString())
+            Firestore.update(receiver, "coins", receiver.coins.toString())
+        }
     }
 
     /**

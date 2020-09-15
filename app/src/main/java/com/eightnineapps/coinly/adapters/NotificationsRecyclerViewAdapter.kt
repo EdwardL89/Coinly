@@ -59,7 +59,7 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
             setNotificationContext(dialogueView, notification)
             builder.setView(dialogueView)
             val dialog = builder.create()
-            setUpDialogButtons(dialogueView, dialog, view)
+            setUpDialogButtons(dialogueView, dialog, view, notification.type)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()
             dialog.window!!.attributes = setDialogDimensions(dialog)
@@ -70,6 +70,8 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
          */
         private fun setNotificationContext(dialogueView: View, notification: Notification) {
             if (notification.type == NotificationType.GIVING_COINS) {
+                dialogueView.cancel_notification_button.visibility = View.GONE
+                dialogueView.accept_button.text = context.getString(R.string.OK)
                 var dialogueContent = notification.message
                 if (notification.moreInformation != "") {
                     dialogueContent += "\n\n Your Big left a note:\n${notification.moreInformation}"
@@ -91,7 +93,7 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
             return layoutParams
         }
 
-        private fun setUpDialogButtons(dialogueView: View, dialog: AlertDialog, notificationView: View) {
+        private fun setUpDialogButtons(dialogueView: View, dialog: AlertDialog, notificationView: View, notificationType: NotificationType) {
             dialogueView.cancel_notification_button.setOnClickListener {
                 val position = recyclerView!!.getChildLayoutPosition(notificationView)
                 removeNotification(position)
@@ -100,7 +102,9 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
             }
             dialogueView.accept_button.setOnClickListener {
                 val position = recyclerView!!.getChildLayoutPosition(notificationView)
-                notificationList[position].execute()
+                if (notificationType != NotificationType.GIVING_COINS) {
+                    notificationList[position].execute()
+                }
                 removeNotification(position)
                 if (notificationList.isEmpty()) (context as Activity).no_notifications_image.visibility = View.VISIBLE
                 dialog.cancel()

@@ -68,8 +68,9 @@ class GiveCoinsFragment : Fragment() {
         notification.coins = coinsGiving
         notification.moreInformation = optionalNote
         notification.type = NotificationType.GIVING_COINS
-        notification.profilePictureUri = CurrentUser.profilePictureUri.value!!
-        notification.message = "${CurrentUser.displayName.value} gave you $coinsGiving coins"
+        notification.toAddUserEmail = littleProfileViewModel.observedUserInstance.email!!
+        notification.profilePictureUri = CurrentUser.instance!!.profilePictureUri
+        notification.message = "${CurrentUser.instance!!.displayName} gave you $coinsGiving coins"
         return notification
     }
 
