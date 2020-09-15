@@ -48,12 +48,16 @@ class GiveCoinsFragment : Fragment() {
     private fun setUpButtons() {
         give_coins_button.setOnClickListener {
             if (hasEnteredCoins()) {
-                val notification = constructNotification(Integer.parseInt(coins_giving_edit_text.text.toString()), optional_note_edit_text.text.toString())
-                notification.execute()
-                littleProfileViewModel.observedUserInstance.notifications.add(notification)
-                Firestore.updateNotifications(littleProfileViewModel.observedUserInstance)
-                Toast.makeText(context, "Coins transferred!", Toast.LENGTH_SHORT).show()
-                activity!!.onBackPressed()
+                if (hasEnoughCoins(Integer.parseInt(coins_giving_edit_text.text.toString()))) {
+                    val notification = constructNotification(Integer.parseInt(coins_giving_edit_text.text.toString()), optional_note_edit_text.text.toString())
+                    notification.execute()
+                    littleProfileViewModel.observedUserInstance.notifications.add(notification)
+                    Firestore.updateNotifications(littleProfileViewModel.observedUserInstance)
+                    Toast.makeText(context, "Coins transferred!", Toast.LENGTH_SHORT).show()
+                    activity!!.onBackPressed()
+                } else {
+                    Toast.makeText(context, "You don't have that many coins!", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 Toast.makeText(context, "Enter a coin amount", Toast.LENGTH_SHORT).show()
             }
@@ -79,5 +83,12 @@ class GiveCoinsFragment : Fragment() {
      */
     private fun hasEnteredCoins(): Boolean {
         return coins_giving_edit_text.text.toString() != ""
+    }
+
+    /**
+     * Determines if the current user has enough coins to give.
+     */
+    private fun hasEnoughCoins(coinsGiving: Int): Boolean {
+        return CurrentUser.instance!!.coins >= coinsGiving
     }
 }
