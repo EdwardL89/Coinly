@@ -36,7 +36,7 @@ class Notification: Serializable {
     }
 
     /**
-     * Start the coin transfer that fulfills the request by the Little
+     * Start the coin transfer that fulfills the request by the Little  
      */
     private fun acceptRequest() {
         Firestore.read(addingToUserEmail).get().addOnCompleteListener {
