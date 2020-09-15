@@ -90,4 +90,6 @@
     <string name="accept">Accept</string>
     <string name="notification">Notification</string>
     <string name="notification_content_placeholder">Notification content</string>
+    <string name="OK">OK</string>
+    <string name="accept">Accept</string>
 </resources>

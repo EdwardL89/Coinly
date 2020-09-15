@@ -85,7 +85,7 @@
                 android:layout_toEndOf="@+id/coins_giving_textView"
                 android:layout_alignTop="@+id/coins_giving_textView"
                 android:layout_alignBottom="@+id/coins_giving_textView"
-                android:inputType="text"
+                android:inputType="number"
                 android:gravity="top|start"
                 tools:ignore="LabelFor" />
 

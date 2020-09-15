@@ -12,14 +12,13 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.views.activities.startup.HomeActivity.Companion.database
 import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.enums.NotificationType
+import com.eightnineapps.coinly.views.activities.startup.HomeActivity.Companion.database
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_my_profile.*
 import kotlinx.android.synthetic.main.notification_dialogue_layout.view.*
@@ -40,7 +39,6 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
      * Explicitly defines the UI elements belonging to a single list element in the recycler view
      */
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view), View.OnClickListener {
-        private var context: Context = view.context
         val notificationContent: TextView = view.notificationInfoTextView
         val acceptButton: Button = view.accept_button
         val profilePicture: ImageView = view.my_profile_picture
@@ -58,13 +56,28 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
             val notification = notificationList[recyclerView!!.getChildLayoutPosition(view!!)]
             val builder = AlertDialog.Builder(context)
             val dialogueView = (context as Activity).layoutInflater.inflate(R.layout.notification_dialogue_layout, null)
-            dialogueView.notification_content.text = notification.moreInformation
+            setNotificationContext(dialogueView, notification)
             builder.setView(dialogueView)
             val dialog = builder.create()
             setUpDialogButtons(dialogueView, dialog, view)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()
             dialog.window!!.attributes = setDialogDimensions(dialog)
+        }
+
+        /**
+         * Sets the content of the notification dialogue when it's tapped from the recycler view
+         */
+        private fun setNotificationContext(dialogueView: View, notification: Notification) {
+            if (notification.type == NotificationType.GIVING_COINS) {
+                var dialogueContent = notification.message
+                if (notification.moreInformation != "") {
+                    dialogueContent += "\n\n Your Big left a note:\n${notification.moreInformation}"
+                }
+                dialogueView.notification_content.text = dialogueContent
+            } else {
+                dialogueView.notification_content.text = notification.moreInformation
+            }
         }
 
         /**
@@ -113,12 +126,22 @@ class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _cont
      * Defines what each UI element (defined in the ViewHolder class above) maps to
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.notificationContent.text = notificationList[position].message
+        val notification = notificationList[position]
+        holder.notificationContent.text = notification.message
         Glide.with(context).load(notificationList[position].profilePictureUri).into(holder.profilePicture)
-        holder.acceptButton.setOnClickListener {
-            notificationList[position].execute()
-            removeNotification(position)
-            if (notificationList.isEmpty()) (context as Activity).no_notifications_image.visibility = View.VISIBLE
+        if (notification.type == NotificationType.GIVING_COINS) {
+            holder.acceptButton.text = context.getString(R.string.OK)
+            holder.acceptButton.setOnClickListener {
+                removeNotification(position)
+                if (notificationList.isEmpty()) (context as Activity).no_notifications_image.visibility = View.VISIBLE
+            }
+        } else {
+            holder.acceptButton.text = context.getString(R.string.accept)
+            holder.acceptButton.setOnClickListener {
+                notificationList[position].execute()
+                removeNotification(position)
+                if (notificationList.isEmpty()) (context as Activity).no_notifications_image.visibility = View.VISIBLE
+            }
         }
     }
 
