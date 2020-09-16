@@ -43,7 +43,7 @@ class LittleProfileViewModel: ViewModel() {
         Firestore.removeBig(observedUserInstance.email!!, currentUserInstance.email!!)
 
         Toast.makeText(context, "Removed ${observedUserInstance.displayName} as a little", Toast.LENGTH_SHORT).show()
-        //TODO: add a listener to the bigs recycler view to refresh it after the removal
+
         (context as Activity).finish()
     }
 
