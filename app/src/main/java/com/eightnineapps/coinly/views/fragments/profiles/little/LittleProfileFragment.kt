@@ -75,8 +75,10 @@ class LittleProfileFragment: Fragment() {
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        littleProfileViewModel.handleGallerySelectionCompletion(requestCode, resultCode, data, context!!)
-        openDialogue(context!!, context!!.applicationContext, data)
+        if (data != null) {
+            littleProfileViewModel.handleGallerySelectionCompletion(requestCode, resultCode, data, context!!)
+            openDialogue(context!!, context!!.applicationContext, data)
+        }
     }
 
     /**
