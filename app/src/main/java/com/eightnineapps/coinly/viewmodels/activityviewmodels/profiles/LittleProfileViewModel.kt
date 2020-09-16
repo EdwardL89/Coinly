@@ -61,7 +61,7 @@ class LittleProfileViewModel: ViewModel() {
      */
     fun uploadNewSetPrize(prizeTitle: String, prizePrice: Int, context: Context) {
         val prizeId = imageUploadHelper.generateId()
-        val prizePath = "set_prizes/${currentUserInstance!!.id}/${observedUserInstance.id}/prizeId"
+        val prizePath = "set_prizes/${currentUserInstance!!.id}/${observedUserInstance.id}/$prizeId"
         ImgStorage.insert(pictureOfNewPrizeSetByteData, prizePath).addOnSuccessListener {
             ImgStorage.read(prizePath).addOnSuccessListener {
                 uri -> Firestore.setNewPrize(observedUserInstance.email!!, currentUserInstance.email!!, Prize(prizeTitle, prizePrice, uri.toString(), prizeId))

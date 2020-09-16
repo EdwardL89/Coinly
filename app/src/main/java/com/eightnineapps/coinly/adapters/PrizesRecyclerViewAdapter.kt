@@ -19,6 +19,7 @@ import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.enums.PrizeTapLocation
 import com.eightnineapps.coinly.models.Firestore
+import com.eightnineapps.coinly.models.ImgStorage
 import kotlinx.android.synthetic.main.claim_prize_dialogue_layout.view.*
 import kotlinx.android.synthetic.main.fragment_big_profile.*
 import kotlinx.android.synthetic.main.prize_info_dialogue_layout.view.*
@@ -110,16 +111,30 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
         }
 
         /**
-         * Places a prize document in the little's claimed list and deletes it from the big's set list
+         * Places a prize document in the little's claimed list and deletes it from the big's set list, and from it's spot in Firebase Storage.
          */
         private fun claimPrize(prize: Prize) {
             Firestore.claimNewPrize(currentUser.email!!, observedUser.email!!, prize).addOnSuccessListener {
                 Firestore.deletePrize(currentUser.email!!, observedUser.email!!, prize.id).addOnSuccessListener {
                     spendCoins(prize.price)
+                    relocateImageInStorage(prize.id)
                     Toast.makeText(context, "Congratulations! You claimed prize!", Toast.LENGTH_SHORT).show()
                     (context as Activity).no_prizes_claimed_image.visibility = View.INVISIBLE
                     ((context as Activity).prizesYouveClaimedRecyclerView.adapter as PrizesRecyclerViewAdapter).addItem(prize)
                     removeItem(prize.id)
+                }
+            }
+        }
+
+        /**
+         * Relocates the prize's image location within Firebase storage from the set_prizes folder to the
+         * claimed_prizes folder.
+         */
+        private fun relocateImageInStorage(prizeId: String) { //Copy first, then delete
+            val prizePath = "${observedUser.id}/${currentUser.id}/$prizeId"
+            ImgStorage.getReference("set_prizes/$prizePath").getBytes(5000000).addOnSuccessListener {
+                ImgStorage.insert(it, "claimed_prizes/$prizePath").addOnSuccessListener {
+                    ImgStorage.delete("set_prizes/$prizePath")
                 }
             }
         }
