@@ -50,8 +50,7 @@ class RequestCoinsFragment : Fragment() {
             if (hasEnteredCoinsAndReason()) {
                 if (hasEnoughCoins()) {
                     val notification = constructRequestNotification(Integer.parseInt(coins_requesting_edit_text.text.toString()), request_reason_edit_text.text.toString())
-                    bigProfileViewModel.observedUserInstance.notifications.add(notification)
-                    Firestore.updateNotifications(bigProfileViewModel.observedUserInstance)
+                    Firestore.addNotification(bigProfileViewModel.observedUserInstance.email!!, notification)
                     Toast.makeText(context, "Request sent!", Toast.LENGTH_SHORT).show()
                     activity!!.onBackPressed()
                 } else {

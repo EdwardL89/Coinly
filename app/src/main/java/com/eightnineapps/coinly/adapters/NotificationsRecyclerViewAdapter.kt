@@ -28,9 +28,9 @@ import kotlinx.android.synthetic.main.notification_layout.view.accept_button
 /**
  * An adapter class to populate the user's notification recycler view
  */
-class NotificationsRecyclerViewAdapter(_notifications: List<Notification>, _context: Context): RecyclerView.Adapter<NotificationsRecyclerViewAdapter.ViewHolder>() {
+class NotificationsRecyclerViewAdapter(_notifications: MutableList<Notification>, _context: Context): RecyclerView.Adapter<NotificationsRecyclerViewAdapter.ViewHolder>() {
 
-    private var notificationList = _notifications as MutableList<Notification>
+    private var notificationList = _notifications
     private var context = _context
     private var recyclerView: RecyclerView? = null
     private var auth = FirebaseAuth.getInstance()

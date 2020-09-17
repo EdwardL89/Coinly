@@ -3,9 +3,7 @@ package com.eightnineapps.coinly.views.fragments.tablayout
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -13,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.adapters.NotificationsRecyclerViewAdapter
 import com.eightnineapps.coinly.databinding.FragmentMyProfileBinding
 import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.MyProfileFragmentViewModel
 import com.eightnineapps.coinly.views.activities.profiles.EditProfileActivity
@@ -99,12 +98,8 @@ class MyProfileFragment : Fragment() {
         })
     }
 
-    /**
-     * Populates the current User's profile activity tab
-     */
     private fun displayEmptyRecyclerViewImages() {
-        val emptyNotificationsImage = fragmentView.findViewById<ImageView>(R.id.no_notifications_image)
-        if (myProfileFragmentViewModel.currentUser.instance!!.notifications.isEmpty()) emptyNotificationsImage.visibility = View.VISIBLE else emptyNotificationsImage.visibility = View.INVISIBLE
+        if ((notificationsRecyclerView.adapter as NotificationsRecyclerViewAdapter).itemCount == 0) no_notifications_image.visibility = View.VISIBLE else no_notifications_image.visibility = View.INVISIBLE
     }
 
     /**

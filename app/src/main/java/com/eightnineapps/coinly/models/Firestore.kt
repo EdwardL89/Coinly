@@ -1,5 +1,6 @@
 package com.eightnineapps.coinly.models
 
+import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.interfaces.Repository
@@ -33,8 +34,16 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
         return database.collection("users").document(email)
     }
 
-    fun updateNotifications(user: User): Task<Void> {
-        return database.collection("users").document(user.email!!).update("notifications", user.notifications)
+    fun addNotification(userEmail: String, notification: Notification) {
+        database.collection("users").document(userEmail).collection("notifications").document(notification.id).set(notification)
+    }
+
+    fun removeNotification(userEmail: String, notification: Notification) {
+        database.collection("users").document(userEmail).collection("notifications").document(notification.id).delete()
+    }
+
+    fun getNotifications(user: User): CollectionReference {
+        return database.collection("users").document(user.email!!).collection("notifications")
     }
 
     fun getBigs(littleEmail: String): CollectionReference {

@@ -20,6 +20,8 @@ import com.eightnineapps.coinly.databinding.ActivityLinkupProfileBinding
 import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_BIG
 import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_LITTLE
+import com.eightnineapps.coinly.models.CurrentUser
+import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LinkupProfileViewModel
 import kotlinx.android.synthetic.main.activity_linkup_profile.*
 import kotlin.math.roundToInt
@@ -119,9 +121,16 @@ class LinkupProfileActivity : AppCompatActivity() {
      * Update the text on the buttons if there's already a pending request
      */
     private fun updateButtonsForPendingRequests(type: NotificationType) {
-        val pendingRequestPair = linkupProfileViewModel.checkForPendingRequest(type)
-        if (pendingRequestPair.second) setUpAddAsLittleAsAcceptRequest(pendingRequestPair.first)
-        else setUpAddAsBigAsAcceptRequest(pendingRequestPair.first)
+        Firestore.getNotifications(CurrentUser.instance!!).get().addOnSuccessListener {
+            val pendingNotification = it.find { queryDocumentSnapshot ->
+                queryDocumentSnapshot["type"] == type &&
+                        queryDocumentSnapshot["toAddUserEmail"] == CurrentUser.instance!!.email &&
+                        queryDocumentSnapshot["addingToUserEmail"] == linkupProfileViewModel.observedUserInstance.email
+            }!!.toObject(Notification::class.java)
+            val pendingRequestPair = if (type == ADDING_AS_BIG) Pair(pendingNotification, true) else Pair(pendingNotification, false)
+            if (pendingRequestPair.second) setUpAddAsLittleAsAcceptRequest(pendingRequestPair.first)
+            else setUpAddAsBigAsAcceptRequest(pendingRequestPair.first)
+        }
     }
 
     /**

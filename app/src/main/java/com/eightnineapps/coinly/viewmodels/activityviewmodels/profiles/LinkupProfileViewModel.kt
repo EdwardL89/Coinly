@@ -61,23 +61,12 @@ class LinkupProfileViewModel: ViewModel() {
      */
     fun sendAddNotification(sendingToBig: Boolean) {
         val newNotification = constructNotification(sendingToBig)
-        observedUserInstance.notifications.add(newNotification)
-        Firestore.updateNotifications(observedUserInstance)
-    }
-
-    /**
-     * Initiates the process of checking if the current user has a pending request
-     */
-    fun checkForPendingRequest(type: NotificationType): Pair<Notification, Boolean> {
-        val notification = currentUserInstance.notifications.find {
-            it.type == type && it.toAddUserEmail == currentUserInstance.email && it.addingToUserEmail == observedUserInstance.email }!!
-        return if (type == NotificationType.ADDING_AS_BIG) Pair(notification, true) else Pair(notification, false)
+        Firestore.addNotification(observedUserInstance.email!!, newNotification)
     }
 
     fun executeAndUpdateNotification(notification: Notification) {
         notification.execute()
-        currentUserInstance.notifications.remove(notification)
-        Firestore.updateNotifications(currentUserInstance)
+        Firestore.removeNotification(currentUserInstance.email!!, notification)
     }
 
     /**
