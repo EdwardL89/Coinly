@@ -143,7 +143,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@id/prizes_claimed_title"
-                android:layout_above="@id/their_spending_power"
+                android:layout_above="@id/your_spending_power"
                 android:layout_below="@id/prizes_claimed_title"
                 tools:ignore="NotSibling" />
 
