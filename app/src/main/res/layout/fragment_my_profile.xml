@@ -178,8 +178,8 @@
 
         <ImageView
             android:id="@+id/no_notifications_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@drawable/up_to_date_icon"
             android:alpha=".7"
             android:layout_alignStart="@id/notifications_title"
