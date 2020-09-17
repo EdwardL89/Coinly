@@ -15,6 +15,7 @@ import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.BigProfileViewModel
 import kotlinx.android.synthetic.main.fragment_request.*
+import kotlin.random.Random
 
 /**
  * Allows a little send a request to a big for coins
@@ -22,6 +23,7 @@ import kotlinx.android.synthetic.main.fragment_request.*
 class RequestCoinsFragment : Fragment() {
 
     private val bigProfileViewModel: BigProfileViewModel by activityViewModels()
+    private val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_request, container, false)
@@ -81,6 +83,7 @@ class RequestCoinsFragment : Fragment() {
      */
     private fun constructRequestNotification(coinsRequesting: Int, reasonForRequest: String): Notification {
         val notification = Notification()
+        notification.id = generateId()
         val myDisplayName = CurrentUser.instance!!.displayName
         notification.coins = coinsRequesting
         notification.moreInformation = reasonForRequest
@@ -90,5 +93,12 @@ class RequestCoinsFragment : Fragment() {
         notification.profilePictureUri = CurrentUser.instance!!.profilePictureUri
         notification.addingToUserEmail = CurrentUser.instance!!.email!!
         return notification
+    }
+
+    /**
+     * Generates a random 30 character, alphanumerical id for each user
+     */
+    private fun generateId(): String {
+        return (1..30).map { Random.nextInt(0, charPool.size) }.map(charPool::get).joinToString("")
     }
 }

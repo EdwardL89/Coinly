@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.adapters.NotificationsRecyclerViewAdapter
@@ -37,7 +38,6 @@ class MyProfileFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_profile, container, false)
         binding.myProfileViewModel = myProfileFragmentViewModel
         fragmentView = binding.root
-        displayEmptyRecyclerViewImages()
         setUpEditProfileButton()
         loadProfilePicture()
         setupNotifications()
@@ -96,10 +96,6 @@ class MyProfileFragment : Fragment() {
         currentUserInstance.profilePictureUri.observe(viewLifecycleOwner, Observer {
             if (it != null) loadProfilePicture()
         })
-    }
-
-    private fun displayEmptyRecyclerViewImages() {
-        if ((notificationsRecyclerView.adapter as NotificationsRecyclerViewAdapter).itemCount == 0) no_notifications_image.visibility = View.VISIBLE else no_notifications_image.visibility = View.INVISIBLE
     }
 
     /**

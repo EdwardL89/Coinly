@@ -19,7 +19,6 @@ class User(_realName: String = "", _displayName: String = "", _id: String = "", 
     var email = _email
     var realName = _realName
     var displayName = _displayName
-    var notifications: MutableList<Notification> = mutableListOf() //TODO: Make this a subcollection in firebase
     var profilePictureUri: String = ""
 
 }
