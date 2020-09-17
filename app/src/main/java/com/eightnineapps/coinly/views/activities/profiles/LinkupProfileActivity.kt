@@ -20,6 +20,8 @@ import com.eightnineapps.coinly.databinding.ActivityLinkupProfileBinding
 import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_BIG
 import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_LITTLE
+import com.eightnineapps.coinly.models.CurrentUser
+import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LinkupProfileViewModel
 import kotlinx.android.synthetic.main.activity_linkup_profile.*
 import kotlin.math.roundToInt
@@ -104,24 +106,44 @@ class LinkupProfileActivity : AppCompatActivity() {
      * Sets up the add as buttons based on the status between the current and observed user
      */
     private fun setUpAddAsButtons(asBig: Boolean) {
-        val addStatus = linkupProfileViewModel.getAddStatus(asBig)
-        if (!addStatus.first && !addStatus.second && !addStatus.third)
-            (if (asBig) add_as_big_button else add_as_little_button).setOnClickListener {
-                linkupProfileViewModel.sendAddNotification(asBig)
-                showRequested(if (asBig) add_as_big_button else add_as_little_button)
+        Firestore.getNotifications(linkupProfileViewModel.observedUserInstance).get().addOnSuccessListener { it ->
+            val notificationMessageTemplate = "${CurrentUser.instance!!.displayName} wants to add you as a ${if (asBig) "big" else "little"}!"
+            val alreadyRequested = it.map{ queryDocumentSnapshot ->  queryDocumentSnapshot["message"] }.contains(notificationMessageTemplate)
+            val alreadyAdded = linkupProfileViewModel.alreadyAdded(asBig)
+            Firestore.getNotifications(CurrentUser.instance!!).get().addOnSuccessListener {
+                val alreadyReceivedRequest = it.find { doc ->
+                    doc["type"] == (if (asBig) ADDING_AS_LITTLE else ADDING_AS_BIG)  &&
+                    doc["toAddUserEmail"] == CurrentUser.instance!!.email &&
+                    doc["addingToUserEmail"] == CurrentUser.instance!!.email } != null
+
+                val addStatus = Triple(alreadyRequested, alreadyAdded, alreadyReceivedRequest)
+
+                if (!addStatus.first && !addStatus.second && !addStatus.third)
+                    (if (asBig) add_as_big_button else add_as_little_button).setOnClickListener {
+                        linkupProfileViewModel.sendAddNotification(asBig)
+                        showRequested(if (asBig) add_as_big_button else add_as_little_button)
+                    }
+                else if (addStatus.first) showRequested(if (asBig) add_as_big_button else add_as_little_button)
+                else if (addStatus.second) showAdded(asBig, if (asBig) add_as_big_button else add_as_little_button)
+                else updateButtonsForPendingRequests(if (asBig) ADDING_AS_LITTLE else ADDING_AS_BIG)
             }
-        else if (addStatus.first) showRequested(if (asBig) add_as_big_button else add_as_little_button)
-        else if (addStatus.second) showAdded(asBig, if (asBig) add_as_big_button else add_as_little_button)
-        else updateButtonsForPendingRequests(if (asBig) ADDING_AS_LITTLE else ADDING_AS_BIG)
+        }
     }
 
     /**
      * Update the text on the buttons if there's already a pending request
      */
     private fun updateButtonsForPendingRequests(type: NotificationType) {
-        val pendingRequestPair = linkupProfileViewModel.checkForPendingRequest(type)
-        if (pendingRequestPair.second) setUpAddAsLittleAsAcceptRequest(pendingRequestPair.first)
-        else setUpAddAsBigAsAcceptRequest(pendingRequestPair.first)
+        Firestore.getNotifications(CurrentUser.instance!!).get().addOnSuccessListener {
+            val pendingNotification = it.find { queryDocumentSnapshot ->
+                queryDocumentSnapshot["type"] == type &&
+                        queryDocumentSnapshot["toAddUserEmail"] == CurrentUser.instance!!.email &&
+                        queryDocumentSnapshot["addingToUserEmail"] == linkupProfileViewModel.observedUserInstance.email
+            }!!.toObject(Notification::class.java)
+            val pendingRequestPair = if (type == ADDING_AS_BIG) Pair(pendingNotification, true) else Pair(pendingNotification, false)
+            if (pendingRequestPair.second) setUpAddAsLittleAsAcceptRequest(pendingRequestPair.first)
+            else setUpAddAsBigAsAcceptRequest(pendingRequestPair.first)
+        }
     }
 
     /**

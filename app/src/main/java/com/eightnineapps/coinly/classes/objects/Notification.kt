@@ -8,6 +8,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import java.io.Serializable
 
 class Notification: Serializable {
+    var id = ""
     var type = NotificationType.DEFAULT
     var addingToUserEmail = "" //Also requester's email
     var toAddUserEmail = ""
