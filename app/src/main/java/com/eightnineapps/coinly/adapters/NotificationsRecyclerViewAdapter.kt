@@ -18,6 +18,8 @@ import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.enums.NotificationType
+import com.eightnineapps.coinly.models.CurrentUser
+import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.views.activities.startup.HomeActivity.Companion.database
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_my_profile.*
@@ -153,10 +155,10 @@ class NotificationsRecyclerViewAdapter(_notifications: MutableList<Notification>
      * Removes the notification at the given position
      */
     private fun removeNotification(position: Int) {
+        Firestore.removeNotification(CurrentUser.instance!!.email!!, notificationList[position])
         notificationList.removeAt(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, notificationList.size)
-        database.collection("users").document(auth.currentUser?.email!!).update("notifications", notificationList)
     }
 
     /**

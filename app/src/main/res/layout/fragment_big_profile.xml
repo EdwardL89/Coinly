@@ -151,8 +151,8 @@
 
             <ImageView
                 android:id="@+id/no_prizes_claimed_image"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="115dp"
+                android:layout_height="115dp"
                 android:src="@drawable/no_prizes_icon"
                 android:layout_marginTop ="10dp"
                 android:alpha=".7"
