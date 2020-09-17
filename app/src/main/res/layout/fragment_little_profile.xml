@@ -164,7 +164,6 @@
                 android:layout_height="wrap_content"
                 android:scrollbars="horizontal"
                 android:layout_alignStart="@id/prizes_claimed_title"
-                android:layout_above="@id/their_spending_power"
                 android:layout_below="@id/prizes_claimed_title"/>
 
             <ImageView
@@ -177,46 +176,6 @@
                 android:layout_alignStart="@id/prizes_claimed_title"
                 android:layout_below="@id/prizes_claimed_title"
                 android:contentDescription="@string/shown_when_there_are_no_prizes" />
-
-            <TextView
-                android:id="@+id/their_spending_power"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/their_spending_power"
-                android:layout_below="@id/no_prizes_set_image"
-                android:layout_alignStart="@id/bio_text_view"
-                android:textColor="@color/black"
-                android:layout_marginTop="30dp"
-                android:fontFamily="sans-serif"
-                android:textSize="15sp"/>
-
-            <TextView
-                android:id="@+id/spending_power"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf(littleProfileViewModel.observedUserInstance.coins), default = @string/zero}"
-                android:layout_below="@id/no_prizes_set_image"
-                android:layout_toEndOf="@id/their_spending_power"
-                android:textColor="@color/black"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="10dp"
-                android:fontFamily="sans-serif"
-                android:textStyle="bold"
-                android:textSize="15sp"/>
-
-            <TextView
-                android:id="@+id/coin_after_spending_power"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/coins"
-                android:layout_below="@id/no_prizes_set_image"
-                android:layout_toEndOf="@id/spending_power"
-                android:textColor="@color/black"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="5dp"
-                android:fontFamily="sans-serif"
-                android:textSize="15sp"/>
-
 
             <RelativeLayout
                 android:layout_width="wrap_content"
