@@ -197,6 +197,9 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
     fun removeItem(id: String) {
         prizeList.remove(prizeList.first { it.id == id })
         notifyDataSetChanged()
+        if (prizeList.size == 0) {
+            (context as Activity).no_prizes_set_by_big_image.visibility = View.VISIBLE
+        }
     }
 
     fun addItem(prize: Prize) {

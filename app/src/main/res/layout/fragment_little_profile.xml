@@ -130,6 +130,7 @@
                 android:id="@+id/claimedPrizesFromYouRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop ="10dp"
                 android:scrollbars="horizontal"
                 android:layout_alignStart="@id/claimed_prizes_from_you_title"
                 android:layout_above="@id/prizes_claimed_title"
@@ -137,10 +138,10 @@
 
             <ImageView
                 android:id="@+id/no_prizes_claimed_from_you_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:src="@drawable/no_prizes_given_icon"
-                android:layout_marginTop ="30dp"
+                android:layout_marginTop ="10dp"
                 android:alpha=".7"
                 android:layout_alignStart="@id/claimed_prizes_from_you_title"
                 android:layout_below="@id/claimed_prizes_from_you_title"
@@ -162,16 +163,17 @@
                 android:id="@+id/setPrizesRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop ="10dp"
                 android:scrollbars="horizontal"
                 android:layout_alignStart="@id/prizes_claimed_title"
                 android:layout_below="@id/prizes_claimed_title"/>
 
             <ImageView
                 android:id="@+id/no_prizes_set_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:src="@drawable/no_prizes_set_icon"
-                android:layout_marginTop ="30dp"
+                android:layout_marginTop ="10dp"
                 android:alpha=".7"
                 android:layout_alignStart="@id/prizes_claimed_title"
                 android:layout_below="@id/prizes_claimed_title"
