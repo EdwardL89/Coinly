@@ -12,6 +12,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -104,8 +105,11 @@ class NotificationsRecyclerViewAdapter(_notifications: MutableList<Notification>
             }
             dialogueView.accept_button.setOnClickListener {
                 val position = recyclerView!!.getChildLayoutPosition(notificationView)
-                if (notificationType != NotificationType.GIVING_COINS) {
-                    notificationList[position].execute()
+                val notification = notificationList[position]
+                if (notification.type == NotificationType.REQUESTING_COINS && notification.coins > CurrentUser.instance!!.coins) {
+                    Toast.makeText(context, "You don't have enough coins! Denying Request", Toast.LENGTH_LONG).show()
+                } else if (notificationType != NotificationType.GIVING_COINS) {
+                    notification.execute()
                 }
                 removeNotification(position)
                 if (notificationList.isEmpty()) (context as Activity).no_notifications_image.visibility = View.VISIBLE
@@ -144,7 +148,11 @@ class NotificationsRecyclerViewAdapter(_notifications: MutableList<Notification>
         } else {
             holder.acceptButton.text = context.getString(R.string.accept)
             holder.acceptButton.setOnClickListener {
-                notificationList[position].execute()
+                if (notification.type == NotificationType.REQUESTING_COINS && notification.coins > CurrentUser.instance!!.coins) {
+                    Toast.makeText(context, "You don't have enough coins! Denying Request", Toast.LENGTH_LONG).show()
+                } else {
+                    notification.execute()
+                }
                 removeNotification(position)
                 if (notificationList.isEmpty()) (context as Activity).no_notifications_image.visibility = View.VISIBLE
             }
