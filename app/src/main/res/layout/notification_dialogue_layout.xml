@@ -65,7 +65,7 @@
             android:background="@drawable/rounded_button_light_gray"
             android:layout_marginTop="2dp"
             android:textSize="12sp"
-            android:text="@string/cancel"
+            android:text="@string/delete"
             tools:ignore="ButtonStyle" />
     </LinearLayout>
 
