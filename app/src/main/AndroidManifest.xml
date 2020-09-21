@@ -10,11 +10,13 @@
         android:roundIcon="@mipmap/coinly_app_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.eightnineapps.coinly.views.fragments.profiles.little.RevokeCoinsFragment" />
-        <activity android:name="com.eightnineapps.coinly.views.fragments.profiles.little.GiveCoinsFragment" />
         <activity android:name="com.eightnineapps.coinly.views.activities.profiles.EditProfileActivity" />
-        <activity android:name="com.eightnineapps.coinly.views.activities.profiles.LittleProfileHost" />
-        <activity android:name="com.eightnineapps.coinly.views.activities.profiles.BigProfileHost" />
+        <activity
+            android:name="com.eightnineapps.coinly.views.activities.profiles.LittleProfileHost"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="com.eightnineapps.coinly.views.activities.profiles.BigProfileHost"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name="com.eightnineapps.coinly.views.activities.profiles.LinkupProfileActivity" />
         <activity android:name="com.eightnineapps.coinly.views.activities.profiles.CreateProfileActivity" />
         <activity
