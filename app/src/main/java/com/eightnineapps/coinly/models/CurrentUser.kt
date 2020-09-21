@@ -25,8 +25,4 @@ object CurrentUser {
     val numberOfLittles = MutableLiveData<Int>()
 
     val profilePictureUri = MutableLiveData<String>()
-
-    val prizesClaimed = MutableLiveData<MutableList<String>>()
-
-    val notifications = MutableLiveData<MutableList<Notification>>()
 }
