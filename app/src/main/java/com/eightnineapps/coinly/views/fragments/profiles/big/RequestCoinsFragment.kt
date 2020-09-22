@@ -1,9 +1,11 @@
 package com.eightnineapps.coinly.views.fragments.profiles.big
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -54,6 +56,7 @@ class RequestCoinsFragment : Fragment() {
                     val notification = constructRequestNotification(Integer.parseInt(coins_requesting_edit_text.text.toString()), request_reason_edit_text.text.toString())
                     Firestore.addNotification(bigProfileViewModel.observedUserInstance.email!!, notification)
                     Toast.makeText(context, "Request sent!", Toast.LENGTH_SHORT).show()
+                    hideSoftKeyboard()
                     activity!!.onBackPressed()
                 } else {
                     Toast.makeText(context, "${bigProfileViewModel.observedUserInstance.displayName} doesn't have that many coins!", Toast.LENGTH_SHORT).show()
@@ -63,7 +66,19 @@ class RequestCoinsFragment : Fragment() {
             }
         }
         cancel_request_coins_button.setOnClickListener {
+            hideSoftKeyboard()
             activity!!.onBackPressed()
+        }
+    }
+
+    /**
+     * Hides the keyboard from the screen
+     */
+    private fun hideSoftKeyboard() {
+        val view = activity!!.currentFocus
+        view?.let { v ->
+            val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(v.windowToken, 0)
         }
     }
 
