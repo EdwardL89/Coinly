@@ -52,14 +52,18 @@ class RequestCoinsFragment : Fragment() {
     private fun setUpButtons() {
         send_request_button.setOnClickListener {
             if (hasEnteredCoinsAndReason()) {
-                if (hasEnoughCoins()) {
-                    val notification = constructRequestNotification(Integer.parseInt(coins_requesting_edit_text.text.toString()), request_reason_edit_text.text.toString())
-                    Firestore.addNotification(bigProfileViewModel.observedUserInstance.email!!, notification)
-                    Toast.makeText(context, "Request sent!", Toast.LENGTH_SHORT).show()
-                    hideSoftKeyboard()
-                    activity!!.onBackPressed()
+                if (coinsIsPositive()) {
+                    if (hasEnoughCoins()) {
+                        val notification = constructRequestNotification(Integer.parseInt(coins_requesting_edit_text.text.toString()), request_reason_edit_text.text.toString())
+                        Firestore.addNotification(bigProfileViewModel.observedUserInstance.email!!, notification)
+                        Toast.makeText(context, "Request sent!", Toast.LENGTH_SHORT).show()
+                        hideSoftKeyboard()
+                        activity!!.onBackPressed()
+                    } else {
+                        Toast.makeText(context, "${bigProfileViewModel.observedUserInstance.displayName} doesn't have that many coins!", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    Toast.makeText(context, "${bigProfileViewModel.observedUserInstance.displayName} doesn't have that many coins!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Coins must be positive", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Toast.makeText(context, "Missing information!", Toast.LENGTH_SHORT).show()
@@ -82,8 +86,18 @@ class RequestCoinsFragment : Fragment() {
         }
     }
 
+    /**
+     * Determines whether Big has enough coins to fulfill this request.
+     */
     private fun hasEnoughCoins(): Boolean {
         return bigProfileViewModel.observedUserInstance.coins >= Integer.parseInt(coins_requesting_edit_text.text.toString())
+    }
+
+    /**
+     * Determines whether the number of coins entered is positive
+     */
+    private fun coinsIsPositive(): Boolean {
+        return Integer.parseInt(coins_requesting_edit_text.text.toString()) > 0
     }
 
     /**

@@ -52,15 +52,19 @@ class GiveCoinsFragment : Fragment() {
     private fun setUpButtons() {
         give_coins_button.setOnClickListener {
             if (hasEnteredCoins()) {
-                if (hasEnoughCoins(Integer.parseInt(coins_giving_edit_text.text.toString()))) {
-                    val notification = constructNotification(Integer.parseInt(coins_giving_edit_text.text.toString()), optional_note_edit_text.text.toString())
-                    notification.execute()
-                    Firestore.addNotification(littleProfileViewModel.observedUserInstance.email!!, notification)
-                    Toast.makeText(context, "Coins transferred!", Toast.LENGTH_SHORT).show()
-                    hideSoftKeyboard()
-                    activity!!.onBackPressed()
+                if (coinsIsPositive()) {
+                    if (hasEnoughCoins(Integer.parseInt(coins_giving_edit_text.text.toString()))) {
+                        val notification = constructNotification(Integer.parseInt(coins_giving_edit_text.text.toString()), optional_note_edit_text.text.toString())
+                        notification.execute()
+                        Firestore.addNotification(littleProfileViewModel.observedUserInstance.email!!, notification)
+                        Toast.makeText(context, "Coins transferred!", Toast.LENGTH_SHORT).show()
+                        hideSoftKeyboard()
+                        activity!!.onBackPressed()
+                    } else {
+                        Toast.makeText(context, "You don't have that many coins!", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    Toast.makeText(context, "You don't have that many coins!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Coins must be positive", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Toast.makeText(context, "Enter a coin amount", Toast.LENGTH_SHORT).show()
@@ -83,6 +87,17 @@ class GiveCoinsFragment : Fragment() {
         }
     }
 
+    /**
+     * Determines whether the number of coins entered is positive
+     */
+    private fun coinsIsPositive(): Boolean {
+        return Integer.parseInt(coins_giving_edit_text.text.toString()) > 0
+    }
+
+    /**
+     * Constructs the notification to be sent to the little with all the information to inform them
+     * of the coins they've been given
+     */
     private fun constructNotification(coinsGiving: Int, optionalNote: String): Notification {
         val notification = Notification()
         notification.id = generateId()
