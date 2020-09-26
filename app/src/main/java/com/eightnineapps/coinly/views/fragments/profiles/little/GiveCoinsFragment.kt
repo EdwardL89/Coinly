@@ -54,10 +54,13 @@ class GiveCoinsFragment : Fragment() {
             if (hasEnteredCoins()) {
                 if (coinsIsPositive()) {
                     if (hasEnoughCoins(Integer.parseInt(coins_giving_edit_text.text.toString()))) {
-                        val notification = constructNotification(Integer.parseInt(coins_giving_edit_text.text.toString()), optional_note_edit_text.text.toString())
+                        val coins = Integer.parseInt(coins_giving_edit_text.text.toString())
+                        val notification = constructNotification(coins, optional_note_edit_text.text.toString())
                         notification.execute()
                         Firestore.addNotification(littleProfileViewModel.observedUserInstance.email!!, notification)
                         Toast.makeText(context, "Coins transferred!", Toast.LENGTH_SHORT).show()
+                        littleProfileViewModel.observedUserInstance.coins += coins
+                        littleProfileViewModel.coinAmountHasChanged = true
                         hideSoftKeyboard()
                         activity!!.onBackPressed()
                     } else {

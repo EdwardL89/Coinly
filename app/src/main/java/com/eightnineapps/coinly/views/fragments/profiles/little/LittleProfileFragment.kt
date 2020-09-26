@@ -42,6 +42,14 @@ class LittleProfileFragment: Fragment() {
         littleProfileViewModel.loadClaimedPrizes(claimedPrizesFromYouRecyclerView, context!!)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (littleProfileViewModel.coinAmountHasChanged) {
+            coin_count.text = littleProfileViewModel.observedUserInstance.coins.toString()
+            littleProfileViewModel.coinAmountHasChanged = false
+        }
+    }
+
     /**
      * Loads the observe user's profile picture
      */

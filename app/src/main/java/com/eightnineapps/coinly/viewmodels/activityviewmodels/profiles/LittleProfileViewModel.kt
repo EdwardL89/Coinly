@@ -28,6 +28,7 @@ class LittleProfileViewModel: ViewModel() {
     private var pictureOfNewPrizeSetByteData = ByteArrayOutputStream().toByteArray()
     lateinit var observedUserInstance: User
     private val imageUploadHelper = ImageUploadHelper()
+    var coinAmountHasChanged = false
 
     /**
      * Removes the observed Big and navigates to the previous page
