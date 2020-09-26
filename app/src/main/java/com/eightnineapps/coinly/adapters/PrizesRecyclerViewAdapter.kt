@@ -124,7 +124,22 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
                     removeItem(prize.id)
                 }
                 updateClaimedStats(prize)
+                updateGivenStats(prize)
             }
+        }
+
+        /**
+         * Calculates new values for the average price of prizes given and the number of prizes given.
+         * Updates these values in the Firestore.
+         */
+        private fun updateGivenStats(prize: Prize) {
+            var previousTotalPrice = observedUser.avgPriceOfPrizesGiven*observedUser.numOfPrizesGiven
+            previousTotalPrice += prize.price
+            observedUser.numOfPrizesGiven++
+            val newAverage = previousTotalPrice / observedUser.numOfPrizesGiven
+            observedUser.avgPriceOfPrizesGiven = newAverage
+            Firestore.update(observedUser, "avgPriceOfPrizesGiven", observedUser.avgPriceOfPrizesGiven.toString())
+            Firestore.update(observedUser, "numOfPrizesGiven", observedUser.numOfPrizesGiven.toString())
         }
 
         /**
