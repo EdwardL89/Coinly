@@ -83,6 +83,7 @@ class Notification: Serializable {
                 Firestore.addLittle(toAddUser.email!!, addingToUser.email!!)
 
                 addingToUser.numOfBigs += 1
+                CurrentUser.numberOfBigs.value = addingToUser.numOfBigs
                 Firestore.update(addingToUser, "numOfBigs", addingToUser.numOfBigs.toString())
                 Firestore.addBig(addingToUser.email!!, toAddUser.email!!)
             }
