@@ -109,6 +109,8 @@ class LittleProfileFragment: Fragment() {
             val price = view.prize_price.text.toString()
             if (title == "" || price == "") {
                 Toast.makeText(context!!, "Missing Fields", Toast.LENGTH_SHORT).show()
+            } else if (price != "" && price[0] == '0') {
+                Toast.makeText(context!!, "Price cannot be 0", Toast.LENGTH_SHORT).show()
             } else {
                 littleProfileViewModel.uploadNewSetPrize(title, Integer.parseInt(price), context!!)
                 dialog.dismiss()
