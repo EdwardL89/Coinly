@@ -21,7 +21,7 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
     }
 
     override fun update(user: User, field: String, value: String): Task<Void> {
-        if (field == "numOfBigs" || field == "numOfLittles" || field == "coins")
+        if (field == "numOfBigs" || field == "numOfLittles" || field == "coins" || field == "numOfPrizesGiven" || field == "numOfPrizesClaimed" || field == "avgPriceOfPrizesGiven" || field == "avgPriceOfPrizesClaimed")
             return database.collection("users").document(user.email!!).update(field, Integer.parseInt(value))
         return database.collection("users").document(user.email!!).update(field, value)
     }

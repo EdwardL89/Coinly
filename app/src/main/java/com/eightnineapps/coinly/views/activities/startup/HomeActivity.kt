@@ -21,7 +21,6 @@ import com.eightnineapps.coinly.classes.helpers.AuthHelper
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.startup.HomeViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlin.system.exitProcess
 
@@ -40,7 +39,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
      * Provides access to data structures for all the below methods
      */
     companion object {
-        val database = FirebaseFirestore.getInstance()
         lateinit var tabLayout: TabLayout
     }
 

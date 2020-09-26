@@ -51,6 +51,7 @@ class Notification: Serializable {
             val requester = it.result!!.toObject(User::class.javaObjectType)!!
             requester.coins += coins
             CurrentUser.instance!!.coins -= coins
+            CurrentUser.coins.value = CurrentUser.instance!!.coins
             Firestore.update(requester, "coins", requester.coins.toString())
             Firestore.update(CurrentUser.instance!!, "coins", CurrentUser.instance!!.coins.toString())
         }
@@ -82,6 +83,7 @@ class Notification: Serializable {
                 Firestore.addLittle(toAddUser.email!!, addingToUser.email!!)
 
                 addingToUser.numOfBigs += 1
+                CurrentUser.numberOfBigs.value = addingToUser.numOfBigs
                 Firestore.update(addingToUser, "numOfBigs", addingToUser.numOfBigs.toString())
                 Firestore.addBig(addingToUser.email!!, toAddUser.email!!)
             }
@@ -114,6 +116,7 @@ class Notification: Serializable {
                 Firestore.addBig(toAddUser.email!!, addingToUser.email!!)
 
                 addingToUser.numOfLittles += 1
+                CurrentUser.numberOfLittles.value = addingToUser.numOfLittles
                 Firestore.update(addingToUser, "numOfLittles", addingToUser.numOfLittles.toString())
                 Firestore.addLittle(addingToUser.email!!, toAddUser.email!!)
             }

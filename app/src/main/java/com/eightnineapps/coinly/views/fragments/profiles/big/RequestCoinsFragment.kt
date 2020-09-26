@@ -1,9 +1,11 @@
 package com.eightnineapps.coinly.views.fragments.profiles.big
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -50,25 +52,52 @@ class RequestCoinsFragment : Fragment() {
     private fun setUpButtons() {
         send_request_button.setOnClickListener {
             if (hasEnteredCoinsAndReason()) {
-                if (hasEnoughCoins()) {
-                    val notification = constructRequestNotification(Integer.parseInt(coins_requesting_edit_text.text.toString()), request_reason_edit_text.text.toString())
-                    Firestore.addNotification(bigProfileViewModel.observedUserInstance.email!!, notification)
-                    Toast.makeText(context, "Request sent!", Toast.LENGTH_SHORT).show()
-                    activity!!.onBackPressed()
+                if (coinsIsPositive()) {
+                    if (hasEnoughCoins()) {
+                        val notification = constructRequestNotification(Integer.parseInt(coins_requesting_edit_text.text.toString()), request_reason_edit_text.text.toString())
+                        Firestore.addNotification(bigProfileViewModel.observedUserInstance.email!!, notification)
+                        Toast.makeText(context, "Request sent!", Toast.LENGTH_SHORT).show()
+                        hideSoftKeyboard()
+                        activity!!.onBackPressed()
+                    } else {
+                        Toast.makeText(context, "${bigProfileViewModel.observedUserInstance.displayName} doesn't have that many coins!", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    Toast.makeText(context, "${bigProfileViewModel.observedUserInstance.displayName} doesn't have that many coins!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Coins must be positive", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Toast.makeText(context, "Missing information!", Toast.LENGTH_SHORT).show()
             }
         }
         cancel_request_coins_button.setOnClickListener {
+            hideSoftKeyboard()
             activity!!.onBackPressed()
         }
     }
 
+    /**
+     * Hides the keyboard from the screen
+     */
+    private fun hideSoftKeyboard() {
+        val view = activity!!.currentFocus
+        view?.let { v ->
+            val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(v.windowToken, 0)
+        }
+    }
+
+    /**
+     * Determines whether Big has enough coins to fulfill this request.
+     */
     private fun hasEnoughCoins(): Boolean {
         return bigProfileViewModel.observedUserInstance.coins >= Integer.parseInt(coins_requesting_edit_text.text.toString())
+    }
+
+    /**
+     * Determines whether the number of coins entered is positive
+     */
+    private fun coinsIsPositive(): Boolean {
+        return Integer.parseInt(coins_requesting_edit_text.text.toString()) > 0
     }
 
     /**
