@@ -123,7 +123,18 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
                     ((context as Activity).prizesYouveClaimedRecyclerView.adapter as PrizesRecyclerViewAdapter).addItem(prize)
                     removeItem(prize.id)
                 }
+                updateClaimedStats(prize)
             }
+        }
+
+        private fun updateClaimedStats(prize: Prize) {
+            var previousTotalPrice = currentUser.avgPriceOfPrizesClaimed*currentUser.numOfPrizesClaimed
+            previousTotalPrice += prize.price
+            currentUser.numOfPrizesClaimed++
+            val newAverage = previousTotalPrice / currentUser.numOfPrizesClaimed
+            currentUser.avgPriceOfPrizesClaimed = newAverage
+            Firestore.update(currentUser, "avgPriceOfPrizesClaimed", currentUser.avgPriceOfPrizesClaimed.toString())
+            Firestore.update(currentUser, "numOfPrizesClaimed", currentUser.numOfPrizesClaimed.toString())
         }
 
         /**
