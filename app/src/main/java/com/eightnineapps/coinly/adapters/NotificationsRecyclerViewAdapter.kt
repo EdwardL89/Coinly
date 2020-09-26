@@ -21,7 +21,6 @@ import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
-import com.eightnineapps.coinly.views.activities.startup.HomeActivity.Companion.database
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_my_profile.*
 import kotlinx.android.synthetic.main.notification_dialogue_layout.view.*

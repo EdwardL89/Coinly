@@ -28,6 +28,7 @@ class LittleProfileViewModel: ViewModel() {
     private var pictureOfNewPrizeSetByteData = ByteArrayOutputStream().toByteArray()
     lateinit var observedUserInstance: User
     private val imageUploadHelper = ImageUploadHelper()
+    var coinAmountHasChanged = false
 
     /**
      * Removes the observed Big and navigates to the previous page
@@ -41,6 +42,7 @@ class LittleProfileViewModel: ViewModel() {
         observedUserInstance.numOfBigs -= 1
         Firestore.update(observedUserInstance, "numOfBigs", observedUserInstance.numOfBigs.toString())
         Firestore.removeBig(observedUserInstance.email!!, currentUserInstance.email!!)
+        CurrentUser.numberOfLittles.value = currentUserInstance.numOfLittles
 
         Toast.makeText(context, "Removed ${observedUserInstance.displayName} as a little", Toast.LENGTH_SHORT).show()
 
