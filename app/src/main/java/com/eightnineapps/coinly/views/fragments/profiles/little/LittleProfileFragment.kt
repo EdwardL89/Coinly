@@ -19,6 +19,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LittleProfileViewModel
 import kotlinx.android.synthetic.main.fragment_little_profile.*
@@ -107,7 +108,10 @@ class LittleProfileFragment: Fragment() {
         view.set_button.setOnClickListener {
             val title = view.prize_title.text.toString()
             val price = view.prize_price.text.toString()
-            if (title == "" || price == "") {
+            if (hasReachedSetPrizeLimit()) {
+                Toast.makeText(context!!, "You've reached the prizes set limit!", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            } else if (title == "" || price == "") {
                 Toast.makeText(context!!, "Missing Fields", Toast.LENGTH_SHORT).show()
             } else if (price != "" && price[0] == '0') {
                 Toast.makeText(context!!, "Price cannot be 0", Toast.LENGTH_SHORT).show()
@@ -116,6 +120,14 @@ class LittleProfileFragment: Fragment() {
                 dialog.dismiss()
             }
         }
+    }
+
+    /**
+     * Determines whether the user has set a number of prizes equal to the limit of how many one
+     * can set.
+     */
+    private fun hasReachedSetPrizeLimit(): Boolean {
+        return (setPrizesRecyclerView.adapter as PrizesRecyclerViewAdapter).itemCount == 10
     }
 
     /**
