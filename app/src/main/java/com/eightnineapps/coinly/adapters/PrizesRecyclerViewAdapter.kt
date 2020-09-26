@@ -127,6 +127,10 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
             }
         }
 
+        /**
+         * Calculates new values for the average price of prizes claimed and the number of prizes claimed.
+         * Updates these values in the Firestore.
+         */
         private fun updateClaimedStats(prize: Prize) {
             var previousTotalPrice = currentUser.avgPriceOfPrizesClaimed*currentUser.numOfPrizesClaimed
             previousTotalPrice += prize.price

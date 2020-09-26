@@ -20,7 +20,7 @@ class BigProfileViewModel: ViewModel() {
     private lateinit var setPrizesRecyclerView: RecyclerView
     private lateinit var claimedPrizesRecyclerView: RecyclerView
     lateinit var observedUserInstance: User
-    private val currentUserInstance = CurrentUser.instance
+    val currentUserInstance = CurrentUser.instance
 
     /**
      * Removes the observed Big and navigates to the previous page

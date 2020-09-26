@@ -41,7 +41,7 @@ class BigProfileFragment: Fragment() {
         coin_count.text = observedUser.coins.toString()
         bigs_count.text = observedUser.numOfBigs.toString()
         littles_count.text = observedUser.numOfLittles.toString()
-        spending_power.text = observedUser.coins.toString()
+        spending_power.text = bigProfileViewModel.currentUserInstance!!.coins.toString()
     }
 
     /**
