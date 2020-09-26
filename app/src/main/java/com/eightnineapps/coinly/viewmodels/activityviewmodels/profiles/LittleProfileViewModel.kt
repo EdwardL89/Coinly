@@ -41,6 +41,7 @@ class LittleProfileViewModel: ViewModel() {
         observedUserInstance.numOfBigs -= 1
         Firestore.update(observedUserInstance, "numOfBigs", observedUserInstance.numOfBigs.toString())
         Firestore.removeBig(observedUserInstance.email!!, currentUserInstance.email!!)
+        CurrentUser.numberOfLittles.value = currentUserInstance.numOfLittles
 
         Toast.makeText(context, "Removed ${observedUserInstance.displayName} as a little", Toast.LENGTH_SHORT).show()
 
