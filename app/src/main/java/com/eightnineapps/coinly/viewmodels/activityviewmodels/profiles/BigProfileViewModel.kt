@@ -26,6 +26,8 @@ class BigProfileViewModel: ViewModel() {
      * Removes the observed Big and navigates to the previous page
      */
     fun removeBigAndSendBack(context: Context) {
+        CurrentUser.bigToBeRemoved = observedUserInstance
+
         currentUserInstance!!.numOfBigs -= 1
         Firestore.update(currentUserInstance!!, "numOfBigs", currentUserInstance.numOfBigs.toString())
         Firestore.removeBig(currentUserInstance.email!!, observedUserInstance.email!!)
