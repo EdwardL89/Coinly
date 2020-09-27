@@ -97,10 +97,18 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
     }
 
     /**
-     * Removes a little from the recycler view when they have been removed by the big
+     * Removes a user from the recycler view
      */
     fun removeUser(user: User) {
         userList.remove(userList.first { it["id"].toString() == user.id })
+        notifyDataSetChanged()
+    }
+
+    /**
+     * Adds a user from the recycler view
+     */
+    fun addUser(userDocumentSnapshot: DocumentSnapshot) {
+        userList.add(userDocumentSnapshot)
         notifyDataSetChanged()
     }
 }

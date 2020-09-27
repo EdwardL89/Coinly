@@ -48,8 +48,13 @@ class AllBigsFragment : Fragment() {
         super.onResume()
         if (CurrentUser.bigToBeRemoved != null) {
             (allBigsRecyclerView.adapter as UsersRecyclerViewAdapter).removeUser(CurrentUser.bigToBeRemoved!!)
-            allBigsFragmentViewModel.removeUserToDisplay(CurrentUser.bigToBeRemoved!!)
+            allBigsFragmentViewModel.removeUserFromAssociates(CurrentUser.bigToBeRemoved!!)
             CurrentUser.bigToBeRemoved = null
+        }
+        if (CurrentUser.bigToBeAdded != null) {
+            (allBigsRecyclerView.adapter as UsersRecyclerViewAdapter).addUser(CurrentUser.bigToBeAdded!!)
+            allBigsFragmentViewModel.addUserToAssociates(CurrentUser.bigToBeAdded!!)
+            CurrentUser.bigToBeAdded = null
         }
     }
 
