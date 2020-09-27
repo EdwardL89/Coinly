@@ -1,9 +1,7 @@
 package com.eightnineapps.coinly.viewmodels.fragmentviewmodels
 
 import android.content.Context
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
-import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 
@@ -26,9 +24,5 @@ class AllLittlesFragmentViewModel: TabLayoutFragmentViewModel() {
         } else {
             updateRecyclerViewAdapterAndLayoutManager(context)
         }
-    }
-
-    fun removeUserToDisplay(user: User) {
-        removeUserFromAssociates(user)
     }
 }

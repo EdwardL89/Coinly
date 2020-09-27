@@ -32,7 +32,6 @@ class LittleProfileViewModel: ViewModel() {
 
     /**
      * Removes the observed Big and navigates to the previous page
-     *
      */
     fun removeLittleAndSendBack(context: Context) {
         CurrentUser.littleToBeRemoved = observedUserInstance

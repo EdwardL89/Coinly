@@ -76,6 +76,7 @@ class Notification: Serializable {
         val toAddUser = toAddUserTask.result!!.toObject(User::class.javaObjectType)!!
         val addingToUser = addingToUserTask.result!!.toObject(User::class.javaObjectType)!!
 
+        CurrentUser.bigToBeAdded = addingToUserTask.result
         Firestore.getLittles(toAddUserEmail).document(addingToUser.email!!).get().addOnCompleteListener {
             if (!it.result!!.exists()) {
                 toAddUser.numOfLittles += 1
@@ -109,6 +110,7 @@ class Notification: Serializable {
         val toAddUser = toAddUserTask.result!!.toObject(User::class.javaObjectType)!!
         val addingToUser = addingToUserTask.result!!.toObject(User::class.javaObjectType)!!
 
+        CurrentUser.littleToBeAdded = addingToUserTask.result
         Firestore.getBigs(toAddUserEmail).document(addingToUser.email!!).get().addOnCompleteListener {
             if (!it.result!!.exists()) {
                 toAddUser.numOfBigs += 1

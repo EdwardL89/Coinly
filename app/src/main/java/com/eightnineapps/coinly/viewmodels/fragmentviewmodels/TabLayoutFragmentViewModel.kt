@@ -37,9 +37,20 @@ abstract class TabLayoutFragmentViewModel: ViewModel() {
         allAssociatesRecyclerViewList.removeAllViews()
     }
 
+    /**
+     * Removes a user to the associates list
+     */
     fun removeUserFromAssociates(user: User) {
         allAssociates.remove(allAssociates.first { it["id"].toString() == user.id })
         allAssociatesToDisplay.remove(allAssociatesToDisplay.first { it["id"].toString() == user.id })
+    }
+
+    /**
+     * Adds a user to the associates list
+     */
+    fun addUserToAssociates(userSnapshot: DocumentSnapshot) {
+        allAssociates.add(userSnapshot)
+        allAssociatesToDisplay.add(userSnapshot)
     }
 
     /**
