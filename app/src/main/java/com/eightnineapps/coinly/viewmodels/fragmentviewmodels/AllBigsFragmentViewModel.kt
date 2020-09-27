@@ -1,11 +1,10 @@
 package com.eightnineapps.coinly.viewmodels.fragmentviewmodels
 
 import android.content.Context
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
+import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
-import com.firebase.ui.auth.data.model.User
 
 class AllBigsFragmentViewModel: TabLayoutFragmentViewModel() {
 
@@ -28,4 +27,7 @@ class AllBigsFragmentViewModel: TabLayoutFragmentViewModel() {
         }
     }
 
+    fun removeUserToDisplay(user: User) {
+        removeUserFromAssociates(user)
+    }
 }

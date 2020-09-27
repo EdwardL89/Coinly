@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.user_list_view_layout.view.*
  */
 class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context): RecyclerView.Adapter<UsersRecyclerViewAdapter.ViewHolder>() {
 
-    private var userList = _items
+    private var userList = _items.toMutableList()
     var context = _context
 
     /**
@@ -94,5 +94,13 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
         val currentUser = userList[position]
         Glide.with(context).load(currentUser.data!!["profilePictureUri"]).into(holder.singleUserProfilePicture)
         holder.singleUserName.text = currentUser.data?.get("displayName").toString()
+    }
+
+    /**
+     * Removes a little from the recycler view when they have been removed by the big
+     */
+    fun removeUser(user: User) {
+        userList.remove(userList.first { it["id"].toString() == user.id })
+        notifyDataSetChanged()
     }
 }

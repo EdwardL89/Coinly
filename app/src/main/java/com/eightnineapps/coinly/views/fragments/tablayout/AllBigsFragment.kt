@@ -6,7 +6,11 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
+import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.AllBigsFragmentViewModel
+import kotlinx.android.synthetic.main.fragment_bigs.*
+import kotlinx.android.synthetic.main.fragment_bigs.view.*
 
 class AllBigsFragment : Fragment() {
 
@@ -40,11 +44,20 @@ class AllBigsFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (CurrentUser.bigToBeRemoved != null) {
+            (allBigsRecyclerView.adapter as UsersRecyclerViewAdapter).removeUser(CurrentUser.bigToBeRemoved!!)
+            allBigsFragmentViewModel.removeUserToDisplay(CurrentUser.bigToBeRemoved!!)
+            CurrentUser.bigToBeRemoved = null
+        }
+    }
+
     /**
      * Sets up the big tab fragment for the user
      */
     private fun createBigsTab(view: View): View {
-        allBigsFragmentViewModel.addAllBigsToRecyclerView(view.findViewById(R.id.allBigsRecyclerView), context)
+        allBigsFragmentViewModel.addAllBigsToRecyclerView(view.allBigsRecyclerView, context)
         return view
     }
 }

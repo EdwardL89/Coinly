@@ -37,6 +37,11 @@ abstract class TabLayoutFragmentViewModel: ViewModel() {
         allAssociatesRecyclerViewList.removeAllViews()
     }
 
+    fun removeUserFromAssociates(user: User) {
+        allAssociates.remove(allAssociates.first { it["id"].toString() == user.id })
+        allAssociatesToDisplay.remove(allAssociatesToDisplay.first { it["id"].toString() == user.id })
+    }
+
     /**
      * Adds the user objects from the given email list to the recycler view
      */
@@ -84,8 +89,8 @@ abstract class TabLayoutFragmentViewModel: ViewModel() {
      * Assigns the given recycler view's layout manager and adapter using the list whose data is being displayed
      */
     fun updateRecyclerViewAdapterAndLayoutManager(context: Context?) {
-        allAssociatesRecyclerViewList.layoutManager = LinearLayoutManager(context)
-        allAssociatesRecyclerViewList.adapter = UsersRecyclerViewAdapter(allAssociatesToDisplay, context!!)
+        if (allAssociatesRecyclerViewList.layoutManager == null) allAssociatesRecyclerViewList.layoutManager = LinearLayoutManager(context)
+        if (allAssociatesRecyclerViewList.adapter == null) allAssociatesRecyclerViewList.adapter = UsersRecyclerViewAdapter(allAssociatesToDisplay, context!!)
     }
 
     /**

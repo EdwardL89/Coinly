@@ -6,7 +6,10 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
+import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.AllLittlesFragmentViewModel
+import kotlinx.android.synthetic.main.fragment_littles.*
 
 class AllLittlesFragment : Fragment() {
 
@@ -38,6 +41,15 @@ class AllLittlesFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (CurrentUser.littleToBeRemoved != null) {
+            (allLittlesRecyclerView.adapter as UsersRecyclerViewAdapter).removeUser(CurrentUser.littleToBeRemoved!!)
+            allLittlesFragmentViewModel.removeUserToDisplay(CurrentUser.littleToBeRemoved!!)
+            CurrentUser.littleToBeRemoved = null
+        }
     }
 
     /**

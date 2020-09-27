@@ -35,6 +35,8 @@ class LittleProfileViewModel: ViewModel() {
      *
      */
     fun removeLittleAndSendBack(context: Context) {
+        CurrentUser.littleToBeRemoved = observedUserInstance
+
         currentUserInstance!!.numOfLittles -= 1
         Firestore.update(currentUserInstance!!, "numOfLittles", currentUserInstance.numOfLittles.toString())
         Firestore.removeLittle(currentUserInstance.email!!, observedUserInstance.email!!)

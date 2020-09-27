@@ -20,6 +20,7 @@ class BigProfileHost : AppCompatActivity() {
         setContentView(R.layout.activity_big_profile_host)
         addCoinlyActionBarTitle()
         addBackArrowToActionBar()
+        
     }
 
     /**

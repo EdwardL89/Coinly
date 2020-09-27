@@ -12,6 +12,10 @@ object CurrentUser {
 
     var instance: User? = null
 
+    var bigToBeRemoved: User? = null
+
+    var littleToBeRemoved: User? = null
+
     val coins = MutableLiveData<Int>()
 
     val bio = MutableLiveData<String>()
