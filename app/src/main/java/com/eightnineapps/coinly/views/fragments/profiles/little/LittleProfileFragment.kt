@@ -125,6 +125,7 @@ class LittleProfileFragment: Fragment() {
                 Toast.makeText(context!!, "Price cannot be 0", Toast.LENGTH_SHORT).show()
             } else {
                 littleProfileViewModel.uploadNewSetPrize(title, Integer.parseInt(price), context!!)
+                Toast.makeText(context!!, "Uploading prize...", Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             }
         }
