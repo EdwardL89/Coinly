@@ -59,7 +59,7 @@ class EditProfileViewModel: ViewModel() {
     }
 
     /**
-     * Uploads image to storage and updates the user's Uri
+     * Uploads image to storage and update the user's Uri
      */
     private fun updateProfilePicture() {
         ImgStorage.insert(userProfilePictureByteData, "profile_pictures/${currentUser.instance!!.id}").addOnSuccessListener {

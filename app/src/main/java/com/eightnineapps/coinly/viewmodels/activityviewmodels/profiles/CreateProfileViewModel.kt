@@ -30,15 +30,19 @@ class CreateProfileViewModel : ViewModel() {
      * Makes sure all fields are filled in before continuing
      */
     fun verifyProfileCreationIsComplete(context: Context, realName: EditText, displayName: EditText, bio: EditText) {
-        if (noFieldsEmpty(realName, displayName, bio)) uploadUserAndGoToHome(
-            User(
-                realName.text.toString(),
-                displayName.text.toString(),
-                generateId(),
-                authHelper.getAuthUserEmail(),
-                bio.text.toString()
-            ), context)
-        else Toast.makeText(context, "Info missing!", Toast.LENGTH_SHORT).show()
+        if (noFieldsEmpty(realName, displayName, bio)) {
+            Toast.makeText(context, "Creating profile...", Toast.LENGTH_LONG).show()
+            uploadUserAndGoToHome(
+                User(
+                    realName.text.toString(),
+                    displayName.text.toString(),
+                    generateId(),
+                    authHelper.getAuthUserEmail(),
+                    bio.text.toString()
+                ), context)
+        } else {
+            Toast.makeText(context, "Info missing!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     /**
@@ -71,6 +75,7 @@ class CreateProfileViewModel : ViewModel() {
      * uploads the user to the Firestore
      */
     private fun uploadUserAndGoToHome(newUser: User, context: Context) {
+        newUser.coins = 100
         ImgStorage.insert(userProfilePictureByteData, "profile_pictures/${newUser.id}").addOnSuccessListener {
             ImgStorage.read(newUser).addOnSuccessListener { uri -> newUser.profilePictureUri = uri.toString()
                         Firestore.insert(newUser).addOnSuccessListener { goToHomePage(context, newUser)
