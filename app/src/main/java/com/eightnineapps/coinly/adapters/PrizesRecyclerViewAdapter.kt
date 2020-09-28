@@ -74,6 +74,8 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
                     removeItem(prize.id)
                     Firestore.deletePrize(observedUser.email!!, currentUser.email!!, prize.id).addOnSuccessListener {
                         Toast.makeText(context, "Prize deleted", Toast.LENGTH_SHORT).show()
+                        val prizePath = "${currentUser.id}/${observedUser.id}/${prize.id}"
+                        ImgStorage.delete("set_prizes/$prizePath")
                     }
                     dialog.cancel()
                 }
