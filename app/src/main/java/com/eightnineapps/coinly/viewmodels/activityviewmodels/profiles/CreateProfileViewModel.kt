@@ -75,6 +75,7 @@ class CreateProfileViewModel : ViewModel() {
      * uploads the user to the Firestore
      */
     private fun uploadUserAndGoToHome(newUser: User, context: Context) {
+        newUser.coins = 100
         ImgStorage.insert(userProfilePictureByteData, "profile_pictures/${newUser.id}").addOnSuccessListener {
             ImgStorage.read(newUser).addOnSuccessListener { uri -> newUser.profilePictureUri = uri.toString()
                         Firestore.insert(newUser).addOnSuccessListener { goToHomePage(context, newUser)
