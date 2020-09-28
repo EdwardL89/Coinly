@@ -22,6 +22,7 @@ import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.models.ImgStorage
 import kotlinx.android.synthetic.main.claim_prize_dialogue_layout.view.*
 import kotlinx.android.synthetic.main.fragment_big_profile.*
+import kotlinx.android.synthetic.main.fragment_little_profile.*
 import kotlinx.android.synthetic.main.prize_info_dialogue_layout.view.*
 import kotlinx.android.synthetic.main.prize_list_view_layout.view.prize_picture
 import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.view.cancel_button
@@ -67,7 +68,19 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
             Glide.with(context.applicationContext).load(prize.uri).into(view.prize_picture)
             builder.setView(view)
             val dialog = builder.create()
-            view.cancel_button.setOnClickListener { dialog.cancel() }
+            if (prizeTapLocation == PrizeTapLocation.LITTLE_PRIZES_SET) {
+                view.cancel_button.text = context.getString(R.string.delete)
+                view.cancel_button.setOnClickListener {
+                    removeItem(prize.id)
+                    Firestore.deletePrize(observedUser.email!!, currentUser.email!!, prize.id).addOnSuccessListener {
+                        Toast.makeText(context, "Prize deleted", Toast.LENGTH_SHORT).show()
+                    }
+                    dialog.cancel()
+                }
+            } else {
+                view.cancel_button.setOnClickListener { dialog.cancel() }
+            }
+
             view.prize_info_name.text = prize.name
             view.prize_info_price.text = prize.price.toString()
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -227,7 +240,9 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTa
     fun removeItem(id: String) {
         prizeList.remove(prizeList.first { it.id == id })
         notifyDataSetChanged()
-        if (prizeList.size == 0) {
+        if (prizeList.size == 0 && prizeTapLocation == PrizeTapLocation.LITTLE_PRIZES_SET) {
+            (context as Activity).no_prizes_set_image.visibility = View.VISIBLE
+        } else {
             (context as Activity).no_prizes_set_by_big_image.visibility = View.VISIBLE
         }
     }
