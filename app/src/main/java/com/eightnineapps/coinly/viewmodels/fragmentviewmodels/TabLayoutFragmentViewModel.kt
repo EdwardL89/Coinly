@@ -152,6 +152,7 @@ abstract class TabLayoutFragmentViewModel: ViewModel() {
         rawDataList.forEach {
             if (it["displayName"].toString().toLowerCase(Locale.ROOT).contains(search)) displayedList.add(it)
         }
+        (allAssociatesRecyclerViewList.adapter as UsersRecyclerViewAdapter).replaceUsers(displayedList)
     }
 
     /**
@@ -160,5 +161,6 @@ abstract class TabLayoutFragmentViewModel: ViewModel() {
     private fun resetDisplayedList(rawDataList: MutableList<DocumentSnapshot>, displayedList: MutableList<DocumentSnapshot>) {
         displayedList.clear()
         displayedList.addAll(rawDataList)
+        (allAssociatesRecyclerViewList.adapter as UsersRecyclerViewAdapter).replaceUsers(displayedList)
     }
 }

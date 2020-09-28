@@ -111,4 +111,10 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
         userList.add(userDocumentSnapshot)
         notifyDataSetChanged()
     }
+
+    fun replaceUsers(newUsers: MutableList<DocumentSnapshot>) {
+        userList.clear()
+        userList.addAll(newUsers)
+        notifyDataSetChanged()
+    }
 }
