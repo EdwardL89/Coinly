@@ -1,7 +1,6 @@
 package com.eightnineapps.coinly.models
 
 import androidx.lifecycle.MutableLiveData
-import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.classes.objects.User
 import com.google.firebase.firestore.DocumentSnapshot
 
@@ -12,26 +11,36 @@ import com.google.firebase.firestore.DocumentSnapshot
 object CurrentUser {
 
     var instance: User? = null
-
+    var bigToBeRemoved: User? = null
+    var littleToBeRemoved: User? = null
     var bigToBeAdded: DocumentSnapshot? = null
-
     var littleToBeAdded: DocumentSnapshot? = null
 
-    var bigToBeRemoved: User? = null
-
-    var littleToBeRemoved: User? = null
-
     val coins = MutableLiveData<Int>()
-
     val bio = MutableLiveData<String>()
-
     val realName = MutableLiveData<String>()
-
     val numberOfBigs = MutableLiveData<Int>()
-
     val displayName = MutableLiveData<String>()
-
     val numberOfLittles = MutableLiveData<Int>()
-
     val profilePictureUri = MutableLiveData<String>()
+
+    /**
+     * Sets the user object to be used throughout the app
+     */
+    fun setUserInstance(user: User) {
+        instance = user
+    }
+
+    /**
+     * Instantiates the live data of this singleton to their initial values
+     */
+    fun instantiateLiveData() {
+        bio.value = instance!!.bio
+        coins.value = instance!!.coins
+        realName.value = instance!!.realName
+        numberOfBigs.value = instance!!.numOfBigs
+        displayName.value = instance!!.displayName
+        numberOfLittles.value = instance!!.numOfLittles
+        profilePictureUri.value = instance!!.profilePictureUri
+    }
 }
