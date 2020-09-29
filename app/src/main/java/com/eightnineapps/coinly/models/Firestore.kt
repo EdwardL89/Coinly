@@ -26,12 +26,8 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
         return database.collection("users").document(user.email!!).update(field, value)
     }
 
-    override fun read(user: User): DocumentReference {
-        return database.collection("users").document(user.email!!)
-    }
-
-    fun read(email: String): DocumentReference {
-        return database.collection("users").document(email)
+    override fun read(userEmail: String): DocumentReference {
+        return database.collection("users").document(userEmail)
     }
 
     fun addNotification(userEmail: String, notification: Notification) {

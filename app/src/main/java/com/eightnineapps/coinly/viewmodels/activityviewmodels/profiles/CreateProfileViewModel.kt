@@ -77,7 +77,7 @@ class CreateProfileViewModel : ViewModel() {
     private fun uploadUserAndGoToHome(newUser: User, context: Context) {
         newUser.coins = 100
         ImgStorage.insert(userProfilePictureByteData, "profile_pictures/${newUser.id}").addOnSuccessListener {
-            ImgStorage.read(newUser).addOnSuccessListener { uri -> newUser.profilePictureUri = uri.toString()
+            ImgStorage.read(newUser.id).addOnSuccessListener { uri -> newUser.profilePictureUri = uri.toString()
                         Firestore.insert(newUser).addOnSuccessListener { goToHomePage(context, newUser)
                             }.addOnFailureListener { Log.w("INFO", "Could not upload user to Firestore") }
                     }.addOnFailureListener { Log.w("INFO", "Could not download from Storage") }

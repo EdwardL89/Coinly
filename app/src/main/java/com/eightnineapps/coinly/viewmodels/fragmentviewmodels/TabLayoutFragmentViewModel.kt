@@ -120,9 +120,7 @@ abstract class TabLayoutFragmentViewModel: ViewModel() {
      * in the involved helper methods
      */
     private fun queryFirestoreForSingleProfile(email: String, context: Context?) {
-        val user = User()
-        user.email = email
-        Firestore.read(user).get().addOnCompleteListener { subtask -> addObservedUserToList(subtask, context) }
+        Firestore.read(email).get().addOnCompleteListener { subtask -> addObservedUserToList(subtask, context) }
     }
 
     /**
@@ -161,6 +159,8 @@ abstract class TabLayoutFragmentViewModel: ViewModel() {
     private fun resetDisplayedList(rawDataList: MutableList<DocumentSnapshot>, displayedList: MutableList<DocumentSnapshot>) {
         displayedList.clear()
         displayedList.addAll(rawDataList)
-        (allAssociatesRecyclerViewList.adapter as UsersRecyclerViewAdapter).replaceUsers(displayedList)
+        if (allAssociatesRecyclerViewList.adapter != null) {
+            (allAssociatesRecyclerViewList.adapter as UsersRecyclerViewAdapter).replaceUsers(displayedList)
+        }
     }
 }

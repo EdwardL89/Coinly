@@ -18,7 +18,7 @@ class LinkupProfileViewModel: ViewModel() {
     private val currentUserInstance = CurrentUser.instance!!
     private val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
-    fun getUpdatedObservedUser(observedUser: User) = Firestore.read(observedUser).get()
+    fun getUpdatedObservedUser(observedUser: User) = Firestore.read(observedUser.email!!).get()
 
     /**
      * Checks to see if the two users have already been added to eachother

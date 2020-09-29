@@ -34,9 +34,7 @@ class LoginViewModel constructor(private val authHelper: AuthHelper) : ViewModel
      */
     fun updateUI(context: Context) {
         if (authHelper.getAuthUser() != null) {
-            val user = User()
-            user.email = authHelper.getAuthUserEmail()
-            Firestore.read(user).get().addOnCompleteListener { task -> handleQueryTask(task, context) }
+            Firestore.read(authHelper.getAuthUserEmail()).get().addOnCompleteListener { task -> handleQueryTask(task, context) }
         }
     }
 
