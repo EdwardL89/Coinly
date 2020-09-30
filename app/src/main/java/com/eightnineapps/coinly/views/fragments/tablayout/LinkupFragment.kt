@@ -14,7 +14,6 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.fragment_linkup.view.*
 
-
 class LinkupFragment : Fragment() {
 
     private lateinit var linkupFragmentViewModel: LinkupFragmentViewModel

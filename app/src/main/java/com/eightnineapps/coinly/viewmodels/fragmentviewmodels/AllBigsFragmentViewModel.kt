@@ -3,6 +3,7 @@ package com.eightnineapps.coinly.viewmodels.fragmentviewmodels
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
+import com.eightnineapps.coinly.classes.helpers.SearchQueryHelper
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.google.android.gms.tasks.Task
@@ -14,6 +15,7 @@ class AllBigsFragmentViewModel: ViewModel() {
     private var allBigsQueryTask: Task<QuerySnapshot>? = null
     private var recyclerAdapter: UsersRecyclerViewAdapter? = null
     private var allBigs = mutableListOf<Triple<String, String, String>>()
+    private val searchQueryHelper = SearchQueryHelper()
 
     fun getAdapter() = recyclerAdapter!!
 
@@ -39,6 +41,8 @@ class AllBigsFragmentViewModel: ViewModel() {
     }
 
     fun setUpSearchView(searchView: SearchView) {
-        return
+        searchQueryHelper.setOriginalList(allBigs)
+        searchQueryHelper.setAdapter(recyclerAdapter!!)
+        searchQueryHelper.setUpSearchView(searchView)
     }
 }

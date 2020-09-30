@@ -96,6 +96,14 @@ class UsersRecyclerViewAdapter(_items: List<Triple<String, String, String>>): Re
     }
 
     /**
+     * Saves the recyclerview upon attachment to the adapter
+     */
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        this.recyclerView = recyclerView
+    }
+
+    /**
      * Removes a user from the recycler view
      */
     fun removeUser(user: User) {
@@ -114,10 +122,11 @@ class UsersRecyclerViewAdapter(_items: List<Triple<String, String, String>>): Re
     }
 
     /**
-     * Saves the recyclerview upon attachment to the adapter
+     * Replaces the current list of users
      */
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        super.onAttachedToRecyclerView(recyclerView)
-        this.recyclerView = recyclerView
+    fun replaceUsers(newUsers: MutableList<Triple<String, String, String>>) {
+        userList.clear()
+        userList.addAll(newUsers)
+        notifyDataSetChanged()
     }
 }
