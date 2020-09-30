@@ -8,13 +8,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
 import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.LinkupFragmentViewModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
-import kotlinx.android.synthetic.main.fragment_linkup.*
 import kotlinx.android.synthetic.main.fragment_linkup.view.*
 
 
@@ -54,7 +51,7 @@ class LinkupFragment : Fragment() {
      * Sets up the linkup tab fragment for the user
      */
     private fun createLinkupTab(view: View): View {
-        addAllUsersToRecycler()
+        addAllUsersToRecycler(view)
         addSpaceBetweenItemsInRecycler(context, view)
         return view
     }
@@ -62,25 +59,35 @@ class LinkupFragment : Fragment() {
     /**
      * Makes sure the query task is completed before continuing
      */
-    private fun addAllUsersToRecycler() {
-        if (linkupFragmentViewModel.hasLoadedUsers()) return
-        val allUsersQueryTask = linkupFragmentViewModel.getAllUsersQuery()!!
-        if (allUsersQueryTask.isComplete) {
-            handleQueryTask(allUsersQueryTask)
+    private fun addAllUsersToRecycler(view: View) {
+        if (linkupFragmentViewModel.hasLoadedUsers()) {
+            attachAdapter(view)
         } else {
-            allUsersQueryTask.addOnCompleteListener {
-                handleQueryTask(allUsersQueryTask)
+            val allUsersQueryTask = linkupFragmentViewModel.getAllUsersQuery()!!
+            if (allUsersQueryTask.isComplete) {
+                handleQueryTask(allUsersQueryTask, view)
+            } else {
+                allUsersQueryTask.addOnCompleteListener {
+                    handleQueryTask(allUsersQueryTask, view)
+                }
             }
         }
     }
 
     /**
+     * Attaches the recyclerview's adapter from when it was scrolled off screen
+     */
+    private fun attachAdapter(view: View) {
+        view.allUsersRecyclerView.adapter = linkupFragmentViewModel.getAdapter()
+    }
+
+    /**
      * Gathers all the Users and sets up the recyclerview to place them in
      */
-    private fun handleQueryTask(allUsersQueryTask: Task<QuerySnapshot>) {
+    private fun handleQueryTask(allUsersQueryTask: Task<QuerySnapshot>, view: View) {
         linkupFragmentViewModel.compileUserDataToList(allUsersQueryTask.result!!)
-        allUsersRecyclerView.layoutManager = LinearLayoutManager(context)
-        allUsersRecyclerView.adapter = UsersRecyclerViewAdapter(linkupFragmentViewModel.getAllUsers())
+        linkupFragmentViewModel.createAdapter()
+        attachAdapter(view)
     }
 
     /**

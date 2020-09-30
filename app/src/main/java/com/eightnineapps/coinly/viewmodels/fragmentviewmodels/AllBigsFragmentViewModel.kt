@@ -2,7 +2,6 @@ package com.eightnineapps.coinly.viewmodels.fragmentviewmodels
 
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
@@ -13,13 +12,10 @@ class AllBigsFragmentViewModel: ViewModel() {
 
     private var hasLoadedUsers = false
     private var allBigsQueryTask: Task<QuerySnapshot>? = null
-    private var linearLayoutManager: LinearLayoutManager? = null
     private var recyclerAdapter: UsersRecyclerViewAdapter? = null
     private var allBigs = mutableListOf<Triple<String, String, String>>()
 
     fun getAdapter() = recyclerAdapter!!
-
-    fun getLayoutManager() = linearLayoutManager!!
 
     fun hasLoadedUsers() = hasLoadedUsers
 
@@ -27,10 +23,6 @@ class AllBigsFragmentViewModel: ViewModel() {
 
     fun createAdapter() {
         recyclerAdapter = UsersRecyclerViewAdapter(allBigs)
-    }
-
-    fun setLayoutManager(llm: LinearLayoutManager) {
-        linearLayoutManager = llm
     }
 
     fun startQueryForAllBigs() {

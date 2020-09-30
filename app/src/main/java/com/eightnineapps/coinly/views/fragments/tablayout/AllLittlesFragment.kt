@@ -8,7 +8,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
 import com.eightnineapps.coinly.models.CurrentUser
@@ -59,7 +58,7 @@ class AllLittlesFragment : Fragment() {
     }
 
     /**
-     * Determines whether or not a big needs to be added or removed
+     * Determines whether or not a little needs to be added or removed
      */
     private fun checkForRemovalOrAdditionOfLittle() {
         if (CurrentUser.littleToBeRemoved != null) {
@@ -76,7 +75,7 @@ class AllLittlesFragment : Fragment() {
      * Sets up the little tab fragment for the user
      */
     private fun createLittlesTab(view: View): View {
-        addAllLittlesToRecycler()
+        addAllLittlesToRecycler(view)
         addSpaceBetweenItemsInRecycler(context, view)
         return view
     }
@@ -84,25 +83,35 @@ class AllLittlesFragment : Fragment() {
     /**
      * Makes sure the query task is completed before continuing
      */
-    private fun addAllLittlesToRecycler() {
-        if (allLittlesFragmentViewModel.hasLoadedUsers()) return
-        val allLittlesQueryTask = allLittlesFragmentViewModel.getAllLittlesQuery()!!
-        if (allLittlesQueryTask.isComplete) {
-            handleQueryTask(allLittlesQueryTask)
+    private fun addAllLittlesToRecycler(view: View) {
+        if (allLittlesFragmentViewModel.hasLoadedUsers()) {
+            attachAdapter(view)
         } else {
-            allLittlesQueryTask.addOnCompleteListener {
-                handleQueryTask(allLittlesQueryTask)
+            val allLittlesQueryTask = allLittlesFragmentViewModel.getAllLittlesQuery()!!
+            if (allLittlesQueryTask.isComplete) {
+                handleQueryTask(allLittlesQueryTask, view)
+            } else {
+                allLittlesQueryTask.addOnCompleteListener {
+                    handleQueryTask(allLittlesQueryTask, view)
+                }
             }
         }
     }
 
     /**
+     * Attaches the recyclerview's adapter from when it was scrolled off screen
+     */
+    private fun attachAdapter(view: View) {
+        view.allLittlesRecyclerView.adapter = allLittlesFragmentViewModel.getAdapter()
+    }
+
+    /**
      * Gathers all the littles and sets up the recyclerview to place them in
      */
-    private fun handleQueryTask(allLittlesQueryTask: Task<QuerySnapshot>) {
+    private fun handleQueryTask(allLittlesQueryTask: Task<QuerySnapshot>, view: View) {
         allLittlesFragmentViewModel.compileUserDataToList(allLittlesQueryTask.result!!)
-        allLittlesRecyclerView.layoutManager = LinearLayoutManager(context)
-        allLittlesRecyclerView.adapter = UsersRecyclerViewAdapter(allLittlesFragmentViewModel.getAllLittles())
+        allLittlesFragmentViewModel.createAdapter()
+        attachAdapter(view)
     }
 
     /**

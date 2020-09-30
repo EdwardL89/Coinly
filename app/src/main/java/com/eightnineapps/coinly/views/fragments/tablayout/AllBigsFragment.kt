@@ -8,7 +8,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
 import com.eightnineapps.coinly.models.CurrentUser
@@ -86,7 +85,7 @@ class AllBigsFragment : Fragment() {
      */
     private fun addAllBigsToRecycler(view: View) {
         if (allBigsFragmentViewModel.hasLoadedUsers()) {
-            attachAdapterAndLayoutManager(view)
+            attachAdapter(view)
         } else {
             val allBigsQueryTask = allBigsFragmentViewModel.getAllBigsQuery()!!
             if (allBigsQueryTask.isComplete) {
@@ -102,8 +101,7 @@ class AllBigsFragment : Fragment() {
     /**
      * Attaches the recyclerview's adapter from when it was scrolled off screen
      */
-    private fun attachAdapterAndLayoutManager(view: View) {
-        view.allBigsRecyclerView.layoutManager = allBigsFragmentViewModel.getLayoutManager()
+    private fun attachAdapter(view: View) {
         view.allBigsRecyclerView.adapter = allBigsFragmentViewModel.getAdapter()
     }
 
@@ -113,8 +111,7 @@ class AllBigsFragment : Fragment() {
     private fun handleQueryTask(allBigsQueryTask: Task<QuerySnapshot>, view: View) {
         allBigsFragmentViewModel.compileUserDataToList(allBigsQueryTask.result!!)
         allBigsFragmentViewModel.createAdapter()
-        allBigsFragmentViewModel.setLayoutManager(LinearLayoutManager(context))
-        attachAdapterAndLayoutManager(view)
+        attachAdapter(view)
     }
 
     /**
