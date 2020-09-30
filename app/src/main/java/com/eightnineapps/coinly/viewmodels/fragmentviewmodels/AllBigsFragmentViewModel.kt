@@ -1,28 +1,52 @@
 package com.eightnineapps.coinly.viewmodels.fragmentviewmodels
 
-import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.QuerySnapshot
 
-class AllBigsFragmentViewModel: TabLayoutFragmentViewModel() {
+class AllBigsFragmentViewModel: ViewModel() {
 
-    private var hasLoadedData = false
+    private var hasLoadedUsers = false
+    private var allBigsQueryTask: Task<QuerySnapshot>? = null
+    private var linearLayoutManager: LinearLayoutManager? = null
+    private var recyclerAdapter: UsersRecyclerViewAdapter? = null
+    private var allBigs = mutableListOf<Triple<String, String, String>>()
 
-    fun addAllBigsToRecyclerView(recyclerView: RecyclerView, context: Context?) {
-        setupRecycler(recyclerView)
-        addSpaceBetweenItems(context)
-        if (!hasLoadedData) {
-            Firestore.getBigs(CurrentUser.instance!!.email!!).get().addOnSuccessListener {
-                val bigs = mutableListOf<String>()
-                for (doc in it) {
-                    bigs.add(doc["email"].toString())
-                }
-                addUsersToRecyclerView(bigs, context)
-                hasLoadedData = true
-            }
-        } else {
-            updateRecyclerViewAdapterAndLayoutManager(context)
+    fun getAdapter() = recyclerAdapter!!
+
+    fun getLayoutManager() = linearLayoutManager!!
+
+    fun hasLoadedUsers() = hasLoadedUsers
+
+    fun getAllBigsQuery() = allBigsQueryTask
+
+    fun createAdapter() {
+        recyclerAdapter = UsersRecyclerViewAdapter(allBigs)
+    }
+
+    fun setLayoutManager(llm: LinearLayoutManager) {
+        linearLayoutManager = llm
+    }
+
+    fun startQueryForAllBigs() {
+        allBigsQueryTask = Firestore.getBigs(CurrentUser.instance!!.email!!).get()
+    }
+
+    fun compileUserDataToList(querySnapshot: QuerySnapshot) {
+        for (document in querySnapshot) {
+            allBigs.add(Triple(document["profilePictureUri"].toString(),
+                document["displayName"].toString(),
+                document["email"].toString()))
         }
+        hasLoadedUsers = true
+    }
+
+    fun setUpSearchView(searchView: SearchView) {
+        return
     }
 }

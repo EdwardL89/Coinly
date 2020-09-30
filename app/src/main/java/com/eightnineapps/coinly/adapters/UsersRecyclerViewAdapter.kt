@@ -11,29 +11,28 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.objects.User
+import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.views.activities.profiles.BigProfileHost
-import com.eightnineapps.coinly.views.activities.startup.HomeActivity.Companion.tabLayout
 import com.eightnineapps.coinly.views.activities.profiles.LinkupProfileActivity
 import com.eightnineapps.coinly.views.activities.profiles.LittleProfileHost
+import com.eightnineapps.coinly.views.activities.startup.HomeActivity.Companion.tabLayout
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.android.synthetic.main.user_list_view_layout.view.*
 
 /**
  * An adapter class to populate the recycler view within a tab in the home tab layout
  */
-class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context): RecyclerView.Adapter<UsersRecyclerViewAdapter.ViewHolder>() {
+class UsersRecyclerViewAdapter(_items: List<Triple<String, String, String>>): RecyclerView.Adapter<UsersRecyclerViewAdapter.ViewHolder>() {
 
     private var userList = _items.toMutableList()
-    var context = _context
+    private var recyclerView: RecyclerView? = null
 
     /**
      * Explicitly defines the UI elements belonging to a single list element in the recycler view
      */
-    class ViewHolder(view: View, _items: List<DocumentSnapshot>): RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class ViewHolder(view: View): RecyclerView.ViewHolder(view), View.OnClickListener {
 
         private var context: Context = view.context
-        private var ViewHolderUserList = _items
-
         val singleUserName: TextView = view.display_name_text_view
         val singleUserProfilePicture: ImageView = view.user_profile_picture
 
@@ -47,10 +46,12 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
          * to the UserProfileActivity along with the current user as an object
          */
         override fun onClick(view: View?) {
-            val displayName = view!!.display_name_text_view!!.text.toString()
-            val userDocument = ViewHolderUserList.first { it.data?.get("displayName") == displayName }
+            val pos = recyclerView!!.getChildLayoutPosition(view!!)
+            val email = userList[pos].third
             val currentTab = tabLayout.selectedTabPosition
-            launchAppropriateActivity(currentTab, userDocument.toObject(User::class.java)!!)
+            Firestore.read(email).get().addOnSuccessListener {
+                launchAppropriateActivity(currentTab, it.toObject(User::class.java)!!)
+            }
         }
 
         /**
@@ -65,9 +66,7 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
             intent.putExtra("observed_user", observedUser)
                 .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             context.startActivity(intent)
-
         }
-
     }
 
     /**
@@ -76,8 +75,8 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             LayoutInflater
-                .from(context)
-                .inflate(R.layout.user_list_view_layout, parent, false), userList)
+                .from(parent.context)
+                .inflate(R.layout.user_list_view_layout, parent, false))
     }
 
     /**
@@ -91,30 +90,34 @@ class UsersRecyclerViewAdapter(_items: List<DocumentSnapshot>, _context: Context
      * Defines what each UI element (defined in the ViewHolder class above) maps to
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val currentUser = userList[position]
-        Glide.with(context).load(currentUser.data!!["profilePictureUri"]).into(holder.singleUserProfilePicture)
-        holder.singleUserName.text = currentUser.data?.get("displayName").toString()
+        val currentUserInfo = userList[position]
+        Glide.with(holder.itemView.context).load(currentUserInfo.first).into(holder.singleUserProfilePicture)
+        holder.singleUserName.text = currentUserInfo.second
     }
 
     /**
      * Removes a user from the recycler view
      */
     fun removeUser(user: User) {
-        userList.remove(userList.first { it["id"].toString() == user.id })
+        userList.remove(userList.first { it.second == user.displayName })
         notifyDataSetChanged()
     }
 
     /**
      * Adds a user from the recycler view
      */
-    fun addUser(userDocumentSnapshot: DocumentSnapshot) {
-        userList.add(userDocumentSnapshot)
+    fun addUser(document: DocumentSnapshot) {
+        userList.add(Triple(document["profilePictureUri"].toString(),
+            document["displayName"].toString(),
+            document["email"].toString()))
         notifyDataSetChanged()
     }
 
-    fun replaceUsers(newUsers: MutableList<DocumentSnapshot>) {
-        userList.clear()
-        userList.addAll(newUsers)
-        notifyDataSetChanged()
+    /**
+     * Saves the recyclerview upon attachment to the adapter
+     */
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        this.recyclerView = recyclerView
     }
 }

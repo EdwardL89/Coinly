@@ -1,28 +1,38 @@
 package com.eightnineapps.coinly.viewmodels.fragmentviewmodels
 
-import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.QuerySnapshot
 
-class AllLittlesFragmentViewModel: TabLayoutFragmentViewModel() {
+class AllLittlesFragmentViewModel: ViewModel() {
 
-    private var hasLoadedData = false
+    private var hasLoadedUsers = false
+    private var allLittlesQueryTask: Task<QuerySnapshot>? = null
+    private var allLittles = mutableListOf<Triple<String, String, String>>()
 
-    fun addAllLittlesToRecyclerView(recyclerView: RecyclerView, context: Context?) {
-        setupRecycler(recyclerView)
-        addSpaceBetweenItems(context)
-        if (!hasLoadedData) {
-            Firestore.getLittles(CurrentUser.instance!!.email!!).get().addOnSuccessListener {
-                val littles = mutableListOf<String>()
-                for (doc in it) {
-                    littles.add(doc["email"].toString())
-                }
-                addUsersToRecyclerView(littles, context)
-                hasLoadedData = true
-            }
-        } else {
-            updateRecyclerViewAdapterAndLayoutManager(context)
+    fun getAllLittles() = allLittles
+
+    fun hasLoadedUsers() = hasLoadedUsers
+
+    fun getAllLittlesQuery() = allLittlesQueryTask
+
+    fun startQueryForAllLittles() {
+        allLittlesQueryTask = Firestore.getLittles(CurrentUser.instance!!.email!!).get()
+    }
+
+    fun compileUserDataToList(querySnapshot: QuerySnapshot) {
+        for (document in querySnapshot) {
+            allLittles.add(Triple(document["profilePictureUri"].toString(),
+                document["displayName"].toString(),
+                document["email"].toString()))
         }
+        hasLoadedUsers = true
+    }
+
+    fun setUpSearchView(searchView: SearchView) {
+        return
     }
 }

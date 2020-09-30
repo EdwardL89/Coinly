@@ -50,12 +50,12 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
         return database.collection("users").document(bigsEmail).collection("Littles")
     }
 
-    fun addBig(littleEmail: String, bigEmail: String) {
-        database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).set(mapOf("email" to bigEmail))
+    fun addBig(littleEmail: String, bigEmail: String, profilePictureUri: String) {
+        database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).set(mapOf("email" to bigEmail, "profilePictureUri" to profilePictureUri))
     }
 
-    fun addLittle(bigEmail: String, littleEmail: String) {
-        database.collection("users").document(bigEmail).collection("Littles").document(littleEmail).set(mapOf("email" to littleEmail))
+    fun addLittle(bigEmail: String, littleEmail: String, profilePictureUri: String) {
+        database.collection("users").document(bigEmail).collection("Littles").document(littleEmail).set(mapOf("email" to littleEmail, "profilePictureUri" to profilePictureUri))
     }
 
     fun removeBig(littleEmail: String, bigEmail: String) {

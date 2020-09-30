@@ -81,12 +81,12 @@ class Notification: Serializable {
             if (!it.result!!.exists()) {
                 toAddUser.numOfLittles += 1
                 Firestore.update(toAddUser, "numOfLittles", toAddUser.numOfLittles.toString())
-                Firestore.addLittle(toAddUser.email!!, addingToUser.email!!)
+                Firestore.addLittle(toAddUser.email!!, addingToUser.email!!, addingToUser.profilePictureUri)
 
                 addingToUser.numOfBigs += 1
                 CurrentUser.numberOfBigs.value = addingToUser.numOfBigs
                 Firestore.update(addingToUser, "numOfBigs", addingToUser.numOfBigs.toString())
-                Firestore.addBig(addingToUser.email!!, toAddUser.email!!)
+                Firestore.addBig(addingToUser.email!!, toAddUser.email!!, toAddUser.profilePictureUri)
             }
         }
     }
@@ -115,12 +115,12 @@ class Notification: Serializable {
             if (!it.result!!.exists()) {
                 toAddUser.numOfBigs += 1
                 Firestore.update(toAddUser, "numOfBigs", toAddUser.numOfBigs.toString())
-                Firestore.addBig(toAddUser.email!!, addingToUser.email!!)
+                Firestore.addBig(toAddUser.email!!, addingToUser.email!!, addingToUser.profilePictureUri)
 
                 addingToUser.numOfLittles += 1
                 CurrentUser.numberOfLittles.value = addingToUser.numOfLittles
                 Firestore.update(addingToUser, "numOfLittles", addingToUser.numOfLittles.toString())
-                Firestore.addLittle(addingToUser.email!!, toAddUser.email!!)
+                Firestore.addLittle(addingToUser.email!!, toAddUser.email!!, toAddUser.profilePictureUri)
             }
         }
     }
