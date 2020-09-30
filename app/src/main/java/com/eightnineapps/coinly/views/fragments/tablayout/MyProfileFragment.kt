@@ -21,7 +21,6 @@ import kotlinx.android.synthetic.main.fragment_my_profile.*
 import kotlinx.android.synthetic.main.fragment_my_profile.view.*
 import kotlin.math.roundToInt
 
-
 class MyProfileFragment : Fragment() {
 
     private lateinit var fragmentView: View

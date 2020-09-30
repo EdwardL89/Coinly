@@ -2,7 +2,6 @@ package com.eightnineapps.coinly.adapters
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
@@ -21,7 +20,6 @@ import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_my_profile.*
 import kotlinx.android.synthetic.main.notification_dialogue_layout.view.*
 import kotlinx.android.synthetic.main.notification_layout.view.*
@@ -33,14 +31,14 @@ import kotlinx.android.synthetic.main.notification_layout.view.accept_button
 class NotificationsRecyclerViewAdapter(_notifications: MutableList<Notification>): RecyclerView.Adapter<NotificationsRecyclerViewAdapter.ViewHolder>() {
 
     private var notificationList = _notifications
-    private var context = _context
     private var recyclerView: RecyclerView? = null
-    private var auth = FirebaseAuth.getInstance()
 
     /**
      * Explicitly defines the UI elements belonging to a single list element in the recycler view
      */
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view), View.OnClickListener {
+
+        private val context = view.context
         val notificationContent: TextView = view.notificationInfoTextView
         val acceptButton: Button = view.accept_button
         val profilePicture: ImageView = view.my_profile_picture
@@ -121,7 +119,7 @@ class NotificationsRecyclerViewAdapter(_notifications: MutableList<Notification>
      * Inflates each row of the recycler view with the proper layout
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.notification_layout, parent, false))
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.notification_layout, parent, false))
     }
 
     /**
@@ -137,23 +135,23 @@ class NotificationsRecyclerViewAdapter(_notifications: MutableList<Notification>
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val notification = notificationList[position]
         holder.notificationContent.text = notification.message
-        Glide.with(context).load(notificationList[position].profilePictureUri).into(holder.profilePicture)
+        Glide.with(holder.itemView.context).load(notificationList[position].profilePictureUri).into(holder.profilePicture)
         if (notification.type == NotificationType.GIVING_COINS) {
-            holder.acceptButton.text = context.getString(R.string.OK)
+            holder.acceptButton.text = holder.itemView.context.getString(R.string.OK)
             holder.acceptButton.setOnClickListener {
                 removeNotification(position)
-                if (notificationList.isEmpty()) (context as Activity).no_notifications_image.visibility = View.VISIBLE
+                if (notificationList.isEmpty()) (holder.itemView.context as Activity).no_notifications_image.visibility = View.VISIBLE
             }
         } else {
-            holder.acceptButton.text = context.getString(R.string.accept)
+            holder.acceptButton.text = holder.itemView.context.getString(R.string.accept)
             holder.acceptButton.setOnClickListener {
                 if (notification.type == NotificationType.REQUESTING_COINS && notification.coins > CurrentUser.instance!!.coins) {
-                    Toast.makeText(context, "You don't have enough coins! Denying Request", Toast.LENGTH_LONG).show()
+                    Toast.makeText(holder.itemView.context, "You don't have enough coins! Denying Request", Toast.LENGTH_LONG).show()
                 } else {
                     notification.execute()
                 }
                 removeNotification(position)
-                if (notificationList.isEmpty()) (context as Activity).no_notifications_image.visibility = View.VISIBLE
+                if (notificationList.isEmpty()) (holder.itemView.context as Activity).no_notifications_image.visibility = View.VISIBLE
             }
         }
     }
