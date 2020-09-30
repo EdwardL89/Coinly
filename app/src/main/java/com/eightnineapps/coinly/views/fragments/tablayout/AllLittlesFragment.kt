@@ -111,6 +111,7 @@ class AllLittlesFragment : Fragment() {
     private fun handleQueryTask(allLittlesQueryTask: Task<QuerySnapshot>, view: View) {
         allLittlesFragmentViewModel.compileUserDataToList(allLittlesQueryTask.result!!)
         allLittlesFragmentViewModel.createAdapter()
+        allLittlesFragmentViewModel.setUpDataForSearchView()
         attachAdapter(view)
     }
 

@@ -17,20 +17,38 @@ class AllBigsFragmentViewModel: ViewModel() {
     private var allBigs = mutableListOf<Triple<String, String, String>>()
     private val searchQueryHelper = SearchQueryHelper()
 
+    /**
+     * Returns the recycler's adapter
+     */
     fun getAdapter() = recyclerAdapter!!
 
+    /**
+     * Determines whether or not the the users have compiled to the allBigs list
+     */
     fun hasLoadedUsers() = hasLoadedUsers
 
+    /**
+     * Returns the query task
+     */
     fun getAllBigsQuery() = allBigsQueryTask
 
+    /**
+     * Instantiates the adapter for the recycler
+     */
     fun createAdapter() {
         recyclerAdapter = UsersRecyclerViewAdapter(allBigs)
     }
 
+    /**
+     * Initiates the query for all the user's Bigs
+     */
     fun startQueryForAllBigs() {
         allBigsQueryTask = Firestore.getBigs(CurrentUser.instance!!.email!!).get()
     }
 
+    /**
+     * Saves all users from the document query as Triples
+     */
     fun compileUserDataToList(querySnapshot: QuerySnapshot) {
         for (document in querySnapshot) {
             allBigs.add(Triple(document["profilePictureUri"].toString(),
@@ -40,9 +58,18 @@ class AllBigsFragmentViewModel: ViewModel() {
         hasLoadedUsers = true
     }
 
+    /**
+     * Overrides the search query functions
+     */
     fun setUpSearchView(searchView: SearchView) {
+        searchQueryHelper.setUpSearchView(searchView)
+    }
+
+    /**
+     * Provides the data to filter the list
+     */
+    fun setUpDataForSearchView() {
         searchQueryHelper.setOriginalList(allBigs)
         searchQueryHelper.setAdapter(recyclerAdapter!!)
-        searchQueryHelper.setUpSearchView(searchView)
     }
 }

@@ -20,7 +20,6 @@ import kotlinx.android.synthetic.main.fragment_bigs.view.*
 class AllBigsFragment : Fragment() {
 
     private lateinit var allBigsFragmentViewModel: AllBigsFragmentViewModel
-    private var tabSearchIcon: SearchView? = null
 
     /**
      * Overrides the onCreate method to allow the fragments to have an options menu
@@ -46,7 +45,7 @@ class AllBigsFragment : Fragment() {
         inflater.inflate(R.menu.home_fragments_app_bar_menu, menu)
         val searchIcon = menu.findItem(R.id.menu_search)
         searchIcon.isVisible = true
-        tabSearchIcon = searchIcon.actionView as SearchView
+        allBigsFragmentViewModel.setUpSearchView(searchIcon.actionView as SearchView)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -112,7 +111,7 @@ class AllBigsFragment : Fragment() {
     private fun handleQueryTask(allBigsQueryTask: Task<QuerySnapshot>, view: View) {
         allBigsFragmentViewModel.compileUserDataToList(allBigsQueryTask.result!!)
         allBigsFragmentViewModel.createAdapter()
-        allBigsFragmentViewModel.setUpSearchView(tabSearchIcon!!)
+        allBigsFragmentViewModel.setUpDataForSearchView()
         attachAdapter(view)
     }
 

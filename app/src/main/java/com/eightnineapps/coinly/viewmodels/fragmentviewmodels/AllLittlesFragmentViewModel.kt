@@ -3,6 +3,7 @@ package com.eightnineapps.coinly.viewmodels.fragmentviewmodels
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
+import com.eightnineapps.coinly.classes.helpers.SearchQueryHelper
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.google.android.gms.tasks.Task
@@ -14,21 +15,40 @@ class AllLittlesFragmentViewModel: ViewModel() {
     private var allLittlesQueryTask: Task<QuerySnapshot>? = null
     private var recyclerAdapter: UsersRecyclerViewAdapter? = null
     private var allLittles = mutableListOf<Triple<String, String, String>>()
+    private val searchQueryHelper = SearchQueryHelper()
 
+    /**
+     * Returns the recycler's adapter
+     */
     fun getAdapter() = recyclerAdapter!!
 
+    /**
+     * Determines whether or not the the users have compiled to the allLittles list
+     */
     fun hasLoadedUsers() = hasLoadedUsers
 
+    /**
+     * Returns the query task
+     */
     fun getAllLittlesQuery() = allLittlesQueryTask
 
+    /**
+     * Instantiates the adapter for the recycler
+     */
     fun createAdapter() {
         recyclerAdapter = UsersRecyclerViewAdapter(allLittles)
     }
 
+    /**
+     * Initiates the query for all the user's Littles
+     */
     fun startQueryForAllLittles() {
         allLittlesQueryTask = Firestore.getLittles(CurrentUser.instance!!.email!!).get()
     }
 
+    /**
+     * Saves all users from the document query as Triples
+     */
     fun compileUserDataToList(querySnapshot: QuerySnapshot) {
         for (document in querySnapshot) {
             allLittles.add(Triple(document["profilePictureUri"].toString(),
@@ -38,7 +58,18 @@ class AllLittlesFragmentViewModel: ViewModel() {
         hasLoadedUsers = true
     }
 
+    /**
+     * Overrides the search query functions
+     */
     fun setUpSearchView(searchView: SearchView) {
-        return
+        searchQueryHelper.setUpSearchView(searchView)
+    }
+
+    /**
+     * Provides the data to filter the list
+     */
+    fun setUpDataForSearchView() {
+        searchQueryHelper.setOriginalList(allLittles)
+        searchQueryHelper.setAdapter(recyclerAdapter!!)
     }
 }

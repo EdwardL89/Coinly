@@ -13,10 +13,16 @@ class SearchQueryHelper {
     private var queryResultList = mutableListOf<Triple<String, String, String>>()
     private var recyclerAdapter: UsersRecyclerViewAdapter? = null
 
+    /**
+     * Sets the original list of users to preform the query on
+     */
     fun setOriginalList(list: MutableList<Triple<String, String, String>>) {
         originalList = list
     }
 
+    /**
+     * Sets the adapter to notify of data set changes
+     */
     fun setAdapter(adapter: UsersRecyclerViewAdapter) {
         recyclerAdapter = adapter
     }

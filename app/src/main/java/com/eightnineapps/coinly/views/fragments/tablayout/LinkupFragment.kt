@@ -86,6 +86,7 @@ class LinkupFragment : Fragment() {
     private fun handleQueryTask(allUsersQueryTask: Task<QuerySnapshot>, view: View) {
         linkupFragmentViewModel.compileUserDataToList(allUsersQueryTask.result!!)
         linkupFragmentViewModel.createAdapter()
+        linkupFragmentViewModel.setUpDataForSearchView()
         attachAdapter(view)
     }
 
