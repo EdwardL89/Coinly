@@ -16,12 +16,16 @@ object CurrentUser {
     var bigToBeAdded: DocumentSnapshot? = null
     var littleToBeAdded: DocumentSnapshot? = null
 
+    val numberOfBigs = MutableLiveData<Int>()
+    val numberOfLittles = MutableLiveData<Int>()
+    val numOfPrizesGiven = MutableLiveData<Int>()
+    val numOfPrizesClaimed = MutableLiveData<Int>()
+    val avgPriceOfPrizesGiven = MutableLiveData<Int>()
+    val avgPriceOfPrizesClaimed = MutableLiveData<Int>()
     val coins = MutableLiveData<Int>()
     val bio = MutableLiveData<String>()
     val realName = MutableLiveData<String>()
-    val numberOfBigs = MutableLiveData<Int>()
     val displayName = MutableLiveData<String>()
-    val numberOfLittles = MutableLiveData<Int>()
     val profilePictureUri = MutableLiveData<String>()
 
     /**
@@ -42,5 +46,9 @@ object CurrentUser {
         displayName.value = instance!!.displayName
         numberOfLittles.value = instance!!.numOfLittles
         profilePictureUri.value = instance!!.profilePictureUri
+        numOfPrizesGiven.value = instance!!.numOfPrizesGiven
+        numOfPrizesClaimed.value = instance!!.numOfPrizesClaimed
+        avgPriceOfPrizesGiven.value = instance!!.avgPriceOfPrizesGiven
+        avgPriceOfPrizesClaimed.value = instance!!.avgPriceOfPrizesClaimed
     }
 }

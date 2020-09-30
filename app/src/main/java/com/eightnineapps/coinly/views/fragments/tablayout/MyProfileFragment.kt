@@ -9,13 +9,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.adapters.NotificationsRecyclerViewAdapter
 import com.eightnineapps.coinly.databinding.FragmentMyProfileBinding
+import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.MyProfileFragmentViewModel
 import com.eightnineapps.coinly.views.activities.profiles.EditProfileActivity
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.fragment_my_profile.*
 import kotlinx.android.synthetic.main.fragment_my_profile.view.*
 import kotlin.math.roundToInt
@@ -23,31 +24,40 @@ import kotlin.math.roundToInt
 
 class MyProfileFragment : Fragment() {
 
+    private lateinit var fragmentView: View
     private lateinit var binding: FragmentMyProfileBinding
     private lateinit var myProfileFragmentViewModel: MyProfileFragmentViewModel
-    private lateinit var fragmentView: View
+
+    /**
+     * Overrides the onCreate method to allow the fragments to have an options menu
+     */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
+        super.onCreate(savedInstanceState)
+        myProfileFragmentViewModel = ViewModelProvider(this).get(MyProfileFragmentViewModel::class.java)
+        myProfileFragmentViewModel.startQueryForNotifications()
+    }
+
     /**
      * Inflates the my profile fragment
      */
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        myProfileFragmentViewModel = ViewModelProvider(this).get(MyProfileFragmentViewModel::class.java)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_profile, container, false)
-        binding.myProfileViewModel = myProfileFragmentViewModel
+        binding.currentUser = CurrentUser
         fragmentView = binding.root
+        setupNotifications(fragmentView)
         setUpEditProfileButton()
         loadProfilePicture()
-        setupNotifications()
         setUpObservers()
         return fragmentView
     }
 
+    /**
+     * Animate the stat values after the view is created
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadStats()
+        animateStats()
     }
 
     /**
@@ -60,40 +70,25 @@ class MyProfileFragment : Fragment() {
     }
 
     /**
-     * Overrides the onCreate method to allow the fragments to have an options menu
-     */
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
-        super.onCreate(savedInstanceState)
-    }
-
-    /**
      * Attaches observers to the User live data to update the fragment UI
      */
     private fun setUpObservers() {
-        val currentUserInstance = myProfileFragmentViewModel.currentUser
-
-        currentUserInstance.bio.observe(viewLifecycleOwner, Observer {
+        CurrentUser.bio.observe(viewLifecycleOwner, Observer {
             if (it != null) binding.bioTextView.text = it
         })
-
-        currentUserInstance.coins.observe(viewLifecycleOwner, Observer {
+        CurrentUser.coins.observe(viewLifecycleOwner, Observer {
             if (it != null) binding.coinCount.text = it.toString()
         })
-
-        currentUserInstance.displayName.observe(viewLifecycleOwner, Observer {
+        CurrentUser.displayName.observe(viewLifecycleOwner, Observer {
             if (it != null) binding.myDisplayNameTextView.text = it
         })
-
-        currentUserInstance.numberOfBigs.observe(viewLifecycleOwner, Observer {
+        CurrentUser.numberOfBigs.observe(viewLifecycleOwner, Observer {
             if (it != null) binding.bigsCount.text = it.toString()
         })
-
-        currentUserInstance.numberOfLittles.observe(viewLifecycleOwner, Observer {
+        CurrentUser.numberOfLittles.observe(viewLifecycleOwner, Observer {
             if (it != null) binding.littlesCount.text = it.toString()
         })
-
-        currentUserInstance.profilePictureUri.observe(viewLifecycleOwner, Observer {
+        CurrentUser.profilePictureUri.observe(viewLifecycleOwner, Observer {
             if (it != null) loadProfilePicture()
         })
     }
@@ -101,11 +96,40 @@ class MyProfileFragment : Fragment() {
     /**
      * Sets the adapter and layout manager for the notifications recycler view
      */
-    private fun setupNotifications() {
-        myProfileFragmentViewModel.updateNotifications(
-            fragmentView.findViewById(R.id.notificationsRecyclerView),
-            context
-        )
+    private fun setupNotifications(view: View) {
+        if (myProfileFragmentViewModel.hasLoadedNotifications()) {
+            attachAdapter(view)
+        } else {
+            val notificationsQueryTask = myProfileFragmentViewModel.getAllNotificationsQuery()!!
+            if (notificationsQueryTask.isComplete) {
+                handleQueryTask(notificationsQueryTask, view)
+            } else {
+                notificationsQueryTask.addOnCompleteListener {
+                    handleQueryTask(notificationsQueryTask, view)
+                }
+            }
+        }
+    }
+
+    /**
+     * Gathers all the notifications and sets up the recyclerview to place them in
+     */
+    private fun handleQueryTask(notificationsQueryTask: Task<QuerySnapshot>, view: View) {
+        myProfileFragmentViewModel.compileNotificationsToList(notificationsQueryTask.result!!)
+        myProfileFragmentViewModel.createAdapter()
+        attachAdapter(view)
+    }
+
+    /**
+     * Attaches the recyclerview's adapter from when it was scrolled off screen
+     */
+    private fun attachAdapter(view: View) {
+        view.notificationsRecyclerView.adapter = myProfileFragmentViewModel.getAdapter()
+        if (myProfileFragmentViewModel.getAdapter().itemCount == 0) {
+            view.no_notifications_image.visibility = View.VISIBLE
+        } else {
+            view.no_notifications_image.visibility = View.INVISIBLE
+        }
     }
 
     /**
@@ -113,11 +137,8 @@ class MyProfileFragment : Fragment() {
      */
     private fun setUpEditProfileButton() {
         fragmentView.edit_profile_button.setOnClickListener {
-            startActivity(
-                Intent(
-                    activity,
-                    EditProfileActivity::class.java
-                ).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            startActivity(Intent(activity, EditProfileActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             )
         }
     }
@@ -126,21 +147,19 @@ class MyProfileFragment : Fragment() {
      * Loads the profile picture
      */
     private fun loadProfilePicture() {
-        Glide.with(activity!!).load(myProfileFragmentViewModel.currentUser.profilePictureUri.value).into(
-            fragmentView.findViewById(
-                R.id.my_profile_picture
-            )
+        Glide.with(activity!!).load(CurrentUser.profilePictureUri.value).into(
+            fragmentView.findViewById(R.id.my_profile_picture)
         )
     }
 
     /**
      * Loads the statistics of the current user through a count-up animation
      */
-    private fun loadStats() {
-        animateValue(my_profile_prizes_given_value, myProfileFragmentViewModel.currentUser.instance!!.numOfPrizesGiven)
-        animateValue(my_profile_prizes_claimed_value, myProfileFragmentViewModel.currentUser.instance!!.numOfPrizesClaimed)
-        animateValue(my_profile_average_price_of_prizes_given_value, myProfileFragmentViewModel.currentUser.instance!!.avgPriceOfPrizesGiven)
-        animateValue(my_profile_average_price_of_prizes_claimed_value, myProfileFragmentViewModel.currentUser.instance!!.avgPriceOfPrizesClaimed)
+    private fun animateStats() {
+        animateValue(my_profile_prizes_given_value, CurrentUser.numOfPrizesGiven.value!!)
+        animateValue(my_profile_prizes_claimed_value, CurrentUser.numOfPrizesClaimed.value!!)
+        animateValue(my_profile_average_price_of_prizes_given_value, CurrentUser.avgPriceOfPrizesGiven.value!!)
+        animateValue(my_profile_average_price_of_prizes_claimed_value, CurrentUser.avgPriceOfPrizesClaimed.value!!)
     }
 
     /**

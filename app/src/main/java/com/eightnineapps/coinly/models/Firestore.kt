@@ -38,8 +38,8 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
         database.collection("users").document(userEmail).collection("notifications").document(notification.id).delete()
     }
 
-    fun getNotifications(user: User): CollectionReference {
-        return database.collection("users").document(user.email!!).collection("notifications")
+    fun getNotifications(userEmail: String): CollectionReference {
+        return database.collection("users").document(userEmail).collection("notifications")
     }
 
     fun getBigs(littleEmail: String): CollectionReference {

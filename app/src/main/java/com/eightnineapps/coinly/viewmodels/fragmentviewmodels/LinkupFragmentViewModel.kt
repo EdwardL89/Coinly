@@ -64,13 +64,11 @@ class LinkupFragmentViewModel: ViewModel() {
         searchQueryHelper.setUpSearchView(searchView)
     }
 
-
     /**
      * Provides the data to filter the list
      */
     fun setUpDataForSearchView() {
         searchQueryHelper.setOriginalList(allUsers)
         searchQueryHelper.setAdapter(recyclerAdapter!!)
-
     }
 }

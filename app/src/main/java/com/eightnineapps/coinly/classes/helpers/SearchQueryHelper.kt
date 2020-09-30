@@ -9,9 +9,9 @@ import java.util.*
  */
 class SearchQueryHelper {
 
+    private var recyclerAdapter: UsersRecyclerViewAdapter? = null
     private var originalList = mutableListOf<Triple<String, String, String>>()
     private var queryResultList = mutableListOf<Triple<String, String, String>>()
-    private var recyclerAdapter: UsersRecyclerViewAdapter? = null
 
     /**
      * Sets the original list of users to preform the query on
@@ -35,8 +35,8 @@ class SearchQueryHelper {
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?) = true
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText!!.isNotEmpty()) populateDisplayedListBasedOnSearchText(newText)
-                else resetDisplayedList()
+                if (newText!!.isNotEmpty()) filterOriginalList(newText)
+                else resetQueryList()
                 recyclerAdapter?.notifyDataSetChanged()
                 return true
             }
@@ -46,7 +46,7 @@ class SearchQueryHelper {
     /**
      * Adds to the displayed list the matching raw data items based on the search bar text
      */
-    private fun populateDisplayedListBasedOnSearchText(newText: String) {
+    private fun filterOriginalList(newText: String) {
         queryResultList.clear()
         val search = newText.toLowerCase(Locale.ROOT)
         originalList.forEach {
@@ -58,7 +58,7 @@ class SearchQueryHelper {
     /**
      * Clears the displayed list and adds back in all the original data
      */
-    private fun resetDisplayedList() {
+    private fun resetQueryList() {
         queryResultList.clear()
         queryResultList.addAll(originalList)
         recyclerAdapter!!.replaceUsers(queryResultList)

@@ -106,11 +106,11 @@ class LinkupProfileActivity : AppCompatActivity() {
      * Sets up the add as buttons based on the status between the current and observed user
      */
     private fun setUpAddAsButtons(asBig: Boolean) {
-        Firestore.getNotifications(linkupProfileViewModel.observedUserInstance).get().addOnSuccessListener { it ->
+        Firestore.getNotifications(linkupProfileViewModel.observedUserInstance.email!!).get().addOnSuccessListener { it ->
             val notificationMessageTemplate = "${CurrentUser.instance!!.displayName} wants to add you as a ${if (asBig) "big" else "little"}!"
             val alreadyRequested = it.map{ queryDocumentSnapshot ->  queryDocumentSnapshot["message"] }.contains(notificationMessageTemplate)
             val alreadyAdded = linkupProfileViewModel.alreadyAdded(asBig)
-            Firestore.getNotifications(CurrentUser.instance!!).get().addOnSuccessListener {
+            Firestore.getNotifications(CurrentUser.instance!!.email!!).get().addOnSuccessListener {
                 val alreadyReceivedRequest = it.find { doc ->
                     doc["type"] == (if (asBig) ADDING_AS_LITTLE else ADDING_AS_BIG)  &&
                     doc["toAddUserEmail"] == CurrentUser.instance!!.email &&
@@ -134,7 +134,7 @@ class LinkupProfileActivity : AppCompatActivity() {
      * Update the text on the buttons if there's already a pending request
      */
     private fun updateButtonsForPendingRequests(type: NotificationType) {
-        Firestore.getNotifications(CurrentUser.instance!!).get().addOnSuccessListener {
+        Firestore.getNotifications(CurrentUser.instance!!.email!!).get().addOnSuccessListener {
             val pendingNotification = it.find { queryDocumentSnapshot ->
                 queryDocumentSnapshot["type"] == type &&
                         queryDocumentSnapshot["toAddUserEmail"] == CurrentUser.instance!!.email &&

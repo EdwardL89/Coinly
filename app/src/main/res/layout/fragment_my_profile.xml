@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <import type="com.eightnineapps.coinly.viewmodels.fragmentviewmodels.MyProfileFragmentViewModel"/>
+        <import type="com.eightnineapps.coinly.models.CurrentUser"/>
         <variable
-            name="myProfileViewModel"
-            type="com.eightnineapps.coinly.viewmodels.fragmentviewmodels.MyProfileFragmentViewModel"/>
+            name="currentUser"
+            type="com.eightnineapps.coinly.models.CurrentUser"/>
     </data>
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,7 +53,7 @@
                 android:id="@+id/coin_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{String.valueOf(myProfileViewModel.currentUser.coins.intValue()), default = @string/zero}"
+                android:text="@{String.valueOf(currentUser.coins.intValue()), default = @string/zero}"
                 android:fontFamily="sans-serif"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -73,7 +73,7 @@
                 android:id="@+id/bigs_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{String.valueOf(myProfileViewModel.currentUser.numberOfBigs.intValue()), default = @string/zero}"
+                android:text="@{String.valueOf(currentUser.numberOfBigs.intValue()), default = @string/zero}"
                 android:layout_alignTop="@id/coin_count"
                 android:fontFamily="sans-serif"
                 android:textSize="15sp"
@@ -98,7 +98,7 @@
                 android:id="@+id/littles_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{String.valueOf(myProfileViewModel.currentUser.numberOfLittles.intValue()), default = @string/zero}"
+                android:text="@{String.valueOf(currentUser.numberOfLittles.intValue()), default = @string/zero}"
                 android:layout_alignTop="@id/bigs_count"
                 android:fontFamily="sans-serif"
                 android:textStyle="bold"
@@ -139,7 +139,7 @@
             android:layout_alignStart="@+id/cardView"
             android:layout_below="@+id/cardView"
             android:layout_gravity="center"
-            android:text="@{myProfileViewModel.currentUser.instance.displayName, default = @string/display_name}"
+            android:text="@{currentUser.displayName.toString(), default = @string/display_name}"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"/>
@@ -148,7 +148,7 @@
             android:id="@+id/bio_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{myProfileViewModel.currentUser.instance.bio, default = @string/bio}"
+            android:text="@{currentUser.bio.toString(), default = @string/bio}"
             android:textColor="@color/black"
             android:fontFamily="sans-serif-thin"
             android:layout_alignStart="@id/my_display_name_textView"
@@ -169,6 +169,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginTop="10dp"
             android:id="@+id/notificationsRecyclerView"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/notifications_title"
