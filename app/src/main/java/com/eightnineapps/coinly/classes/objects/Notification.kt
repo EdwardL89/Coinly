@@ -57,19 +57,29 @@ class Notification: Serializable {
     private fun executeAddAsBig() {
         Firestore.read(addingToUserEmail).get().addOnCompleteListener {
             CurrentUser.littleToBeAdded = it.result!!
-            addAsBig(CurrentUser.littleToBeAdded!!)
+            updateLittleUsingReference(CurrentUser.littleToBeAdded!!)
+            addLittleToBig(CurrentUser.littleToBeAdded!!)
         }
     }
 
-    private fun addAsBig(littleToBeAdded: DocumentSnapshot) {
+    /**
+     * Updates the bigs count of the little through a document reference and adds the big to it
+     */
+    private fun updateLittleUsingReference(littleToBeAdded: DocumentSnapshot) {
         val previousNumOfBigsTheLittleHas = Integer.parseInt(littleToBeAdded["numOfBigs"].toString())
         littleToBeAdded.reference.update("numOfBigs", previousNumOfBigsTheLittleHas + 1)
         Firestore.addBig(littleToBeAdded["email"].toString(), CurrentUser.getEmail()!!, CurrentUser.profilePictureUri.value!!)
+    }
 
+    /**
+     * Updates the littles count of the current user and adds the little to it
+     */
+    private fun addLittleToBig(littleToBeAdded: DocumentSnapshot) {
         CurrentUser.incrementLittles()
         Firestore.update(CurrentUser.instance!!, "numOfLittles", CurrentUser.numOfLittles.value.toString())
         Firestore.addLittle(CurrentUser.getEmail()!!, littleToBeAdded["email"].toString(), littleToBeAdded["profilePictureUri"].toString())
     }
+
 
     /**
      * Queries the database to retrieve the bigs and littles list of both users to complete the request
@@ -77,18 +87,24 @@ class Notification: Serializable {
     private fun executeAddAsLittle() {
         Firestore.read(toAddUserEmail).get().addOnCompleteListener {
             CurrentUser.bigToBeAdded = it.result!!
-            addAsLittle(CurrentUser.bigToBeAdded!!)
+            updateBigUsingReference(CurrentUser.bigToBeAdded!!)
+            addBigToLittle(CurrentUser.bigToBeAdded!!)
         }
     }
 
     /**
-     * Adds the current user as a little to the requester and updates the firestore
+     * Updates the little count of the big through a document reference and adds the little to it
      */
-    private fun addAsLittle(bigToBeAdded: DocumentSnapshot) {
+    private fun updateBigUsingReference(bigToBeAdded: DocumentSnapshot) {
         val previousNumOfLittlesTheBigHas = Integer.parseInt(bigToBeAdded["numOfLittles"].toString())
         bigToBeAdded.reference.update("numOfLittles",  previousNumOfLittlesTheBigHas + 1)
         Firestore.addLittle(bigToBeAdded["email"].toString(), CurrentUser.getEmail()!!, CurrentUser.profilePictureUri.value!!)
+    }
 
+    /**
+     * Updates the bigs count of the current user and adds the big to it
+     */
+    private fun addBigToLittle(bigToBeAdded: DocumentSnapshot) {
         CurrentUser.incrementBigs()
         Firestore.update(CurrentUser.instance!!, "numOfBigs", CurrentUser.numOfBigs.value.toString())
         Firestore.addBig(CurrentUser.getEmail()!!, bigToBeAdded["email"].toString(), bigToBeAdded["profilePictureUri"].toString())

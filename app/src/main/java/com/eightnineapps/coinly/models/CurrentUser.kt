@@ -22,6 +22,7 @@ object CurrentUser {
     val numOfPrizesClaimed = MutableLiveData<Int>()
     val avgPriceOfPrizesGiven = MutableLiveData<Int>()
     val avgPriceOfPrizesClaimed = MutableLiveData<Int>()
+
     val coins = MutableLiveData<Int>()
     val bio = MutableLiveData<String>()
     val realName = MutableLiveData<String>()
@@ -40,7 +41,6 @@ object CurrentUser {
      */
     fun subtractCoins(coins: Int) {
         instance!!.coins -= coins
-        CurrentUser.coins.value!!.minus(coins)
     }
 
     /**
@@ -48,7 +48,6 @@ object CurrentUser {
      */
     fun incrementBigs() {
         instance!!.numOfBigs += 1
-        numOfBigs.value!!.plus(1)
     }
 
     /**
@@ -56,7 +55,6 @@ object CurrentUser {
      */
     fun incrementLittles() {
         instance!!.numOfLittles += 1
-        numOfLittles.value!!.plus(1)
     }
 
     /**
@@ -74,8 +72,8 @@ object CurrentUser {
         numOfBigs.value = instance!!.numOfBigs
         displayName.value = instance!!.displayName
         numOfLittles.value = instance!!.numOfLittles
-        profilePictureUri.value = instance!!.profilePictureUri
         numOfPrizesGiven.value = instance!!.numOfPrizesGiven
+        profilePictureUri.value = instance!!.profilePictureUri
         numOfPrizesClaimed.value = instance!!.numOfPrizesClaimed
         avgPriceOfPrizesGiven.value = instance!!.avgPriceOfPrizesGiven
         avgPriceOfPrizesClaimed.value = instance!!.avgPriceOfPrizesClaimed
