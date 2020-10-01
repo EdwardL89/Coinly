@@ -69,8 +69,6 @@ class DialogCreator {
      * Set content specifically for a "giving coins" notification
      */
     private fun showContentForGivingCoinsNotification(dialogueView: View, notification: Notification) {
-        dialogueView.cancel_notification_button.visibility = View.GONE
-        dialogueView.accept_button.text = dialogueView.context.getString(R.string.OK)
         if (notification.moreInformation != "") {
             notification.message += "\n\n Your Big left a note:\n${notification.moreInformation}"
         }

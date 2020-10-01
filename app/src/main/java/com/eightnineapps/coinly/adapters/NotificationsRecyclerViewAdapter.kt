@@ -35,6 +35,7 @@ class NotificationsRecyclerViewAdapter(_notifications: MutableList<Notification>
 
         private val dialogCreator = DialogCreator()
         val acceptButton: Button = view.accept_button
+        val deleteButton: Button = view.delete_button
         val profilePicture: ImageView = view.my_profile_picture
         val notificationContent: TextView = view.notificationInfoTextView
 
@@ -106,10 +107,9 @@ class NotificationsRecyclerViewAdapter(_notifications: MutableList<Notification>
      * Changes the accept button's text to "OK" and removes the notification when tapped
      */
     private fun setupCoinsGivenNotification(holder: ViewHolder, notification: Notification) {
+        holder.deleteButton.visibility = View.GONE
         holder.acceptButton.text = holder.itemView.context.getString(R.string.OK)
-        holder.acceptButton.setOnClickListener {
-            removeNotification(notificationList.indexOf(notification), holder.itemView.context)
-        }
+        holder.acceptButton.setOnClickListener { removeNotification(notificationList.indexOf(notification), holder.itemView.context) }
     }
 
     /**
@@ -117,9 +117,8 @@ class NotificationsRecyclerViewAdapter(_notifications: MutableList<Notification>
      */
     private fun setupNonCoinsGivenNotification(holder: ViewHolder, notification: Notification) {
         holder.acceptButton.text = holder.itemView.context.getString(R.string.accept)
-        holder.acceptButton.setOnClickListener {
-            handleNonCoinsGivenNotification(holder, notification)
-        }
+        holder.acceptButton.setOnClickListener { handleNonCoinsGivenNotification(holder, notification) }
+        holder.deleteButton.setOnClickListener { removeNotification(notificationList.indexOf(notification), holder.itemView.context) }
     }
 
     /**

@@ -9,13 +9,13 @@ import java.io.Serializable
 
 class Notification: Serializable {
     var id = ""
-    var type = NotificationType.DEFAULT
-    var addingToUserEmail = "" //Also requester's email
-    var toAddUserEmail = ""
-    var message = ""
-    var moreInformation = ""
-    var profilePictureUri = ""
     var coins = 0
+    var message = ""
+    var toAddUserEmail = ""
+    var moreInformation = ""
+    var addingToUserEmail = ""
+    var profilePictureUri = ""
+    var type = NotificationType.DEFAULT
 
     /**
      * Determines the type of notification and calls the appropriate method to handle the notification
