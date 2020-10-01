@@ -47,7 +47,7 @@ class LinkupFragmentViewModel: ViewModel() {
     }
 
     /**
-     * Saves all users from the document query as Triples
+     * Saves all users from the document query as Triples, except for the current user
      */
     fun compileUserDataToList(querySnapshot: QuerySnapshot) {
         for (document in querySnapshot) {
