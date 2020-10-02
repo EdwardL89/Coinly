@@ -1,5 +1,6 @@
 package com.eightnineapps.coinly.viewmodels.fragmentviewmodels
 
+import android.util.Log
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
@@ -51,6 +52,7 @@ class AllBigsFragmentViewModel: ViewModel() {
      */
     fun compileUserDataToList(querySnapshot: QuerySnapshot) {
         for (document in querySnapshot) {
+            Log.d("INFO", document["displayName"].toString())
             allBigs.add(Triple(document["profilePictureUri"].toString(),
                 document["displayName"].toString(),
                 document["email"].toString()))

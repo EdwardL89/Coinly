@@ -51,7 +51,7 @@ class LinkupFragmentViewModel: ViewModel() {
      */
     fun compileUserDataToList(querySnapshot: QuerySnapshot) {
         for (document in querySnapshot) {
-            if (document["displayName"] != CurrentUser.displayName.toString()) {
+            if (document["email"] != CurrentUser.getEmail()) {
                 allUsers.add(Triple(document["profilePictureUri"].toString(),
                     document["displayName"].toString(),
                     document["email"].toString()))

@@ -15,8 +15,8 @@ class LinkupProfileViewModel: ViewModel() {
 
     lateinit var observedUserInstance: User
     private var hasDeterminedConnectionStatus = false
-    private val ADD_AS_BIG_MESSAGE_TEMPLATE = "${CurrentUser.displayName} wants to add you as a big!"
-    private val ADD_AS_LITTLE_MESSAGE_TEMPLATE = "${CurrentUser.displayName} wants to add you as a little!"
+    private val ADD_AS_BIG_MESSAGE_TEMPLATE = "${CurrentUser.displayName.value} wants to add you as a big!"
+    private val ADD_AS_LITTLE_MESSAGE_TEMPLATE = "${CurrentUser.displayName.value} wants to add you as a little!"
     private val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
     /**
@@ -117,9 +117,9 @@ class LinkupProfileViewModel: ViewModel() {
         newNotification.type = if (sendingToBig) NotificationType.ADDING_AS_BIG else NotificationType.ADDING_AS_LITTLE
         newNotification.addingToUserEmail = CurrentUser.getEmail()!!
         newNotification.toAddUserEmail = observedUserInstance.email!!
-        newNotification.profilePictureUri = CurrentUser.profilePictureUri.toString()
-        newNotification.message = "${CurrentUser.displayName.toString()} wants to add you as a ${if (sendingToBig) "big" else "little"}!"
-        newNotification.moreInformation = "${CurrentUser.displayName.toString()} wants to add you as a ${if (sendingToBig) "big" else "little"}!"
+        newNotification.profilePictureUri = CurrentUser.profilePictureUri.value!!
+        newNotification.message = "${CurrentUser.displayName.value} wants to add you as a ${if (sendingToBig) "big" else "little"}!"
+        newNotification.moreInformation = "${CurrentUser.displayName.value} wants to add you as a ${if (sendingToBig) "big" else "little"}!"
         return newNotification
     }
 

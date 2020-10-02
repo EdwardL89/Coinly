@@ -48,6 +48,7 @@ object CurrentUser {
      */
     fun incrementBigs() {
         instance!!.numOfBigs += 1
+        numOfBigs.value = numOfBigs.value!!.plus(1)
     }
 
     /**
@@ -55,6 +56,7 @@ object CurrentUser {
      */
     fun incrementLittles() {
         instance!!.numOfLittles += 1
+        numOfLittles.value = numOfLittles.value!!.plus(1)
     }
 
     /**

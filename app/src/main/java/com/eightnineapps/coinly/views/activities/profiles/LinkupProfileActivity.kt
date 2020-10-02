@@ -70,7 +70,7 @@ class LinkupProfileActivity : AppCompatActivity() {
     }
 
     /**
-     * Sets up the "add as little" button to reflect the current relationship status
+     * Sets up the "add as big" button to reflect the current relationship status
      * between the current and observed user
      */
     private fun setupAddAsBigButton() {
@@ -97,7 +97,7 @@ class LinkupProfileActivity : AppCompatActivity() {
      */
     private fun determineLittleConnectionStatus() {
         linkupProfileViewModel.queryForAlreadyRequestedLittle().addOnCompleteListener {
-            if (it.isSuccessful) showRequestedLittle()
+            if (!it.result!!.isEmpty) showRequestedLittle()
             else checkForReceivedRequestFromLittle()
         }
     }
@@ -108,7 +108,7 @@ class LinkupProfileActivity : AppCompatActivity() {
      */
     private fun determineBigConnectionStatus() {
         linkupProfileViewModel.queryForAlreadyRequestedBig().addOnCompleteListener {
-            if (it.isSuccessful) showRequestedBig()
+            if (!it.result!!.isEmpty) showRequestedBig()
             else checkForReceivedRequestFromBig()
         }
     }
@@ -119,7 +119,7 @@ class LinkupProfileActivity : AppCompatActivity() {
      */
     private fun checkForReceivedRequestFromBig() {
         linkupProfileViewModel.queryForReceivedRequestFromBig().addOnCompleteListener {
-            if (it.isSuccessful) showAcceptRequestFromBig(it.result!!.first())
+            if (!it.result!!.isEmpty) showAcceptRequestFromBig(it.result!!.first())
             else setupStandardAddBigButton()
         }
     }
@@ -130,7 +130,7 @@ class LinkupProfileActivity : AppCompatActivity() {
      */
     private fun checkForReceivedRequestFromLittle() {
         linkupProfileViewModel.queryForReceivedRequestFromLittle().addOnCompleteListener {
-            if (it.isSuccessful) showAcceptRequestFromLittle(it.result!!.first())
+            if (!it.result!!.isEmpty) showAcceptRequestFromLittle(it.result!!.first())
             else setupStandardAddLittleButton()
         }
     }

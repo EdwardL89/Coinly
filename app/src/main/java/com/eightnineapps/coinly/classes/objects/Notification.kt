@@ -1,5 +1,6 @@
 package com.eightnineapps.coinly.classes.objects
 
+import android.util.Log
 import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
@@ -75,7 +76,9 @@ class Notification: Serializable {
      * Updates the littles count of the current user and adds the little to it
      */
     private fun addLittleToBig(littleToBeAdded: DocumentSnapshot) {
+        Log.d("INFO", "Before increment: ${CurrentUser.numOfLittles.value}")
         CurrentUser.incrementLittles()
+        Log.d("INFO", "After increment: ${CurrentUser.numOfLittles.value}")
         Firestore.update(CurrentUser.instance!!, "numOfLittles", CurrentUser.numOfLittles.value.toString())
         Firestore.addLittle(CurrentUser.getEmail()!!, littleToBeAdded["email"].toString(), littleToBeAdded["profilePictureUri"].toString())
     }
@@ -85,7 +88,7 @@ class Notification: Serializable {
      * Queries the database to retrieve the bigs and littles list of both users to complete the request
      */
     private fun executeAddAsLittle() {
-        Firestore.read(toAddUserEmail).get().addOnCompleteListener {
+        Firestore.read(addingToUserEmail).get().addOnCompleteListener {
             CurrentUser.bigToBeAdded = it.result!!
             updateBigUsingReference(CurrentUser.bigToBeAdded!!)
             addBigToLittle(CurrentUser.bigToBeAdded!!)

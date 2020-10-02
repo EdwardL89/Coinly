@@ -126,7 +126,7 @@ class NotificationsRecyclerViewAdapter(_notifications: MutableList<Notification>
      */
     private fun handleNonCoinsGivenNotification(holder: ViewHolder, notification: Notification) {
         if (notification.type == NotificationType.REQUESTING_COINS && notification.coins > CurrentUser.instance!!.coins) {
-            Toast.makeText(holder.itemView.context, context.getString(R.string.Request_Denial_Message), Toast.LENGTH_LONG).show()
+            Toast.makeText(holder.itemView.context, holder.itemView.context.getString(R.string.Request_Denial_Message), Toast.LENGTH_LONG).show()
         } else {
             notification.execute()
         }

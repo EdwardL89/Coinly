@@ -61,6 +61,6 @@ class SearchQueryHelper {
     private fun resetQueryList() {
         queryResultList.clear()
         queryResultList.addAll(originalList)
-        recyclerAdapter!!.replaceUsers(queryResultList)
+        recyclerAdapter?.replaceUsers(queryResultList)
     }
 }

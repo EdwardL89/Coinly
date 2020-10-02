@@ -81,10 +81,10 @@ class MyProfileFragment : Fragment() {
         CurrentUser.displayName.observe(viewLifecycleOwner, Observer {
             if (it != null) binding.myDisplayNameTextView.text = it
         })
-        CurrentUser.numberOfBigs.observe(viewLifecycleOwner, Observer {
+        CurrentUser.numOfBigs.observe(viewLifecycleOwner, Observer {
             if (it != null) binding.bigsCount.text = it.toString()
         })
-        CurrentUser.numberOfLittles.observe(viewLifecycleOwner, Observer {
+        CurrentUser.numOfLittles.observe(viewLifecycleOwner, Observer {
             if (it != null) binding.littlesCount.text = it.toString()
         })
         CurrentUser.profilePictureUri.observe(viewLifecycleOwner, Observer {
