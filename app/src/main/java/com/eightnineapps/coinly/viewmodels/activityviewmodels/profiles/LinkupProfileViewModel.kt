@@ -68,7 +68,8 @@ class LinkupProfileViewModel: ViewModel() {
     fun queryForReceivedRequestFromBig(): Task<QuerySnapshot> {
         return Firestore.getNotifications(CurrentUser.getEmail()!!)
             .whereEqualTo("type", NotificationType.ADDING_AS_LITTLE)
-            .whereEqualTo("addingToUserEmail", observedUserInstance.email!!).get()
+            .whereEqualTo("addingToUserEmail", observedUserInstance.email!!)
+            .limit(1).get()
     }
 
     /**
@@ -78,19 +79,31 @@ class LinkupProfileViewModel: ViewModel() {
     fun queryForReceivedRequestFromLittle(): Task<QuerySnapshot> {
         return Firestore.getNotifications(CurrentUser.getEmail()!!)
             .whereEqualTo("type", NotificationType.ADDING_AS_BIG)
-            .whereEqualTo("addingToUserEmail", observedUserInstance.email!!).get()
+            .whereEqualTo("addingToUserEmail", observedUserInstance.email!!)
+            .limit(1).get()
     }
 
     /**
-     * Initiates the notification sending process by querying for the current user's name to place
-     * in the string message
+     * Sends an "add as little" notification to the observed user
      */
-    fun sendAddNotification(sendingToBig: Boolean) {
-        val newNotification = constructNotification(sendingToBig)
+    fun sendAddLittleNotification() {
+        val newNotification = constructNotification(false)
         Firestore.addNotification(observedUserInstance.email!!, newNotification)
     }
 
-    fun executeAndUpdateNotification(notification: Notification) {
+    /**
+     * Sends an "add as big" notification to the observed user
+     */
+    fun sendAddBigNotification() {
+        val newNotification = constructNotification(true)
+        Firestore.addNotification(observedUserInstance.email!!, newNotification)
+    }
+
+    /**
+     * Executes the given notification and removes it from the current user's notification list
+     */
+    fun executeAndUpdateNotification(notificationSnapshot: DocumentSnapshot) {
+        val notification = notificationSnapshot.toObject(Notification::class.java)!!
         notification.execute()
         Firestore.removeNotification(CurrentUser.getEmail()!!, notification)
     }
