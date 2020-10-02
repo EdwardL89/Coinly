@@ -69,7 +69,8 @@ class Notification: Serializable {
     private fun updateLittleUsingReference(littleToBeAdded: DocumentSnapshot) {
         val previousNumOfBigsTheLittleHas = Integer.parseInt(littleToBeAdded["numOfBigs"].toString())
         littleToBeAdded.reference.update("numOfBigs", previousNumOfBigsTheLittleHas + 1)
-        Firestore.addBig(littleToBeAdded["email"].toString(), CurrentUser.getEmail()!!, CurrentUser.profilePictureUri.value!!)
+        Firestore.addBig(littleToBeAdded["email"].toString(), CurrentUser.getEmail()!!,
+            CurrentUser.profilePictureUri.value!!, CurrentUser.displayName.value!!)
     }
 
     /**
@@ -80,7 +81,8 @@ class Notification: Serializable {
         CurrentUser.incrementLittles()
         Log.d("INFO", "After increment: ${CurrentUser.numOfLittles.value}")
         Firestore.update(CurrentUser.instance!!, "numOfLittles", CurrentUser.numOfLittles.value.toString())
-        Firestore.addLittle(CurrentUser.getEmail()!!, littleToBeAdded["email"].toString(), littleToBeAdded["profilePictureUri"].toString())
+        Firestore.addLittle(CurrentUser.getEmail()!!, littleToBeAdded["email"].toString(),
+            littleToBeAdded["profilePictureUri"].toString(), littleToBeAdded["displayName"].toString())
     }
 
 
@@ -101,7 +103,8 @@ class Notification: Serializable {
     private fun updateBigUsingReference(bigToBeAdded: DocumentSnapshot) {
         val previousNumOfLittlesTheBigHas = Integer.parseInt(bigToBeAdded["numOfLittles"].toString())
         bigToBeAdded.reference.update("numOfLittles",  previousNumOfLittlesTheBigHas + 1)
-        Firestore.addLittle(bigToBeAdded["email"].toString(), CurrentUser.getEmail()!!, CurrentUser.profilePictureUri.value!!)
+        Firestore.addLittle(bigToBeAdded["email"].toString(), CurrentUser.getEmail()!!,
+            CurrentUser.profilePictureUri.value!!, CurrentUser.displayName.value!!)
     }
 
     /**
@@ -110,6 +113,7 @@ class Notification: Serializable {
     private fun addBigToLittle(bigToBeAdded: DocumentSnapshot) {
         CurrentUser.incrementBigs()
         Firestore.update(CurrentUser.instance!!, "numOfBigs", CurrentUser.numOfBigs.value.toString())
-        Firestore.addBig(CurrentUser.getEmail()!!, bigToBeAdded["email"].toString(), bigToBeAdded["profilePictureUri"].toString())
+        Firestore.addBig(CurrentUser.getEmail()!!, bigToBeAdded["email"].toString(),
+            bigToBeAdded["profilePictureUri"].toString(), bigToBeAdded["displayName"].toString())
     }
 }

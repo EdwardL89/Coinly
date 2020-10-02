@@ -62,11 +62,11 @@ class AllLittlesFragment : Fragment() {
      */
     private fun checkForRemovalOrAdditionOfLittle() {
         if (CurrentUser.littleToBeRemoved != null) {
-            (allLittlesRecyclerView.adapter as UsersRecyclerViewAdapter).removeUser(CurrentUser.littleToBeRemoved!!)
+            allLittlesFragmentViewModel.removeUser(CurrentUser.littleToBeRemoved!!)
             CurrentUser.littleToBeRemoved = null
         }
         if (CurrentUser.littleToBeAdded != null) {
-            (allLittlesRecyclerView.adapter as UsersRecyclerViewAdapter).addUser(CurrentUser.littleToBeAdded!!)
+            allLittlesFragmentViewModel.addUser(CurrentUser.littleToBeAdded!!)
             CurrentUser.littleToBeAdded = null
         }
     }

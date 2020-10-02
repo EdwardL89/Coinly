@@ -104,24 +104,6 @@ class UsersRecyclerViewAdapter(_items: List<Triple<String, String, String>>): Re
     }
 
     /**
-     * Removes a user from the recycler view
-     */
-    fun removeUser(user: User) {
-        userList.remove(userList.first { it.second == user.displayName })
-        notifyDataSetChanged()
-    }
-
-    /**
-     * Adds a user from the recycler view
-     */
-    fun addUser(document: DocumentSnapshot) {
-        userList.add(Triple(document["profilePictureUri"].toString(),
-            document["displayName"].toString(),
-            document["email"].toString()))
-        notifyDataSetChanged()
-    }
-
-    /**
      * Replaces the current list of users
      */
     fun replaceUsers(newUsers: MutableList<Triple<String, String, String>>) {

@@ -4,9 +4,11 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.helpers.SearchQueryHelper
+import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 
 class AllLittlesFragmentViewModel: ViewModel() {
@@ -37,6 +39,22 @@ class AllLittlesFragmentViewModel: ViewModel() {
      */
     fun createAdapter() {
         recyclerAdapter = UsersRecyclerViewAdapter(allLittles)
+    }
+
+    /**
+     * Removes a user from the recycler view
+     */
+    fun removeUser(user: User) {
+        allLittles.remove(allLittles.first { it.second == user.displayName })
+    }
+
+    /**
+     * Adds a user from the recycler view
+     */
+    fun addUser(document: DocumentSnapshot) {
+        allLittles.add(Triple(document["profilePictureUri"].toString(),
+            document["displayName"].toString(),
+            document["email"].toString()))
     }
 
     /**

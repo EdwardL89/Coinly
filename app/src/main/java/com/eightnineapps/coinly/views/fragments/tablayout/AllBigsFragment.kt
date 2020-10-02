@@ -62,11 +62,11 @@ class AllBigsFragment : Fragment() {
      */
     private fun checkForRemovalOrAdditionOfBig() {
         if (CurrentUser.bigToBeRemoved != null) {
-            (allBigsRecyclerView.adapter as UsersRecyclerViewAdapter).removeUser(CurrentUser.bigToBeRemoved!!)
+            allBigsFragmentViewModel.removeUser(CurrentUser.bigToBeRemoved!!)
             CurrentUser.bigToBeRemoved = null
         }
         if (CurrentUser.bigToBeAdded != null) {
-            (allBigsRecyclerView.adapter as UsersRecyclerViewAdapter).addUser(CurrentUser.bigToBeAdded!!)
+            allBigsFragmentViewModel.addUser(CurrentUser.bigToBeAdded!!)
             CurrentUser.bigToBeAdded = null
         }
     }
