@@ -7,28 +7,78 @@ import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import kotlin.random.Random
 
 class LinkupProfileViewModel: ViewModel() {
 
     lateinit var observedUserInstance: User
-    var observedUserInstanceLittles = mutableListOf<String>()
-    var observedUserInstanceBigs = mutableListOf<String>()
-    private val currentUserInstance = CurrentUser.instance!!
+    private var hasDeterminedConnectionStatus = false
+    private val ADD_AS_BIG_MESSAGE_TEMPLATE = "${CurrentUser.displayName} wants to add you as a big!"
+    private val ADD_AS_LITTLE_MESSAGE_TEMPLATE = "${CurrentUser.displayName} wants to add you as a little!"
     private val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
-    fun getUpdatedObservedUser(observedUser: User) = Firestore.read(observedUser.email!!).get()
+    /**
+     * Returns whether or not the view model has determined the connection status between the
+     * current and observed user
+     */
+    fun hasDeterminedConnectionStatus() = hasDeterminedConnectionStatus
 
     /**
-     * Checks to see if the two users have already been added to eachother
+     * Helps determine whether or not the current user is already a big of the
+     * observed user
      */
-    fun alreadyAdded(asBig: Boolean): Boolean {
-        return if (asBig) {
-            observedUserInstanceLittles.contains(currentUserInstance.email)
-        } else {
-            observedUserInstanceBigs.contains(currentUserInstance.email)
-        }
+    fun queryForContainedBig(): Task<DocumentSnapshot> {
+        return Firestore.getBigs(observedUserInstance.email!!)
+            .document(CurrentUser.getEmail()!!).get()
+    }
+
+    /**
+     * Helps determine whether or not the current user is already a little of the
+     * observed user
+     */
+    fun queryForContainedLittle(): Task<DocumentSnapshot> {
+        return Firestore.getLittles(observedUserInstance.email!!)
+            .document(CurrentUser.getEmail()!!).get()
+    }
+
+    /**
+     * Checks if the observed user has already received a request to be added as a big
+     * by the current user
+     */
+    fun queryForAlreadyRequestedBig(): Task<QuerySnapshot> {
+        return Firestore.getNotifications(observedUserInstance.email!!)
+            .whereEqualTo("message", ADD_AS_BIG_MESSAGE_TEMPLATE).get()
+    }
+
+    /**
+     * Checks if the observed user has already received a request to be added as a little
+     * by the current user
+     */
+    fun queryForAlreadyRequestedLittle(): Task<QuerySnapshot> {
+        return Firestore.getNotifications(observedUserInstance.email!!)
+            .whereEqualTo("message", ADD_AS_LITTLE_MESSAGE_TEMPLATE).get()
+    }
+
+    /**
+     * Checks if the current user has already received a request to be added as a big
+     * by the observed user
+     */
+    fun queryForReceivedRequestFromBig(): Task<QuerySnapshot> {
+        return Firestore.getNotifications(CurrentUser.getEmail()!!)
+            .whereEqualTo("type", NotificationType.ADDING_AS_LITTLE)
+            .whereEqualTo("addingToUserEmail", observedUserInstance.email!!).get()
+    }
+
+    /**
+     * Checks if the current user has already received a request to be added as a little
+     * by the observed user
+     */
+    fun queryForReceivedRequestFromLittle(): Task<QuerySnapshot> {
+        return Firestore.getNotifications(CurrentUser.getEmail()!!)
+            .whereEqualTo("type", NotificationType.ADDING_AS_BIG)
+            .whereEqualTo("addingToUserEmail", observedUserInstance.email!!).get()
     }
 
     /**
@@ -42,7 +92,7 @@ class LinkupProfileViewModel: ViewModel() {
 
     fun executeAndUpdateNotification(notification: Notification) {
         notification.execute()
-        Firestore.removeNotification(currentUserInstance.email!!, notification)
+        Firestore.removeNotification(CurrentUser.getEmail()!!, notification)
     }
 
     /**
@@ -52,11 +102,11 @@ class LinkupProfileViewModel: ViewModel() {
         val newNotification = Notification()
         newNotification.id = generateId()
         newNotification.type = if (sendingToBig) NotificationType.ADDING_AS_BIG else NotificationType.ADDING_AS_LITTLE
-        newNotification.addingToUserEmail = currentUserInstance.email!!
+        newNotification.addingToUserEmail = CurrentUser.getEmail()!!
         newNotification.toAddUserEmail = observedUserInstance.email!!
-        newNotification.profilePictureUri = currentUserInstance.profilePictureUri
-        newNotification.message = "${currentUserInstance.displayName} wants to add you as a ${if (sendingToBig) "big" else "little"}!"
-        newNotification.moreInformation = "${currentUserInstance.displayName} wants to add you as a ${if (sendingToBig) "big" else "little"}!"
+        newNotification.profilePictureUri = CurrentUser.profilePictureUri.toString()
+        newNotification.message = "${CurrentUser.displayName.toString()} wants to add you as a ${if (sendingToBig) "big" else "little"}!"
+        newNotification.moreInformation = "${CurrentUser.displayName.toString()} wants to add you as a ${if (sendingToBig) "big" else "little"}!"
         return newNotification
     }
 
@@ -65,13 +115,5 @@ class LinkupProfileViewModel: ViewModel() {
      */
     private fun generateId(): String {
         return (1..30).map { Random.nextInt(0, charPool.size) }.map(charPool::get).joinToString("")
-    }
-
-    fun retrieveObservedUserBigs(): Task<QuerySnapshot> {
-        return Firestore.getBigs(observedUserInstance.email!!).get()
-    }
-
-    fun retrieveObservedUserLittles(): Task<QuerySnapshot> {
-        return Firestore.getLittles(observedUserInstance.email!!).get()
     }
 }

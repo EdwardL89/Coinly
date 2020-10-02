@@ -81,7 +81,7 @@ class Notification: Serializable {
     }
 
 
-    /**
+    /**l
      * Queries the database to retrieve the bigs and littles list of both users to complete the request
      */
     private fun executeAddAsLittle() {
