@@ -56,6 +56,7 @@ class Notification: Serializable {
      * Queries the database to retrieve the bigs and littles list of both users to complete the request
      */
     private fun executeAddAsBig() {
+        CurrentUser.notificationsToBeRemoved.add(id)
         Firestore.read(addingToUserEmail).get().addOnCompleteListener {
             CurrentUser.littleToBeAdded = it.result!!
             updateLittleUsingReference(CurrentUser.littleToBeAdded!!)
@@ -90,6 +91,7 @@ class Notification: Serializable {
      * Queries the database to retrieve the bigs and littles list of both users to complete the request
      */
     private fun executeAddAsLittle() {
+        CurrentUser.notificationsToBeRemoved.add(id)
         Firestore.read(addingToUserEmail).get().addOnCompleteListener {
             CurrentUser.bigToBeAdded = it.result!!
             updateBigUsingReference(CurrentUser.bigToBeAdded!!)

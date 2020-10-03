@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -66,6 +67,24 @@ class MyProfileFragment : Fragment() {
         inflater.inflate(R.menu.home_fragments_app_bar_menu, menu)
         menu.findItem(R.id.menu_search).isVisible = false
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    /**
+     * Updates the notification list every time myProfile is visible
+     */
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        super.setMenuVisibility(menuVisible)
+        if (menuVisible) checkForClearedNotifications()
+    }
+
+    /**
+     * Removes notifications from the list through matching IDs
+     */
+    private fun checkForClearedNotifications() {
+        if (CurrentUser.notificationsToBeRemoved.isNotEmpty()) {
+            myProfileFragmentViewModel.removeNotifications(CurrentUser.notificationsToBeRemoved)
+            CurrentUser.notificationsToBeRemoved.clear()
+        }
     }
 
     /**

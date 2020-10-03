@@ -47,6 +47,7 @@ class AllBigsFragmentViewModel: ViewModel() {
      */
     fun removeUser(user: User) {
         allBigs.remove(allBigs.first { it.second == user.displayName })
+        recyclerAdapter?.notifyDataSetChanged()
     }
 
     /**
@@ -56,6 +57,7 @@ class AllBigsFragmentViewModel: ViewModel() {
         allBigs.add(Triple(document["profilePictureUri"].toString(),
             document["displayName"].toString(),
             document["email"].toString()))
+        recyclerAdapter?.notifyDataSetChanged()
     }
 
     /**

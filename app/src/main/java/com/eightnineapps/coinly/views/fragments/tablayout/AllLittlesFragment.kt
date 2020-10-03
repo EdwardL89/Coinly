@@ -9,12 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.AllLittlesFragmentViewModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
-import kotlinx.android.synthetic.main.fragment_littles.*
 import kotlinx.android.synthetic.main.fragment_littles.view.*
 
 class AllLittlesFragment : Fragment() {
@@ -52,9 +50,9 @@ class AllLittlesFragment : Fragment() {
     /**
      * Checks for changes to the members of the recyclerview
      */
-    override fun onResume() {
-        super.onResume()
-        checkForRemovalOrAdditionOfLittle()
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        super.setMenuVisibility(menuVisible)
+        if (menuVisible) checkForRemovalOrAdditionOfLittle()
     }
 
     /**

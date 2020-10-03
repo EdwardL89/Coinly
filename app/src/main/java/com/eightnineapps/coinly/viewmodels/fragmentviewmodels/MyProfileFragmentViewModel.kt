@@ -31,6 +31,14 @@ class MyProfileFragmentViewModel: ViewModel() {
     fun getAllNotificationsQuery() = notificationsQueryTask
 
     /**
+     * Removes the given notifications from the list
+     */
+    fun removeNotifications(notificationsToBeRemoved: MutableList<String>) {
+        notifications.removeAll { it.id in notificationsToBeRemoved }
+        recyclerAdapter?.notifyDataSetChanged()
+    }
+
+    /**
      * Instantiates the adapter for the recycler
      */
     fun createAdapter() {

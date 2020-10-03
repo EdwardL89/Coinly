@@ -46,6 +46,7 @@ class AllLittlesFragmentViewModel: ViewModel() {
      */
     fun removeUser(user: User) {
         allLittles.remove(allLittles.first { it.second == user.displayName })
+        recyclerAdapter?.notifyDataSetChanged()
     }
 
     /**
@@ -55,6 +56,7 @@ class AllLittlesFragmentViewModel: ViewModel() {
         allLittles.add(Triple(document["profilePictureUri"].toString(),
             document["displayName"].toString(),
             document["email"].toString()))
+        recyclerAdapter?.notifyDataSetChanged()
     }
 
     /**

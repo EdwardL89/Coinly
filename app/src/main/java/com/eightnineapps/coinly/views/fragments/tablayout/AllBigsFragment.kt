@@ -52,9 +52,9 @@ class AllBigsFragment : Fragment() {
     /**
      * Checks for changes to the members of the recyclerview
      */
-    override fun onResume() {
-        super.onResume()
-        checkForRemovalOrAdditionOfBig()
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        super.setMenuVisibility(menuVisible)
+        if (menuVisible) checkForRemovalOrAdditionOfBig()
     }
 
     /**

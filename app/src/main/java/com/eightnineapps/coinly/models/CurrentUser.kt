@@ -15,6 +15,7 @@ object CurrentUser {
     var littleToBeRemoved: User? = null
     var bigToBeAdded: DocumentSnapshot? = null
     var littleToBeAdded: DocumentSnapshot? = null
+    var notificationsToBeRemoved = mutableListOf<String>()
 
     val numOfBigs = MutableLiveData<Int>()
     val numOfLittles = MutableLiveData<Int>()
