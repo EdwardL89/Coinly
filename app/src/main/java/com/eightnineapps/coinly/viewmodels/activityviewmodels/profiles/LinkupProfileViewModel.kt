@@ -3,7 +3,6 @@ package com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.classes.objects.User
-import com.eightnineapps.coinly.enums.ConnectionStatus
 import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
@@ -15,48 +14,9 @@ import kotlin.random.Random
 class LinkupProfileViewModel: ViewModel() {
 
     lateinit var observedUserInstance: User
-    private var hasDeterminedConnectionStatus = false
-    private var pendingBigNotification: DocumentSnapshot? = null
-    private var pendingLittleNotification: DocumentSnapshot? = null
     private val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
     private val ADD_AS_BIG_MESSAGE_TEMPLATE = "${CurrentUser.displayName.value} wants to add you as a big!"
     private val ADD_AS_LITTLE_MESSAGE_TEMPLATE = "${CurrentUser.displayName.value} wants to add you as a little!"
-    private var connectionStatuses = arrayOf(ConnectionStatus.NOT_ADDED_AS_BIG, ConnectionStatus.NOT_ADDED_AS_LITTLE)
-
-    /**
-     * Returns the connection statuses of both "add as" buttons
-     */
-    fun getConnectionStatuses() = connectionStatuses
-
-    /**
-     * Returns a pending notification from the big document snapshot if it exists
-     */
-    fun getPendingBigNotification() = pendingBigNotification
-
-    /**
-     * Returns a pending notification from the little document snapshot if it exists
-     */
-    fun getPendingLittleNotification() = pendingLittleNotification
-
-    /**
-     * Returns whether or not the view model has determined the connection status between the
-     * current and observed user
-     */
-    fun hasDeterminedConnectionStatus() = hasDeterminedConnectionStatus
-
-    /**
-     * Sets a pending notification to be used in the linkup profile activity
-     */
-    fun setPendingBigNotification(notificationSnapshot: DocumentSnapshot) {
-        pendingBigNotification = notificationSnapshot
-    }
-
-    /**
-     * Sets a pending notification to be used in the linkup profile activity
-     */
-    fun setPendingLittleNotification(notificationSnapshot: DocumentSnapshot) {
-        pendingLittleNotification = notificationSnapshot
-    }
 
     /**
      * Helps determine whether or not the current user is already a big of the
