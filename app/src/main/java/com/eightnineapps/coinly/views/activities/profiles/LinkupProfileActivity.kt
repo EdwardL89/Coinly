@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.databinding.ActivityLinkupProfileBinding
+import com.eightnineapps.coinly.enums.ConnectionStatus
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LinkupProfileViewModel
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.android.synthetic.main.activity_linkup_profile.*
@@ -35,6 +36,7 @@ class LinkupProfileActivity : AppCompatActivity() {
         binding.linkupProfileViewModel = linkupProfileViewModel
         super.onCreate(savedInstanceState)
         setupProfilePage()
+        setupButtons()
     }
 
     /**
@@ -65,15 +67,53 @@ class LinkupProfileActivity : AppCompatActivity() {
         addBackArrowToActionBar()
         loadProfilePicture()
         loadStats()
-        setupAddAsBigButton()
-        setupAddAsLittleButton()
+    }
+
+    /**
+     * Determines whether or not we've already determined the connection status between the current
+     * user and observed user to take the appropriate action
+     */
+    private fun setupButtons() {
+        if (linkupProfileViewModel.hasDeterminedConnectionStatus()) {
+            setAddAsBigButtonStatus()
+            setAddAsLittleButtonStatus()
+        } else {
+            determineAddAsBigButtonStatus()
+            determineAddAsLittleButtonStatus()
+        }
+    }
+
+    /**
+     * Uses the predetermined connection status to update the "add as big" button
+     */
+    private fun setAddAsBigButtonStatus() {
+        when (linkupProfileViewModel.getConnectionStatuses()[0]) {
+            ConnectionStatus.REQUESTED_BIG -> showRequestedBig()
+            ConnectionStatus.RECEIVED_REQUEST_FROM_BIG ->
+                showAcceptRequestFromBig(linkupProfileViewModel.getPendingBigNotification()!!)
+            ConnectionStatus.ADDED_AS_BIG -> showAddedAsBig()
+            else -> return
+        }
+    }
+
+    /**
+     * Uses the predetermined connection status to update the "add as little" button
+     */
+    private fun setAddAsLittleButtonStatus() {
+        when (linkupProfileViewModel.getConnectionStatuses()[1]) {
+            ConnectionStatus.REQUESTED_LITTLE -> showRequestedLittle()
+            ConnectionStatus.RECEIVED_REQUEST_FROM_LITTLE ->
+                showAcceptRequestFromLittle(linkupProfileViewModel.getPendingLittleNotification()!!)
+            ConnectionStatus.ADDED_AS_LITTLE -> showAddedAsLittle()
+            else -> return
+        }
     }
 
     /**
      * Sets up the "add as big" button to reflect the current relationship status
      * between the current and observed user
      */
-    private fun setupAddAsBigButton() {
+    private fun determineAddAsBigButtonStatus() {
         linkupProfileViewModel.queryForContainedLittle().addOnCompleteListener {
             if (it.result!!.exists()) showAddedAsBig()
             else determineBigConnectionStatus()
@@ -84,7 +124,7 @@ class LinkupProfileActivity : AppCompatActivity() {
      * Sets up the "add as little" button to reflect the current relationship status
      * between the current and observed user
      */
-    private fun setupAddAsLittleButton() {
+    private fun determineAddAsLittleButtonStatus() {
         linkupProfileViewModel.queryForContainedBig().addOnCompleteListener {
             if (it.result!!.exists()) showAddedAsLittle()
             else determineLittleConnectionStatus()
@@ -196,6 +236,7 @@ class LinkupProfileActivity : AppCompatActivity() {
      * observed user to be added as a little
      */
     private fun showAcceptRequestFromBig(notificationSnapshot: DocumentSnapshot) {
+        linkupProfileViewModel.setPendingBigNotification(notificationSnapshot)
         add_as_big_button.text = getString(R.string.accept_request)
         add_as_big_button.isEnabled = true
         add_as_big_button.setOnClickListener {
@@ -209,6 +250,7 @@ class LinkupProfileActivity : AppCompatActivity() {
      * observed user to be added as a big
      */
     private fun showAcceptRequestFromLittle(notificationSnapshot: DocumentSnapshot) {
+        linkupProfileViewModel.setPendingLittleNotification(notificationSnapshot)
         add_as_little_button.text = getString(R.string.accept_request)
         add_as_little_button.isEnabled = true
         add_as_little_button.setOnClickListener {

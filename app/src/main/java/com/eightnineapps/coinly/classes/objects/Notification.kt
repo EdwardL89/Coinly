@@ -78,9 +78,7 @@ class Notification: Serializable {
      * Updates the littles count of the current user and adds the little to it
      */
     private fun addLittleToBig(littleToBeAdded: DocumentSnapshot) {
-        Log.d("INFO", "Before increment: ${CurrentUser.numOfLittles.value}")
         CurrentUser.incrementLittles()
-        Log.d("INFO", "After increment: ${CurrentUser.numOfLittles.value}")
         Firestore.update(CurrentUser.instance!!, "numOfLittles", CurrentUser.numOfLittles.value.toString())
         Firestore.addLittle(CurrentUser.getEmail()!!, littleToBeAdded["email"].toString(),
             littleToBeAdded["profilePictureUri"].toString(), littleToBeAdded["displayName"].toString())

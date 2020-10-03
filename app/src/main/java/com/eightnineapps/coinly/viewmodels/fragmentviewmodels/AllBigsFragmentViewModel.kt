@@ -72,7 +72,6 @@ class AllBigsFragmentViewModel: ViewModel() {
      */
     fun compileUserDataToList(querySnapshot: QuerySnapshot) {
         for (document in querySnapshot) {
-            Log.d("INFO", document["displayName"].toString())
             allBigs.add(Triple(document["profilePictureUri"].toString(),
                 document["displayName"].toString(),
                 document["email"].toString()))
