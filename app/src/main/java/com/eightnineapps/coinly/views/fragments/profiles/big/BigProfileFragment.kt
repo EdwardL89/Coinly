@@ -1,9 +1,11 @@
 package com.eightnineapps.coinly.views.fragments.profiles.big
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -21,6 +23,10 @@ class BigProfileFragment: Fragment() {
 
     private val bigProfileViewModel: BigProfileViewModel by activityViewModels()
 
+    /**
+     * Overrides the onCreate method to allow the fragments to have an options menu and starts a
+     * query
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bigProfileViewModel.observedUserInstance = activity!!.intent.getSerializableExtra("observed_user") as User
@@ -28,10 +34,16 @@ class BigProfileFragment: Fragment() {
         bigProfileViewModel.startQueryForClaimedPrizes()
     }
 
+    /**
+     * Inflates the all big's profile
+     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_big_profile, container, false)
     }
 
+    /**
+     * Begin loading all the big's profile information
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadProfile()
@@ -40,6 +52,9 @@ class BigProfileFragment: Fragment() {
         addPrizesClaimedToRecycler(view)
     }
 
+    /**
+     * Makes sure the query task is completed before continuing
+     */
     private fun addPrizesSetToRecycler(view: View) {
         if (bigProfileViewModel.hasLoadedPrizesSet()) {
             attachPrizesSetAdapter(view)
@@ -55,6 +70,9 @@ class BigProfileFragment: Fragment() {
         }
     }
 
+    /**
+     * Makes sure the query task is completed before continuing
+     */
     private fun addPrizesClaimedToRecycler(view: View) {
         if (bigProfileViewModel.hasLoadedPrizesClaimed()) {
             attachPrizesClaimedAdapter(view)
@@ -70,18 +88,27 @@ class BigProfileFragment: Fragment() {
         }
     }
 
+    /**
+     * Gathers all the prizes set and sets up the recyclerview to place them in
+     */
     private fun handlePrizesSetQueryTask(prizesSetQueryTask: Task<QuerySnapshot>, view: View) {
         bigProfileViewModel.compilePrizesSet(prizesSetQueryTask.result!!)
         bigProfileViewModel.createPrizesSetAdapter()
         attachPrizesSetAdapter(view)
     }
 
+    /**
+     * Gathers all the prizes claimed and sets up the recyclerview to place them in
+     */
     private fun handlePrizesClaimedQueryTask(prizesClaimedQueryTask: Task<QuerySnapshot>, view: View) {
         bigProfileViewModel.compilePrizesClaimed(prizesClaimedQueryTask.result!!)
         bigProfileViewModel.createPrizesClaimedAdapter()
         attachPrizesClaimedAdapter(view)
     }
 
+    /**
+     * Attaches the adapter to the prizes set recycler view and updates UI if it's empty
+     */
     private fun attachPrizesSetAdapter(view: View) {
         view.prizesToClaimRecyclerView.adapter = bigProfileViewModel.getPrizesSetAdapter()
         if (bigProfileViewModel.getPrizesSetAdapter().itemCount == 0) {
@@ -91,6 +118,9 @@ class BigProfileFragment: Fragment() {
         }
     }
 
+    /**
+     * Attaches the adapter to the prizes claimed recycler view and updates UI if it's empty
+     */
     private fun attachPrizesClaimedAdapter(view: View) {
         view.prizesYouveClaimedRecyclerView.adapter = bigProfileViewModel.getPrizesClaimedAdapter()
         if (bigProfileViewModel.getPrizesClaimedAdapter().itemCount == 0) {
@@ -122,7 +152,10 @@ class BigProfileFragment: Fragment() {
             findNavController().navigate(R.id.action_bigProfileFragment_to_requestCoinsFragment, null)
         }
         remove_big_button.setOnClickListener {
-           bigProfileViewModel.removeBigAndSendBack(context!!)
+            bigProfileViewModel.removeBigAndSendBack()
+            Toast.makeText(context, "Removed ${bigProfileViewModel.observedUserInstance.displayName} as a big",
+                Toast.LENGTH_SHORT).show()
+            (context as Activity).finish()
         }
     }
 

@@ -20,7 +20,8 @@ class AllBigsFragment : Fragment() {
     private lateinit var allBigsFragmentViewModel: AllBigsFragmentViewModel
 
     /**
-     * Overrides the onCreate method to allow the fragments to have an options menu
+     * Overrides the onCreate method to allow the fragments to have an options menu and starts a
+     * query
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)

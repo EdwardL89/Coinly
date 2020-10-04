@@ -1,6 +1,5 @@
 package com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.objects.Prize
@@ -106,20 +105,28 @@ class BigProfileViewModel: ViewModel() {
     /**
      * Removes the observed Big and navigates to the previous page
      */
-    fun removeBigAndSendBack(context: Context) {
-//        CurrentUser.bigToBeRemoved = observedUserInstance
-//
-//        CurrentUser.decrementBigs()
-//        Firestore.update(currentUserInstance!!, "numOfBigs", currentUserInstance.numOfBigs.toString())
-//        Firestore.removeBig(currentUserInstance.email!!, observedUserInstance.email!!)
-//
-//        observedUserInstance.numOfLittles -= 1
-//        Firestore.update(observedUserInstance, "numOfLittles", observedUserInstance.numOfLittles.toString())
-//        Firestore.removeLittle(observedUserInstance.email!!, currentUserInstance.email!!)
-//        CurrentUser.numOfBigs.value = currentUserInstance.numOfBigs
-//
-//        Toast.makeText(context, "Removed ${observedUserInstance.displayName} as a big", Toast.LENGTH_SHORT).show()
-//
-//        (context as Activity).finish()
+    fun removeBigAndSendBack() {
+        CurrentUser.bigToBeRemoved = observedUserInstance
+        removeBigFromCurrentUser()
+        removeCurrentUserFromObservedUsersLittles()
+
+    }
+
+    /**
+     * Removes the observed user from the current user's big list
+     */
+    private fun removeBigFromCurrentUser() {
+        CurrentUser.decrementBigs()
+        Firestore.removeBig(CurrentUser.getEmail()!!, observedUserInstance.email!!)
+        Firestore.update(CurrentUser.instance!!, "numOfBigs", CurrentUser.numOfBigs.value.toString())
+    }
+
+    /**
+     * Removes the current user from the observed user's little list
+     */
+    private fun removeCurrentUserFromObservedUsersLittles() {
+        observedUserInstance.numOfLittles -= 1
+        Firestore.update(observedUserInstance, "numOfLittles", observedUserInstance.numOfLittles.toString())
+        Firestore.removeLittle(observedUserInstance.email!!, CurrentUser.getEmail()!!)
     }
 }
