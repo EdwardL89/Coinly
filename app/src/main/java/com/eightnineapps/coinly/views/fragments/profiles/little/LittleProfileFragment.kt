@@ -20,14 +20,25 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
+import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LittleProfileViewModel
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.fragment_little_profile.*
+import kotlinx.android.synthetic.main.fragment_little_profile.view.*
 import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.view.*
 
 class LittleProfileFragment: Fragment() {
 
     private val littleProfileViewModel: LittleProfileViewModel by activityViewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        littleProfileViewModel.observedUserInstance = activity!!.intent.getSerializableExtra("observed_user") as User
+        littleProfileViewModel.startQueryForPrizesSet()
+        littleProfileViewModel.startQueryForPrizesClaimed()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_little_profile, container, false)
@@ -35,18 +46,75 @@ class LittleProfileFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        littleProfileViewModel.observedUserInstance = activity!!.intent.getSerializableExtra("observed_user") as User
         loadProfile()
         setUpButtons()
-        littleProfileViewModel.loadSetPrizes(setPrizesRecyclerView, context!!)
-        littleProfileViewModel.loadClaimedPrizes(claimedPrizesFromYouRecyclerView, context!!)
+        addPrizesSetToRecycler(view)
+        addPrizesClaimedToRecycler(view)
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (littleProfileViewModel.coinAmountHasChanged) {
-            coin_count.text = littleProfileViewModel.observedUserInstance.coins.toString()
-            littleProfileViewModel.coinAmountHasChanged = false
+    private fun addPrizesSetToRecycler(view: View) {
+        if (littleProfileViewModel.hasLoadedPrizesSet()) {
+            attachPrizesSetAdapter(view)
+        } else {
+            val prizesSetQueryTask = littleProfileViewModel.getPrizesSetQuery()!!
+            if (prizesSetQueryTask.isComplete) {
+                handlePrizesSetQueryTask(prizesSetQueryTask, view)
+            } else {
+                prizesSetQueryTask.addOnCompleteListener {
+                    handlePrizesSetQueryTask(prizesSetQueryTask, view)
+                }
+            }
+        }
+    }
+
+    private fun addPrizesClaimedToRecycler(view: View) {
+        if (littleProfileViewModel.hasLoadedPrizesClaimed()) {
+            attachPrizesClaimedAdapter(view)
+        } else {
+            val prizesClaimedQueryTask = littleProfileViewModel.getPrizesClaimedQuery()!!
+            if (prizesClaimedQueryTask.isComplete) {
+                handlePrizesClaimedQueryTask(prizesClaimedQueryTask, view)
+            } else {
+                prizesClaimedQueryTask.addOnCompleteListener {
+                    handlePrizesClaimedQueryTask(prizesClaimedQueryTask, view)
+                }
+            }
+        }
+    }
+
+    /**
+     * Gathers all the prizes set and sets up the recyclerview to place them in
+     */
+    private fun handlePrizesSetQueryTask(prizesSetQueryTask: Task<QuerySnapshot>, view: View) {
+        littleProfileViewModel.compilePrizesSet(prizesSetQueryTask.result!!)
+        littleProfileViewModel.createPrizesSetAdapter()
+        attachPrizesSetAdapter(view)
+    }
+
+    /**
+     * Gathers all the prizes claimed and sets up the recyclerview to place them in
+     */
+    private fun handlePrizesClaimedQueryTask(prizesClaimedQueryTask: Task<QuerySnapshot>, view: View) {
+        littleProfileViewModel.compilePrizesClaimed(prizesClaimedQueryTask.result!!)
+        littleProfileViewModel.createPrizesClaimedAdapter()
+        attachPrizesClaimedAdapter(view)
+    }
+
+    private fun attachPrizesSetAdapter(view: View) {
+        view.setPrizesRecyclerView.adapter = littleProfileViewModel.getPrizesSetAdapter()
+        if (littleProfileViewModel.getPrizesSetAdapter().itemCount == 0) {
+            view.no_prizes_set_image.visibility = View.INVISIBLE
+        } else {
+            view.no_prizes_set_image.visibility = View.VISIBLE
+        }
+    }
+
+    private fun attachPrizesClaimedAdapter(view: View) {
+        view.claimedPrizesFromYouRecyclerView.adapter = littleProfileViewModel.getPrizesClaimedAdapter()
+        if (littleProfileViewModel.getPrizesClaimedAdapter().itemCount == 0) {
+            view.no_prizes_claimed_from_you_image.visibility = View.INVISIBLE
+        } else {
+            view.no_prizes_claimed_from_you_image.visibility = View.VISIBLE
         }
     }
 
@@ -124,10 +192,26 @@ class LittleProfileFragment: Fragment() {
             } else if (price != "" && price[0] == '0') {
                 Toast.makeText(context!!, "Price cannot be 0", Toast.LENGTH_SHORT).show()
             } else {
-                littleProfileViewModel.uploadNewSetPrize(title, Integer.parseInt(price), context!!)
-                Toast.makeText(context!!, "Uploading prize...", Toast.LENGTH_SHORT).show()
+                uploadSetPrize(title, Integer.parseInt(price))
                 dialog.dismiss()
             }
+        }
+    }
+
+    private fun uploadSetPrize(prizeTitle: String, prizePrice: Int) {
+        val prizeId = littleProfileViewModel.generateId()
+        val prizePath = littleProfileViewModel.generatePrizePath(prizeId)
+        littleProfileViewModel.insertPrizeImageToStorage(prizePath).addOnCompleteListener {
+            littleProfileViewModel.downloadImageUri(prizePath).addOnCompleteListener {
+                uri -> saveSetPrizeToFirestore(Prize(prizeTitle, prizePrice, uri.toString(), prizeId))
+            }
+        }
+    }
+
+    private fun saveSetPrizeToFirestore(prize: Prize) {
+        Toast.makeText(context!!, "Uploading prize...", Toast.LENGTH_SHORT).show()
+        littleProfileViewModel.savePrizeInFireStore(prize).addOnCompleteListener {
+            Toast.makeText(context, "Prize Set!", Toast.LENGTH_SHORT).show()
         }
     }
 
