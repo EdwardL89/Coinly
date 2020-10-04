@@ -9,12 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.AllBigsFragmentViewModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
-import kotlinx.android.synthetic.main.fragment_bigs.*
 import kotlinx.android.synthetic.main.fragment_bigs.view.*
 
 class AllBigsFragment : Fragment() {

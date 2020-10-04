@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.prize_info_dialogue_layout.view.*
 import kotlinx.android.synthetic.main.prize_list_view_layout.view.prize_picture
 import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.view.cancel_button
 
-class PrizesRecyclerViewAdapter(_items: List<Prize>, _context: Context, _prizeTapLocation: PrizeTapLocation, _currentUser: User, _observedUser: User): RecyclerView.Adapter<PrizesRecyclerViewAdapter.ViewHolder>() {
+class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTapLocation, _observedUser: User): RecyclerView.Adapter<PrizesRecyclerViewAdapter.ViewHolder>() {
 
     private var prizeList = _items.toMutableList()
     private var prizeTapLocation = _prizeTapLocation

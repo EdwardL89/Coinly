@@ -1,98 +1,125 @@
 package com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles
 
-import android.app.Activity
 import android.content.Context
-import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.enums.PrizeTapLocation
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
-import kotlinx.android.synthetic.main.fragment_big_profile.*
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.QuerySnapshot
 
 class BigProfileViewModel: ViewModel() {
 
-    private lateinit var setPrizesRecyclerView: RecyclerView
-    private lateinit var claimedPrizesRecyclerView: RecyclerView
     lateinit var observedUserInstance: User
-    val currentUserInstance = CurrentUser.instance
+    private var hasLoadedPrizesSet = false
+    private var hasLoadedPrizesClaimed = false
+    private val allPrizesSet = mutableListOf<Prize>()
+    private val allPrizesClaimed = mutableListOf<Prize>()
+    private var prizesSetQuery: Task<QuerySnapshot>? = null
+    private var prizesClaimedQuery: Task<QuerySnapshot>? = null
+    private var prizesSetAdapter: PrizesRecyclerViewAdapter? = null
+    private var prizesClaimedAdapter: PrizesRecyclerViewAdapter? = null
+
+    /**
+     * Determines whether or not the prizes set have been loaded
+     */
+    fun hasLoadedPrizesSet() = hasLoadedPrizesSet
+
+    /**
+     * Determines whether or not the prizes claimed have been loaded
+     */
+    fun hasLoadedPrizesClaimed() = hasLoadedPrizesClaimed
+
+    /**
+     * Returns the adapter of the prizes set recycler view
+     */
+    fun getPrizesSetAdapter() = prizesSetAdapter!!
+
+    /**
+     * Returns the adapter of the prizes claimed recycler view
+     */
+    fun getPrizesClaimedAdapter() = prizesClaimedAdapter!!
+
+    /**
+     * Returns the query to get the prizes set
+     */
+    fun getPrizesSetQuery() = prizesSetQuery
+
+    /**
+     * Returns the query to get the prizes claimed
+     */
+    fun getPrizesClaimedQuery() = prizesClaimedQuery
+
+    /**
+     * Instantiates the adapter for the prizes set recycler
+     */
+    fun createPrizesSetAdapter() {
+        prizesSetAdapter = PrizesRecyclerViewAdapter(allPrizesSet,
+            PrizeTapLocation.BIG_PRIZES_SET, observedUserInstance)
+    }
+
+    /**
+     * Instantiates the adapter for the prizes claimed recycler
+     */
+    fun createPrizesClaimedAdapter() {
+        prizesClaimedAdapter = PrizesRecyclerViewAdapter(allPrizesClaimed,
+            PrizeTapLocation.BIG_PRIZES_CLAIMED, observedUserInstance)
+    }
+
+    /**
+     * Launches the query to get the prizes set
+     */
+    fun startQueryForPrizesSet(): Task<QuerySnapshot> {
+        return Firestore.getPrizesSet(CurrentUser.getEmail()!!, observedUserInstance.email!!).get()
+    }
+
+    /**
+     * Launches the query to get the prizes claimed
+     */
+    fun startQueryForClaimedPrizes(): Task<QuerySnapshot> {
+        return Firestore.getPrizesClaimed(CurrentUser.getEmail()!!, observedUserInstance.email!!).get()
+    }
+
+    /**
+     * Saves all the prizes set retrieved from the query
+     */
+    fun compilePrizesSet(querySnapshot: QuerySnapshot) {
+        for (document in querySnapshot) {
+            allPrizesSet.add(document.toObject(Prize::class.java))
+        }
+        hasLoadedPrizesSet = true
+    }
+
+    /**
+     * Saves all the prizes claimed retrieved from the query
+     */
+    fun compilePrizesClaimed(querySnapshot: QuerySnapshot) {
+        for (document in querySnapshot) {
+            allPrizesClaimed.add(document.toObject(Prize::class.java))
+        }
+        hasLoadedPrizesClaimed = true
+    }
 
     /**
      * Removes the observed Big and navigates to the previous page
      */
     fun removeBigAndSendBack(context: Context) {
-        CurrentUser.bigToBeRemoved = observedUserInstance
-
-        currentUserInstance!!.numOfBigs -= 1
-        Firestore.update(currentUserInstance!!, "numOfBigs", currentUserInstance.numOfBigs.toString())
-        Firestore.removeBig(currentUserInstance.email!!, observedUserInstance.email!!)
-
-        observedUserInstance.numOfLittles -= 1
-        Firestore.update(observedUserInstance, "numOfLittles", observedUserInstance.numOfLittles.toString())
-        Firestore.removeLittle(observedUserInstance.email!!, currentUserInstance.email!!)
-        CurrentUser.numOfBigs.value = currentUserInstance.numOfBigs
-
-        Toast.makeText(context, "Removed ${observedUserInstance.displayName} as a big", Toast.LENGTH_SHORT).show()
-        
-        (context as Activity).finish()
-    }
-
-    /**
-     * Loads the prizes set by the big into the given recycler view
-     */
-    fun loadSetPrizes(recyclerView: RecyclerView, context: Context) {
-        setPrizesRecyclerView = recyclerView
-        setPrizesRecyclerView.removeAllViews()
-        updateSetPrizesRecyclerViewAdapterAndLayoutManager(context)
-    }
-
-    /**
-     * Loads the prizes claimed by the little into the given recycler view
-     */
-    fun loadClaimedPrizes(recyclerView: RecyclerView, context: Context) {
-        claimedPrizesRecyclerView = recyclerView
-        claimedPrizesRecyclerView.removeAllViews()
-        updateClaimedPrizesRecyclerViewAdapterAndLayoutManager(context)
-    }
-
-    private fun updateClaimedPrizesRecyclerViewAdapterAndLayoutManager(context: Context) {
-        claimedPrizesRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        Firestore.getPrizesClaimed(currentUserInstance!!.email!!, observedUserInstance.email!!).get().addOnSuccessListener {
-            val allPrizesClaimed = mutableListOf<Prize>()
-            for (document in it) {
-                allPrizesClaimed.add(document.toObject(Prize::class.java))
-            }
-            claimedPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(allPrizesClaimed,
-                context, PrizeTapLocation.BIG_PRIZES_CLAIMED, currentUserInstance, observedUserInstance)
-            if (allPrizesClaimed.isNotEmpty()) {
-                (context as Activity).no_prizes_claimed_image.visibility = View.INVISIBLE
-            } else {
-                (context as Activity).no_prizes_claimed_image.visibility = View.VISIBLE
-            }
-        }
-    }
-
-    /**
-     * Assigns the given recycler view's layout manager and adapter using the list whose data is being displayed
-     */
-    private fun updateSetPrizesRecyclerViewAdapterAndLayoutManager(context: Context?) {
-        setPrizesRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        Firestore.getPrizesSet(currentUserInstance!!.email!!, observedUserInstance.email!!).get().addOnSuccessListener {
-            val allPrizesSet = mutableListOf<Prize>()
-            for (document in it) {
-                allPrizesSet.add(document.toObject(Prize::class.java))
-            }
-            setPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(allPrizesSet, context!!, PrizeTapLocation.BIG_PRIZES_SET, currentUserInstance, observedUserInstance)
-            if (allPrizesSet.isNotEmpty()) {
-                (context as Activity).no_prizes_set_by_big_image.visibility = View.INVISIBLE
-            } else {
-                (context as Activity).no_prizes_set_by_big_image.visibility = View.VISIBLE
-            }
-        }
+//        CurrentUser.bigToBeRemoved = observedUserInstance
+//
+//        CurrentUser.decrementBigs()
+//        Firestore.update(currentUserInstance!!, "numOfBigs", currentUserInstance.numOfBigs.toString())
+//        Firestore.removeBig(currentUserInstance.email!!, observedUserInstance.email!!)
+//
+//        observedUserInstance.numOfLittles -= 1
+//        Firestore.update(observedUserInstance, "numOfLittles", observedUserInstance.numOfLittles.toString())
+//        Firestore.removeLittle(observedUserInstance.email!!, currentUserInstance.email!!)
+//        CurrentUser.numOfBigs.value = currentUserInstance.numOfBigs
+//
+//        Toast.makeText(context, "Removed ${observedUserInstance.displayName} as a big", Toast.LENGTH_SHORT).show()
+//
+//        (context as Activity).finish()
     }
 }

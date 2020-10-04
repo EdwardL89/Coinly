@@ -53,11 +53,27 @@ object CurrentUser {
     }
 
     /**
+     * Decrements the big count
+     */
+    fun decrementBigs() {
+        instance!!.numOfBigs -= 1
+        numOfBigs.value = numOfBigs.value!!.minus(1)
+    }
+
+    /**
      * Increments the little count
      */
     fun incrementLittles() {
         instance!!.numOfLittles += 1
         numOfLittles.value = numOfLittles.value!!.plus(1)
+    }
+
+    /**
+     * Decrements the little count
+     */
+    fun decrementLittles() {
+        instance!!.numOfLittles -= 1
+        numOfLittles.value = numOfLittles.value!!.minus(1)
     }
 
     /**

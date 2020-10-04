@@ -1,6 +1,5 @@
 package com.eightnineapps.coinly.viewmodels.fragmentviewmodels
 
-import android.util.Log
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.adapters.UsersRecyclerViewAdapter
