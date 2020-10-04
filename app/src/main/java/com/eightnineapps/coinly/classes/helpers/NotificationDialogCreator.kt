@@ -12,12 +12,12 @@ import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.enums.NotificationType
 import kotlinx.android.synthetic.main.notification_dialogue_layout.view.*
 
-class DialogCreator {
+class NotificationDialogCreator {
 
     /**
      * Displays the dialog on the screen and sets its background and color
      */
-    fun showDialogue(dialog: AlertDialog) {
+    fun showDialog(dialog: AlertDialog) {
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
         dialog.window!!.attributes = setDialogDimensions(dialog)
@@ -26,7 +26,7 @@ class DialogCreator {
     /**
      * Creates the alert dialogue
      */
-    fun createAlertDialogue(notification: Notification, view: View): AlertDialog {
+    fun createAlertDialog(notification: Notification, view: View): AlertDialog {
         val builder = AlertDialog.Builder(view.context)
         val dialogueView = createViewForAlertDialogue(notification, view)
         builder.setView(dialogueView)

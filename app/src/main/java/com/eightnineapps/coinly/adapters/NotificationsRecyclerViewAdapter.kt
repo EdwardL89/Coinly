@@ -12,7 +12,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.classes.helpers.DialogCreator
+import com.eightnineapps.coinly.classes.helpers.NotificationDialogCreator
 import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.models.CurrentUser
@@ -33,7 +33,7 @@ class NotificationsRecyclerViewAdapter(_notifications: MutableList<Notification>
      */
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view), View.OnClickListener {
 
-        private val dialogCreator = DialogCreator()
+        private val dialogCreator = NotificationDialogCreator()
         val acceptButton: Button = view.accept_button
         val deleteButton: Button = view.delete_button
         val profilePicture: ImageView = view.my_profile_picture
@@ -49,7 +49,7 @@ class NotificationsRecyclerViewAdapter(_notifications: MutableList<Notification>
          */
         override fun onClick(view: View?) {
             val notification = notificationList[recyclerView!!.getChildLayoutPosition(view!!)]
-            dialogCreator.showDialogue(dialogCreator.createAlertDialogue(notification, view))
+            dialogCreator.showDialog(dialogCreator.createAlertDialog(notification, view))
         }
     }
 

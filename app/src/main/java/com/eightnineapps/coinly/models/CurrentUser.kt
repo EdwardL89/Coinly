@@ -31,6 +31,11 @@ object CurrentUser {
     val profilePictureUri = MutableLiveData<String>()
 
     /**
+     * Returns the ID of the current user
+     */
+    fun getId() = instance?.id
+
+    /**
      * Sets the user object to be used throughout the app
      */
     fun setUserInstance(user: User) {
@@ -40,8 +45,10 @@ object CurrentUser {
     /**
      * Subtracts coins from the user instance and the live data
      */
-    fun subtractCoins(coins: Int) {
-        instance!!.coins -= coins
+    fun subtractCoins(coinsSubtracting: Int) {
+        instance!!.coins -= coinsSubtracting
+        coins.value = coins.value!!.minus(coinsSubtracting)
+
     }
 
     /**
@@ -74,6 +81,22 @@ object CurrentUser {
     fun decrementLittles() {
         instance!!.numOfLittles -= 1
         numOfLittles.value = numOfLittles.value!!.minus(1)
+    }
+
+    /**
+     * Increments the number of prizes given by the current user
+     */
+    fun incrementPrizesClaimed() {
+        instance!!.numOfPrizesClaimed += 1
+        numOfPrizesClaimed.value = numOfPrizesClaimed.value!!.plus(1)
+    }
+
+    /**
+     * Updates the average price of the prizes claimed of the current user
+     */
+    fun updateAveragePriceOfPrizesClaimed(newAverage: Int) {
+        instance!!.avgPriceOfPrizesClaimed = newAverage
+        avgPriceOfPrizesClaimed.value = newAverage
     }
 
     /**
