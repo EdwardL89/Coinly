@@ -1,10 +1,8 @@
 package com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
@@ -30,7 +28,6 @@ class LittleProfileViewModel: ViewModel() {
     private var prizesClaimedAdapter: PrizesRecyclerViewAdapter? = null
     private val allPrizesSet = mutableListOf<Prize>()
     private val allPrizesClaimed = mutableListOf<Prize>()
-    private val currentUserInstance = CurrentUser.instance
     private var pictureOfNewPrizeSetByteData = ByteArrayOutputStream().toByteArray()
     lateinit var observedUserInstance: User
     private val imageUploadHelper = ImageUploadHelper()
@@ -116,26 +113,6 @@ class LittleProfileViewModel: ViewModel() {
     }
 
     /**
-     * Removes the observed Big and navigates to the previous page
-     */
-    fun removeLittleAndSendBack(context: Context) {
-        CurrentUser.littleToBeRemoved = observedUserInstance
-
-        currentUserInstance!!.numOfLittles -= 1
-        Firestore.update(currentUserInstance!!, "numOfLittles", currentUserInstance.numOfLittles.toString())
-        Firestore.removeLittle(currentUserInstance.email!!, observedUserInstance.email!!)
-
-        observedUserInstance.numOfBigs -= 1
-        Firestore.update(observedUserInstance, "numOfBigs", observedUserInstance.numOfBigs.toString())
-        Firestore.removeBig(observedUserInstance.email!!, currentUserInstance.email!!)
-        CurrentUser.numOfLittles.value = currentUserInstance.numOfLittles
-
-        Toast.makeText(context, "Removed ${observedUserInstance.displayName} as a little", Toast.LENGTH_SHORT).show()
-
-        (context as Activity).finish()
-    }
-
-    /**
      * Loads selected image to an image view and prepares the image to be uploaded to Storage
      */
     fun handleGallerySelectionCompletion(requestCode: Int, resultCode: Int, data: Intent?, context: Context) {
@@ -144,25 +121,70 @@ class LittleProfileViewModel: ViewModel() {
         }
     }
 
+    /**
+     * Adds a prize item to the set prizes recycler view
+     */
     fun addSetPrizeToRecycler(prize: Prize) {
         prizesSetAdapter!!.addItem(prize)
     }
 
+    /**
+     * Starts a query to save a new prize in the firestore
+     */
     fun savePrizeInFireStore(prize: Prize): Task<Void> {
         return Firestore.setNewPrize(observedUserInstance.email!!, CurrentUser.getEmail()!!, prize)
     }
 
+    /**
+     * Generates a random 30-character Id
+     */
     fun generateId() = imageUploadHelper.generateId()
 
+    /**
+     * Generates a path to save a prize in based on the prize Id
+     */
     fun generatePrizePath(prizeId: String): String {
         return "set_prizes/${CurrentUser.getId()}/${observedUserInstance.id}/$prizeId"
     }
 
+    /**
+     * Starts a query to save an image to storage
+     */
     fun insertPrizeImageToStorage(prizePath: String): UploadTask {
         return ImgStorage.insert(pictureOfNewPrizeSetByteData, prizePath)
     }
 
+    /**
+     * Starts a query to download an image uri at the given path
+     */
     fun downloadImageUri(prizePath: String): Task<Uri> {
         return ImgStorage.readImage(prizePath)
+    }
+
+    /**
+     * Removes the observed Little
+     */
+    fun removeLittleAndSendBack() {
+        CurrentUser.littleToBeRemoved = observedUserInstance
+        removeLittleFromCurrentUser()
+        removeCurrentUserFromObservedUsersBigs()
+    }
+
+    /**
+     * Removes the observed user from the current user's little list
+     */
+    private fun removeLittleFromCurrentUser() {
+        CurrentUser.decrementLittles()
+        Firestore.removeLittle(CurrentUser.getEmail()!!, observedUserInstance.email!!)
+        Firestore.update(CurrentUser.instance!!, "numOfLittles", CurrentUser.numOfLittles.value.toString())
+    }
+
+    /**
+     * Removes the current user from the observed user's big list
+     */
+    private fun removeCurrentUserFromObservedUsersBigs() {
+        observedUserInstance.numOfBigs -= 1
+        Firestore.update(observedUserInstance, "numOfBigs", observedUserInstance.numOfBigs.toString())
+        Firestore.removeBig(observedUserInstance.email!!, CurrentUser.getEmail()!!)
     }
 }

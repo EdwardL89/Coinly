@@ -24,8 +24,8 @@ class BigProfileFragment: Fragment() {
     private val bigProfileViewModel: BigProfileViewModel by activityViewModels()
 
     /**
-     * Overrides the onCreate method to allow the fragments to have an options menu and starts a
-     * query
+     * Overrides the onCreate method to allow the fragments to have an options menu and starts the
+     * queries
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,14 +35,14 @@ class BigProfileFragment: Fragment() {
     }
 
     /**
-     * Inflates the all big's profile
+     * Inflates the big's profile
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_big_profile, container, false)
     }
 
     /**
-     * Begin loading all the big's profile information
+     * Begin loading the big's profile information
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

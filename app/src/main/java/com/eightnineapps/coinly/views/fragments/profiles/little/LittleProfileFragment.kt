@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +33,10 @@ class LittleProfileFragment: Fragment() {
 
     private val littleProfileViewModel: LittleProfileViewModel by activityViewModels()
 
+    /**
+     * Overrides the onCreate method to allow the fragments to have an options menu and starts the
+     * queries
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         littleProfileViewModel.observedUserInstance = activity!!.intent.getSerializableExtra("observed_user") as User
@@ -41,10 +44,16 @@ class LittleProfileFragment: Fragment() {
         littleProfileViewModel.startQueryForPrizesClaimed()
     }
 
+    /**
+     * Inflates the little's profile
+     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_little_profile, container, false)
     }
 
+    /**
+     * Begin loading the littles's profile information
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadProfile()
@@ -53,6 +62,9 @@ class LittleProfileFragment: Fragment() {
         addPrizesClaimedToRecycler(view)
     }
 
+    /**
+     * Makes sure the query task is completed before continuing
+     */
     private fun addPrizesSetToRecycler(view: View) {
         if (littleProfileViewModel.hasLoadedPrizesSet()) {
             attachPrizesSetAdapter(view)
@@ -68,6 +80,9 @@ class LittleProfileFragment: Fragment() {
         }
     }
 
+    /**
+     * Makes sure the query task is completed before continuing
+     */
     private fun addPrizesClaimedToRecycler(view: View) {
         if (littleProfileViewModel.hasLoadedPrizesClaimed()) {
             attachPrizesClaimedAdapter(view)
@@ -101,6 +116,9 @@ class LittleProfileFragment: Fragment() {
         attachPrizesClaimedAdapter(view)
     }
 
+    /**
+     * Attaches the adapter to the prizes set recycler view and updates UI if it's empty
+     */
     private fun attachPrizesSetAdapter(view: View) {
         view.setPrizesRecyclerView.adapter = littleProfileViewModel.getPrizesSetAdapter()
         if (littleProfileViewModel.getPrizesSetAdapter().itemCount == 0) {
@@ -110,6 +128,9 @@ class LittleProfileFragment: Fragment() {
         }
     }
 
+    /**
+     * Attaches the adapter to the prizes claimed recycler view and updates UI if it's empty
+     */
     private fun attachPrizesClaimedAdapter(view: View) {
         view.claimedPrizesFromYouRecyclerView.adapter = littleProfileViewModel.getPrizesClaimedAdapter()
         if (littleProfileViewModel.getPrizesClaimedAdapter().itemCount == 0) {
@@ -140,7 +161,10 @@ class LittleProfileFragment: Fragment() {
             findNavController().navigate(R.id.action_littleProfileFragment_to_giveCoinsFragment, null)
         }
         remove_little_button.setOnClickListener {
-            littleProfileViewModel.removeLittleAndSendBack(context!!)
+            littleProfileViewModel.removeLittleAndSendBack()
+            Toast.makeText(context, "Removed " +
+                    "${littleProfileViewModel.observedUserInstance.displayName} as a little", Toast.LENGTH_SHORT).show()
+            (context as Activity).finish()
         }
         set_prize_button.setOnClickListener {
             val openGallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
@@ -200,6 +224,9 @@ class LittleProfileFragment: Fragment() {
         }
     }
 
+    /**
+     * Starts the process of saving the set prize to the firestore and storage
+     */
     private fun uploadSetPrize(prizeTitle: String, prizePrice: Int) {
         Toast.makeText(context!!, "Uploading prize...", Toast.LENGTH_SHORT).show()
         val prizeId = littleProfileViewModel.generateId()
@@ -211,6 +238,9 @@ class LittleProfileFragment: Fragment() {
         }
     }
 
+    /**
+     * Saves the recently set prize to the firestore
+     */
     private fun saveSetPrizeToFirestore(prize: Prize) {
         littleProfileViewModel.savePrizeInFireStore(prize).addOnCompleteListener {
             littleProfileViewModel.addSetPrizeToRecycler(prize)

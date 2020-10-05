@@ -1,6 +1,5 @@
 package com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.objects.Prize
@@ -104,7 +103,7 @@ class BigProfileViewModel: ViewModel() {
     }
 
     /**
-     * Removes the observed Big and navigates to the previous page
+     * Removes the observed Big
      */
     fun removeBigAndSendBack() {
         CurrentUser.bigToBeRemoved = observedUserInstance
