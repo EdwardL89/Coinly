@@ -25,9 +25,9 @@ class AllBigsFragment : Fragment() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
-        super.onCreate(savedInstanceState)
         allBigsFragmentViewModel = ViewModelProvider(this).get(AllBigsFragmentViewModel::class.java)
         allBigsFragmentViewModel.startQueryForAllBigs()
+        super.onCreate(savedInstanceState)
     }
 
     /**
@@ -53,7 +53,7 @@ class AllBigsFragment : Fragment() {
      */
     override fun setMenuVisibility(menuVisible: Boolean) {
         super.setMenuVisibility(menuVisible)
-        if (menuVisible) checkForRemovalOrAdditionOfBig()
+        if (menuVisible && this::allBigsFragmentViewModel.isInitialized) checkForRemovalOrAdditionOfBig()
     }
 
     /**

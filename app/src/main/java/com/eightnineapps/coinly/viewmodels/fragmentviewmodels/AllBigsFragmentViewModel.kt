@@ -45,8 +45,11 @@ class AllBigsFragmentViewModel: ViewModel() {
      * Removes a user from the recycler view
      */
     fun removeUser(user: User) {
-        allBigs.remove(allBigs.first { it.second == user.displayName })
-        recyclerAdapter?.notifyDataSetChanged()
+        val userToRemove = allBigs.firstOrNull { it.second == user.displayName }
+        if (userToRemove != null) {
+            allBigs.remove(userToRemove)
+            recyclerAdapter?.notifyDataSetChanged()
+        }
     }
 
     /**

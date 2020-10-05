@@ -45,8 +45,11 @@ class AllLittlesFragmentViewModel: ViewModel() {
      * Removes a user from the recycler view
      */
     fun removeUser(user: User) {
-        allLittles.remove(allLittles.first { it.second == user.displayName })
-        recyclerAdapter?.notifyDataSetChanged()
+        val userToRemove = allLittles.firstOrNull { it.second == user.displayName }
+        if (userToRemove != null) {
+            allLittles.remove(userToRemove)
+            recyclerAdapter?.notifyDataSetChanged()
+        }
     }
 
     /**

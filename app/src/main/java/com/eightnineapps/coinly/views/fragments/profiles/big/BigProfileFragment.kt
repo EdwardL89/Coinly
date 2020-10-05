@@ -14,6 +14,7 @@ import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.BigProfileViewModel
+import com.eightnineapps.coinly.views.activities.startup.HomeActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.fragment_big_profile.*
@@ -156,8 +157,15 @@ class BigProfileFragment: Fragment() {
             Toast.makeText(context, "Removed ${bigProfileViewModel.observedUserInstance.displayName} as a big",
                 Toast.LENGTH_SHORT).show()
             (context as Activity).finish()
+            redrawAllBigsPage()
         }
     }
 
-
+    /**
+     * Refreshes the all big's fragment by re-selecting it
+     */
+    private fun redrawAllBigsPage() {
+        HomeActivity.tabLayout.getTabAt(1)!!.select()
+        HomeActivity.tabLayout.getTabAt(0)!!.select()
+    }
 }

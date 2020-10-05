@@ -187,4 +187,5 @@ class LittleProfileViewModel: ViewModel() {
         Firestore.update(observedUserInstance, "numOfBigs", observedUserInstance.numOfBigs.toString())
         Firestore.removeBig(observedUserInstance.email!!, CurrentUser.getEmail()!!)
     }
+
 }

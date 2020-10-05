@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.AllLittlesFragmentViewModel
+import com.eightnineapps.coinly.views.activities.startup.HomeActivity.Companion.tabLayout
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.fragment_littles.view.*
@@ -48,11 +49,12 @@ class AllLittlesFragment : Fragment() {
     }
 
     /**
-     * Checks for changes to the members of the recyclerview
+     * Checks for changes to the members of the recyclerview for when the user swipes back to
+     * this tab in the tablayout
      */
     override fun setMenuVisibility(menuVisible: Boolean) {
         super.setMenuVisibility(menuVisible)
-        if (menuVisible) checkForRemovalOrAdditionOfLittle()
+        if (menuVisible && this::allLittlesFragmentViewModel.isInitialized) checkForRemovalOrAdditionOfLittle()
     }
 
     /**

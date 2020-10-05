@@ -19,6 +19,7 @@ import com.eightnineapps.coinly.classes.helpers.PrizeDialogCreator
 import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LittleProfileViewModel
+import com.eightnineapps.coinly.views.activities.startup.HomeActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.fragment_little_profile.*
@@ -162,11 +163,20 @@ class LittleProfileFragment: Fragment() {
             Toast.makeText(context, "Removed " +
                     "${littleProfileViewModel.observedUserInstance.displayName} as a little", Toast.LENGTH_SHORT).show()
             (context as Activity).finish()
+            redrawAllLittlesPage()
         }
         set_prize_button.setOnClickListener {
             val openGallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(openGallery, 1)
         }
+    }
+
+    /**
+     * Refreshes the all little's fragment by re-selecting it
+     */
+    private fun redrawAllLittlesPage() {
+        HomeActivity.tabLayout.getTabAt(0)!!.select()
+        HomeActivity.tabLayout.getTabAt(1)!!.select()
     }
 
     /**
