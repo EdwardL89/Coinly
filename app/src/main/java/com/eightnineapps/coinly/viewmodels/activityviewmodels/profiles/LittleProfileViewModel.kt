@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.helpers.ImageUploadHelper
+import com.eightnineapps.coinly.classes.helpers.PrizeDialogCreator
 import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.enums.PrizeTapLocation
@@ -20,6 +21,7 @@ import java.io.ByteArrayOutputStream
 
 class LittleProfileViewModel: ViewModel() {
 
+    lateinit var observedUserInstance: User
     private var hasLoadedPrizesSet = false
     private var hasLoadedPrizesClaimed = false
     private var prizesSetQuery: Task<QuerySnapshot>? = null
@@ -28,9 +30,8 @@ class LittleProfileViewModel: ViewModel() {
     private var prizesClaimedAdapter: PrizesRecyclerViewAdapter? = null
     private val allPrizesSet = mutableListOf<Prize>()
     private val allPrizesClaimed = mutableListOf<Prize>()
-    private var pictureOfNewPrizeSetByteData = ByteArrayOutputStream().toByteArray()
-    lateinit var observedUserInstance: User
     private val imageUploadHelper = ImageUploadHelper()
+    private var pictureOfNewPrizeSetByteData = ByteArrayOutputStream().toByteArray()
 
     /**
      * Returns the adapter of the prizes set recycler view

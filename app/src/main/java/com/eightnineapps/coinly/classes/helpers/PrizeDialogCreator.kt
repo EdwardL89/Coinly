@@ -3,6 +3,7 @@ package com.eightnineapps.coinly.classes.helpers
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.View
@@ -15,8 +16,11 @@ import kotlinx.android.synthetic.main.claim_prize_dialogue_layout.view.*
 import kotlinx.android.synthetic.main.prize_info_dialogue_layout.view.*
 import kotlinx.android.synthetic.main.prize_info_dialogue_layout.view.prize_info_name
 import kotlinx.android.synthetic.main.prize_list_view_layout.view.prize_picture
+import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.view.*
 
 class PrizeDialogCreator {
+
+    private var imageDataFromIntent: Intent? = null
 
     /**
      * Displays the dialog on the screen and sets its background and color
@@ -30,7 +34,7 @@ class PrizeDialogCreator {
     /**
      * Creates the alert dialogue
      */
-    fun createAlertDialog(prize: Prize, context: Context, layoutResource: Int): AlertDialog {
+    fun createAlertDialog(prize: Prize?, context: Context, layoutResource: Int): AlertDialog {
         val builder = AlertDialog.Builder(context)
         val dialogueView = createViewForAlertDialogue(prize, context, layoutResource)
         builder.setView(dialogueView)
@@ -41,11 +45,21 @@ class PrizeDialogCreator {
      * Creates the view to go in the Alert Dialog
      */
     @SuppressLint("InflateParams")
-    private fun createViewForAlertDialogue(prize: Prize, context: Context, layoutResource: Int): View {
+    private fun createViewForAlertDialogue(prize: Prize?, context: Context, layoutResource: Int): View {
         val dialogueView = (context as Activity).layoutInflater.inflate(layoutResource, null)
-        if (layoutResource == R.layout.prize_info_dialogue_layout) setPrizeContent(dialogueView, prize)
-        else setClaimPrizeContent(dialogueView, prize)
+        when (layoutResource) {
+            R.layout.prize_info_dialogue_layout -> setPrizeInfoContent(dialogueView, prize!!)
+            R.layout.set_new_prize_dialogue_layout -> setNewPrizeInfo(dialogueView)
+            else -> setClaimPrizeContent(dialogueView, prize!!)
+        }
         return dialogueView
+    }
+
+    /**
+     * Lets the user enter the new prize's title and price
+     */
+    private fun setNewPrizeInfo(dialogView: View) {
+        Glide.with(dialogView.context.applicationContext).load(imageDataFromIntent!!.data).into(dialogView.new_prize_picture)
     }
 
     /**
@@ -60,7 +74,7 @@ class PrizeDialogCreator {
     /**
      * Sets the content of the set prize dialogue when it's tapped from the recycler view
      */
-    private fun setPrizeContent(dialogView: View, prize: Prize) {
+    private fun setPrizeInfoContent(dialogView: View, prize: Prize) {
         dialogView.prize_info_name.text = prize.name
         dialogView.prize_info_price.text = prize.price.toString()
         Glide.with(dialogView.context.applicationContext).load(prize.uri).into(dialogView.prize_picture)
@@ -77,4 +91,10 @@ class PrizeDialogCreator {
         return layoutParams
     }
 
+    /**
+     * Saves the data of the image selected from the gallery intent for setting a new prize
+     */
+    fun setImageDataForDialog(data: Intent?) {
+        imageDataFromIntent = data
+    }
 }

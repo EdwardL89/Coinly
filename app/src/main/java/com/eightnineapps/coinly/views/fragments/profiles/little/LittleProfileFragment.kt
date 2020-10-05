@@ -2,16 +2,12 @@ package com.eightnineapps.coinly.views.fragments.profiles.little
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -19,7 +15,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
+import com.eightnineapps.coinly.classes.helpers.PrizeDialogCreator
 import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LittleProfileViewModel
@@ -27,11 +23,12 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.fragment_little_profile.*
 import kotlinx.android.synthetic.main.fragment_little_profile.view.*
-import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.view.*
+import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.*
 
 class LittleProfileFragment: Fragment() {
 
     private val littleProfileViewModel: LittleProfileViewModel by activityViewModels()
+    private val dialogCreator = PrizeDialogCreator()
 
     /**
      * Overrides the onCreate method to allow the fragments to have an options menu and starts the
@@ -179,7 +176,7 @@ class LittleProfileFragment: Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (data != null) {
             littleProfileViewModel.handleGallerySelectionCompletion(requestCode, resultCode, data, context!!)
-            openDialogue(context!!, context!!.applicationContext, data)
+            openDialogue(data)
         }
     }
 
@@ -187,41 +184,46 @@ class LittleProfileFragment: Fragment() {
      * Open a dialogue for the user to set the title and price of the new prize
      */
     @SuppressLint("InflateParams")
-    private fun openDialogue(context: Context, appContext: Context, data: Intent?) {
-        val builder = AlertDialog.Builder(context)
-        val view = (context as Activity).layoutInflater.inflate(R.layout.set_new_prize_dialogue_layout, null)
-        Glide.with(appContext).load(data!!.data).into(view.new_prize_picture)
-        builder.setView(view)
-        val dialog = builder.create()
-        setUpDialogButtons(view, dialog)
-        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.show()
-        dialog.window!!.attributes = setDialogDimensions(dialog)
+    private fun openDialogue(data: Intent?) {
+        dialogCreator.setImageDataForDialog(data)
+        val dialog = dialogCreator.createAlertDialog(null, context!!, R.layout.set_new_prize_dialogue_layout)
+        dialogCreator.showDialog(dialog)
+        setUpDialogButtons(dialog)
     }
 
     /**
      * Sets the actions the buttons in the set new prize dialog will do
      */
-    private fun setUpDialogButtons(view: View, dialog: AlertDialog) {
-        view.cancel_button.setOnClickListener {
+    private fun setUpDialogButtons(dialog: AlertDialog) {
+        dialog.cancel_set_new_prize_button.setOnClickListener {
             dialog.cancel()
         }
-        view.set_button.setOnClickListener {
-            val title = view.prize_title.text.toString()
-            val price = view.prize_price.text.toString()
-            if (hasReachedSetPrizeLimit()) {
-                Toast.makeText(context!!, "You've reached the prizes set limit!", Toast.LENGTH_SHORT).show()
-                dialog.dismiss()
-            } else if (title == "" || price == "") {
-                Toast.makeText(context!!, "Missing Fields", Toast.LENGTH_SHORT).show()
-            } else if (price != "" && price[0] == '0') {
-                Toast.makeText(context!!, "Price cannot be 0", Toast.LENGTH_SHORT).show()
-            } else {
+        dialog.set_button.setOnClickListener {
+            val title = dialog.prize_title.text.toString()
+            val price = dialog.prize_price.text.toString()
+            if (verifyPrizeBeforeSetting(title, price, dialog)) {
                 no_prizes_set_image.visibility = View.INVISIBLE
                 uploadSetPrize(title, Integer.parseInt(price))
                 dialog.dismiss()
             }
         }
+    }
+
+    /**
+     * Verifies that the info entered by the user for the new set prize is valid
+     */
+    private fun verifyPrizeBeforeSetting(title: String, price: String, dialog: AlertDialog): Boolean {
+        if (hasReachedSetPrizeLimit()) {
+            Toast.makeText(context!!, "You've reached the prizes set limit!", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+        } else if (title == "" || price == "") {
+            Toast.makeText(context!!, "Missing Fields", Toast.LENGTH_SHORT).show()
+        } else if (price != "" && price[0] == '0') {
+            Toast.makeText(context!!, "Price cannot be 0", Toast.LENGTH_SHORT).show()
+        } else {
+            return true
+        }
+        return false
     }
 
     /**
@@ -253,18 +255,6 @@ class LittleProfileFragment: Fragment() {
      * can set.
      */
     private fun hasReachedSetPrizeLimit(): Boolean {
-        return (setPrizesRecyclerView.adapter as PrizesRecyclerViewAdapter).itemCount == 10
+        return setPrizesRecyclerView.adapter!!.itemCount == 10
     }
-
-    /**
-     * Sets the dimensions of the set new prize dialogue
-     */
-    private fun setDialogDimensions(dialog: AlertDialog): WindowManager.LayoutParams {
-        val layoutParams = WindowManager.LayoutParams()
-        layoutParams.copyFrom(dialog.window!!.attributes)
-        layoutParams.width = 900
-        layoutParams.height = 1200
-        return layoutParams
-    }
-
 }
