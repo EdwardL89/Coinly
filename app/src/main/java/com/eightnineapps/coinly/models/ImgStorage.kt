@@ -33,6 +33,10 @@ object ImgStorage : Repository<ByteArray, Uri, Task<Uri>, UploadTask> {
         return imageStorage.reference.child(path).delete()
     }
 
+    fun deleteSetPrizes(prizeIds: MutableList<String>, path: String) {
+        for (ids in prizeIds) delete(path + ids)
+    }
+
     fun readImage(path: String): Task<Uri> {
         return imageStorage.reference.child(path).downloadUrl
     }

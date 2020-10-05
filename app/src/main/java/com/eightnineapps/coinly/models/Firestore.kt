@@ -59,11 +59,14 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
     }
 
     fun removeBig(littleEmail: String, bigEmail: String) {
+        val prizesToDeleteFromStorage = mutableListOf<String>()
         database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).collection("Prizes").get().addOnSuccessListener {
             for (document in it) { //Max of 10 prizes can be set
+                prizesToDeleteFromStorage.add(document["id"].toString())
                 document.reference.delete()
             }
             database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).delete()
+            ImgStorage.deleteSetPrizes(prizesToDeleteFromStorage, "set_prizes/$bigEmail/$littleEmail/")
         }
     }
 

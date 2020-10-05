@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.helpers.ImageUploadHelper
-import com.eightnineapps.coinly.classes.helpers.PrizeDialogCreator
 import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.enums.PrizeTapLocation
@@ -145,7 +144,7 @@ class LittleProfileViewModel: ViewModel() {
      * Generates a path to save a prize in based on the prize Id
      */
     fun generatePrizePath(prizeId: String): String {
-        return "set_prizes/${CurrentUser.getId()}/${observedUserInstance.id}/$prizeId"
+        return "set_prizes/${CurrentUser.getEmail()}/${observedUserInstance.email}/$prizeId"
     }
 
     /**
