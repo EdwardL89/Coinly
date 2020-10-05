@@ -68,15 +68,15 @@ class LittleProfileViewModel: ViewModel() {
     /**
      * Launches the query to get the prizes set
      */
-    fun startQueryForPrizesSet(): Task<QuerySnapshot> {
-        return Firestore.getPrizesSet(observedUserInstance.email!!, currentUserInstance!!.email!!).get()
+    fun startQueryForPrizesSet() {
+        prizesSetQuery = Firestore.getPrizesSet(observedUserInstance.email!!, CurrentUser.getEmail()!!).get()
     }
 
     /**
      * Launches the query to get the prizes claimed
      */
-    fun startQueryForPrizesClaimed(): Task<QuerySnapshot> {
-        return Firestore.getPrizesClaimed(observedUserInstance.email!!, currentUserInstance!!.email!!).get()
+    fun startQueryForPrizesClaimed() {
+        prizesClaimedQuery = Firestore.getPrizesClaimed(observedUserInstance.email!!, CurrentUser.getEmail()!!).get()
     }
 
     /**
@@ -144,6 +144,10 @@ class LittleProfileViewModel: ViewModel() {
         }
     }
 
+    fun addSetPrizeToRecycler(prize: Prize) {
+        prizesSetAdapter!!.addItem(prize)
+    }
+
     fun savePrizeInFireStore(prize: Prize): Task<Void> {
         return Firestore.setNewPrize(observedUserInstance.email!!, CurrentUser.getEmail()!!, prize)
     }
@@ -151,7 +155,7 @@ class LittleProfileViewModel: ViewModel() {
     fun generateId() = imageUploadHelper.generateId()
 
     fun generatePrizePath(prizeId: String): String {
-        return "set_prizes/${currentUserInstance!!.id}/${observedUserInstance.id}/$prizeId"
+        return "set_prizes/${CurrentUser.getId()}/${observedUserInstance.id}/$prizeId"
     }
 
     fun insertPrizeImageToStorage(prizePath: String): UploadTask {

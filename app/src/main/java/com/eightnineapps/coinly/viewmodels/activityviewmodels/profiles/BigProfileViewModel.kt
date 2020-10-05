@@ -1,5 +1,6 @@
 package com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.objects.Prize
@@ -71,15 +72,15 @@ class BigProfileViewModel: ViewModel() {
     /**
      * Launches the query to get the prizes set
      */
-    fun startQueryForPrizesSet(): Task<QuerySnapshot> {
-        return Firestore.getPrizesSet(CurrentUser.getEmail()!!, observedUserInstance.email!!).get()
+    fun startQueryForPrizesSet() {
+        prizesSetQuery = Firestore.getPrizesSet(CurrentUser.getEmail()!!, observedUserInstance.email!!).get()
     }
 
     /**
      * Launches the query to get the prizes claimed
      */
-    fun startQueryForClaimedPrizes(): Task<QuerySnapshot> {
-        return Firestore.getPrizesClaimed(CurrentUser.getEmail()!!, observedUserInstance.email!!).get()
+    fun startQueryForClaimedPrizes() {
+        prizesClaimedQuery = Firestore.getPrizesClaimed(CurrentUser.getEmail()!!, observedUserInstance.email!!).get()
     }
 
     /**

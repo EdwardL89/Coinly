@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -103,18 +104,18 @@ class LittleProfileFragment: Fragment() {
     private fun attachPrizesSetAdapter(view: View) {
         view.setPrizesRecyclerView.adapter = littleProfileViewModel.getPrizesSetAdapter()
         if (littleProfileViewModel.getPrizesSetAdapter().itemCount == 0) {
-            view.no_prizes_set_image.visibility = View.INVISIBLE
-        } else {
             view.no_prizes_set_image.visibility = View.VISIBLE
+        } else {
+            view.no_prizes_set_image.visibility = View.INVISIBLE
         }
     }
 
     private fun attachPrizesClaimedAdapter(view: View) {
         view.claimedPrizesFromYouRecyclerView.adapter = littleProfileViewModel.getPrizesClaimedAdapter()
         if (littleProfileViewModel.getPrizesClaimedAdapter().itemCount == 0) {
-            view.no_prizes_claimed_from_you_image.visibility = View.INVISIBLE
-        } else {
             view.no_prizes_claimed_from_you_image.visibility = View.VISIBLE
+        } else {
+            view.no_prizes_claimed_from_you_image.visibility = View.INVISIBLE
         }
     }
 
@@ -192,6 +193,7 @@ class LittleProfileFragment: Fragment() {
             } else if (price != "" && price[0] == '0') {
                 Toast.makeText(context!!, "Price cannot be 0", Toast.LENGTH_SHORT).show()
             } else {
+                no_prizes_set_image.visibility = View.INVISIBLE
                 uploadSetPrize(title, Integer.parseInt(price))
                 dialog.dismiss()
             }
@@ -199,18 +201,19 @@ class LittleProfileFragment: Fragment() {
     }
 
     private fun uploadSetPrize(prizeTitle: String, prizePrice: Int) {
+        Toast.makeText(context!!, "Uploading prize...", Toast.LENGTH_SHORT).show()
         val prizeId = littleProfileViewModel.generateId()
         val prizePath = littleProfileViewModel.generatePrizePath(prizeId)
         littleProfileViewModel.insertPrizeImageToStorage(prizePath).addOnCompleteListener {
             littleProfileViewModel.downloadImageUri(prizePath).addOnCompleteListener {
-                uri -> saveSetPrizeToFirestore(Prize(prizeTitle, prizePrice, uri.toString(), prizeId))
+                uri -> saveSetPrizeToFirestore(Prize(prizeTitle, prizePrice, uri.result!!.toString(), prizeId))
             }
         }
     }
 
     private fun saveSetPrizeToFirestore(prize: Prize) {
-        Toast.makeText(context!!, "Uploading prize...", Toast.LENGTH_SHORT).show()
         littleProfileViewModel.savePrizeInFireStore(prize).addOnCompleteListener {
+            littleProfileViewModel.addSetPrizeToRecycler(prize)
             Toast.makeText(context, "Prize Set!", Toast.LENGTH_SHORT).show()
         }
     }

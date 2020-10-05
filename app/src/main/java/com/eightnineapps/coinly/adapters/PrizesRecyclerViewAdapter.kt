@@ -2,6 +2,7 @@ package com.eightnineapps.coinly.adapters
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,11 +19,11 @@ import com.eightnineapps.coinly.enums.PrizeTapLocation
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.models.ImgStorage
-import kotlinx.android.synthetic.main.claim_prize_dialogue_layout.view.*
+import kotlinx.android.synthetic.main.claim_prize_dialogue_layout.*
 import kotlinx.android.synthetic.main.fragment_big_profile.*
 import kotlinx.android.synthetic.main.fragment_little_profile.*
-import kotlinx.android.synthetic.main.prize_list_view_layout.view.prize_picture
-import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.view.*
+import kotlinx.android.synthetic.main.prize_info_dialogue_layout.*
+import kotlinx.android.synthetic.main.prize_list_view_layout.view.*
 
 class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTapLocation, _observedUser: User): RecyclerView.Adapter<PrizesRecyclerViewAdapter.ViewHolder>() {
 
@@ -48,6 +49,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
          */
         override fun onClick(v: View?) {
             val selectedPrize = prizeList[recyclerView!!.getChildLayoutPosition(v!!)]
+            Log.d("INFO", prizeTapLocation.toString())
             when (prizeTapLocation) {
                 PrizeTapLocation.BIG_PRIZES_SET -> openDialogueToClaimPrize(selectedPrize, v)
                 else -> openDialogueToShowPrizeInfo(selectedPrize, v)
@@ -58,19 +60,19 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
          * Open a dialogue to show the prize title and price, with no other functionality
          */
         private fun openDialogueToShowPrizeInfo(prize: Prize, view: View) {
-            val dialog = dialogCreator.createAlertDialog(prize, view, R.layout.prize_info_dialogue_layout)
-            if (prizeTapLocation == PrizeTapLocation.LITTLE_PRIZES_SET) setUpButtonForDeletion(view, prize.id, dialog)
-            else view.cancel_button.setOnClickListener { dialog.cancel() }
+            val dialog = dialogCreator.createAlertDialog(prize, view.context, R.layout.prize_info_dialogue_layout)
             dialogCreator.showDialog(dialog)
+            if (prizeTapLocation == PrizeTapLocation.LITTLE_PRIZES_SET) setUpButtonForDeletion(prize.id, dialog)
+            else dialog.cancel_button.setOnClickListener { dialog.cancel() }
         }
 
         /**
          * Sets up the negative button of the dialog to delete the selected set prize
          */
-        private fun setUpButtonForDeletion(view: View, prizeId: String, dialog: AlertDialog) {
-            view.cancel_button.text = context.getString(R.string.delete)
-            view.cancel_button.setOnClickListener {
-                removeItem(prizeId, view.context)
+        private fun setUpButtonForDeletion(prizeId: String, dialog: AlertDialog) {
+            dialog.cancel_button.text = context.getString(R.string.delete)
+            dialog.cancel_button.setOnClickListener {
+                removeItem(prizeId, context)
                 deleteSetPrize(prizeId)
                 dialog.cancel()
             }
@@ -90,17 +92,17 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
          * Open a dialogue for the user to set the title and price of the new prize
          */
         private fun openDialogueToClaimPrize(prize: Prize, view: View) {
-            val dialog = dialogCreator.createAlertDialog(prize, view, R.layout.claim_prize_dialogue_layout)
-            setUpDialogButtons(view, dialog, prize)
+            val dialog = dialogCreator.createAlertDialog(prize, view.context, R.layout.claim_prize_dialogue_layout)
             dialogCreator.showDialog(dialog)
+            setUpDialogButtons(dialog, prize)
         }
 
         /**
          * Sets the actions the buttons in the set new prize dialog will do
          */
-        private fun setUpDialogButtons(view: View, dialog: AlertDialog, prize: Prize) {
-            view.claim_button.setOnClickListener { setupClaimButton(prize, dialog) }
-            view.cancel_claim_button.setOnClickListener { dialog.cancel() }
+        private fun setUpDialogButtons(dialog: AlertDialog, prize: Prize) {
+            dialog.claim_button.setOnClickListener { setupClaimButton(prize, dialog) }
+            dialog.cancel_claim_button.setOnClickListener { dialog.cancel() }
         }
 
         /**
@@ -235,7 +237,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
     private fun updateUIForNoPrizesSet(context: Context) {
         if (prizeList.size == 0 && prizeTapLocation == PrizeTapLocation.LITTLE_PRIZES_SET) {
             (context as Activity).no_prizes_set_image.visibility = View.VISIBLE
-        } else {
+        } else if (prizeList.size == 0) {
             (context as Activity).no_prizes_set_by_big_image.visibility = View.VISIBLE
         }
     }
