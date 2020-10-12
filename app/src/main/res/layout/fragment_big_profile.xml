@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,12 +12,12 @@
     android:paddingBottom="10dp"
     android:id="@+id/profile_background"
     android:clipToPadding="false">
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/user_profile_body"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingEnd="5dp"
+            android:padding="20dp"
             android:background="@drawable/my_profile_rounded_background"
             tools:context=".views.activities.profiles.CreateProfileActivity"
             tools:ignore="RtlSymmetry,UselessParent"
@@ -27,9 +27,12 @@
                 android:id="@+id/user_profile_cardView"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_margin="20dp"
                 android:layout_gravity="center"
-                app:cardCornerRadius="100dp">
+                app:cardCornerRadius="100dp"
+                android:layout_marginEnd="5dp"
+                app:layout_constraintStart_toStartOf="@+id/user_profile_body"
+                app:layout_constraintTop_toTopOf="@id/user_profile_body"
+                app:layout_constraintEnd_toStartOf="@id/top_stats">
 
                 <ImageView
                     android:id="@+id/user_profile_picture"
@@ -39,260 +42,267 @@
                     android:scaleType="centerCrop" />
             </androidx.cardview.widget.CardView>
 
+            <RelativeLayout
+                android:id="@+id/top_stats"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/user_profile_cardView"
+                app:layout_constraintTop_toTopOf="@id/user_profile_cardView"
+                app:layout_constraintBottom_toBottomOf="@id/user_profile_cardView"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body">
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true">
+                    <TextView
+                        android:id="@+id/coin_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/zero"
+                        android:fontFamily="sans-serif"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/coin_count_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/coins_count_text"
+                        android:fontFamily="sans-serif"
+                        android:textSize="15sp"
+                        android:layout_below="@id/coin_count"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:id="@+id/bigs_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/zero"
+                        android:layout_alignTop="@id/coin_count"
+                        android:fontFamily="sans-serif"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:layout_alignStart="@+id/bigs_count_title"
+                        android:layout_toEndOf="@id/coin_count"/>
+
+                    <TextView
+                        android:id="@+id/bigs_count_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bigs"
+                        android:fontFamily="sans-serif"
+                        android:textSize="15sp"
+                        android:layout_below="@id/coin_count"
+                        android:textColor="@color/black"
+                        android:layout_marginStart="30dp"
+                        android:layout_toEndOf="@id/coin_count_title"/>
+
+                    <TextView
+                        android:id="@+id/littles_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/zero"
+                        android:layout_alignTop="@id/bigs_count"
+                        android:fontFamily="sans-serif"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        android:layout_alignStart="@+id/littles_count_title"
+                        android:layout_toEndOf="@id/bigs_count"/>
+
+                    <TextView
+                        android:id="@+id/littles_count_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/littles_count_titles"
+                        android:fontFamily="sans-serif"
+                        android:textSize="15sp"
+                        android:layout_below="@id/coin_count"
+                        android:textColor="@color/black"
+                        android:layout_marginStart="30dp"
+                        android:layout_toEndOf="@id/bigs_count_title"/>
+
+                    <Button
+                        android:id="@+id/remove_big_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:background="@drawable/rounded_button_green"
+                        android:layout_marginTop="2dp"
+                        android:layout_below="@+id/coin_count_title"
+                        android:layout_alignStart="@+id/coin_count"
+                        android:layout_alignEnd="@+id/littles_count_title"
+                        android:textSize="12sp"
+                        android:text="@string/remove_big"/>
+                </RelativeLayout>
+
+            </RelativeLayout>
+
             <TextView
                 android:id="@+id/my_display_name_textView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/user_profile_cardView"
-                android:layout_below="@+id/user_profile_cardView"
-                android:layout_gravity="center"
                 android:text="@string/display_name"
                 android:textColor="@color/black"
                 android:textSize="15sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                app:layout_constraintTop_toBottomOf="@id/user_profile_cardView"
+                app:layout_constraintStart_toStartOf="@id/user_profile_body"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
 
             <TextView
                 android:id="@+id/bio_text_view"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="15dp"
                 android:text="@string/bio"
                 android:textColor="@color/black"
                 android:fontFamily="sans-serif-thin"
-                android:layout_alignStart="@id/my_display_name_textView"
-                android:layout_below="@id/my_display_name_textView"/>
+                app:layout_constraintTop_toBottomOf="@id/my_display_name_textView"
+                app:layout_constraintStart_toStartOf="@id/my_display_name_textView"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
 
             <TextView
                 android:id="@+id/actions_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/actions"
-                android:layout_below="@id/bio_text_view"
-                android:layout_alignStart="@id/bio_text_view"
                 android:textColor="@color/black"
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif"
-                android:textSize="15sp"/>
+                android:textSize="15sp"
+                app:layout_constraintTop_toBottomOf="@id/bio_text_view"
+                app:layout_constraintStart_toStartOf="@id/bio_text_view"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
 
-            <LinearLayout
-                android:id="@+id/action_buttons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/actions_title"
-                android:layout_alignStart="@id/actions_title"
-                android:paddingBottom="10dp"
-                android:clipToPadding="false"
-                android:layout_alignEnd="@id/bio_text_view">
-                <Button
-                    android:id="@+id/request_coins_button"
-                    android:layout_width="0dp"
-                    android:layout_height="25dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="5dp"
-                    android:background="@drawable/rounded_button_green"
-                    android:layout_marginTop="2dp"
-                    android:textSize="12sp"
-                    android:text="@string/request_coins"
-                    tools:ignore="ButtonStyle" />
-            </LinearLayout>
+            <Button
+                android:id="@+id/request_coins_button"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:background="@drawable/rounded_button_green"
+                android:layout_marginTop="5dp"
+                android:textSize="12sp"
+                android:text="@string/request_coins"
+                tools:ignore="ButtonStyle"
+                app:layout_constraintTop_toBottomOf="@id/actions_title"
+                app:layout_constraintStart_toStartOf="@id/actions_title"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
 
             <TextView
                 android:id="@+id/prizes_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/prizes"
-                android:layout_below="@id/action_buttons"
-                android:layout_alignStart="@id/bio_text_view"
                 android:textColor="@color/black"
                 android:fontFamily="sans-serif"
-                android:textSize="15sp"/>
+                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/request_coins_button"
+                app:layout_constraintStart_toStartOf="@id/request_coins_button"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/prizesToClaimRecyclerView"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_alignStart="@id/prizes_title"
-                android:layout_above="@id/prizes_claimed_title"
-                android:layout_below="@id/prizes_title"/>
+                android:layout_width="0dp"
+                android:layout_height="115dp"
+                android:layout_marginTop="5dp"
+                android:scrollbars="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/prizes_title"
+                app:layout_constraintStart_toStartOf="@id/prizes_title"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
 
             <ImageView
                 android:id="@+id/no_prizes_set_by_big_image"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:src="@drawable/no_prizes_set_icon"
                 android:alpha=".7"
-                android:layout_alignStart="@id/prizes_title"
-                android:layout_below="@id/prizes_title"
+                app:layout_constraintTop_toBottomOf="@id/prizes_title"
+                app:layout_constraintStart_toStartOf="@id/prizes_title"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"
                 android:contentDescription="@string/shown_when_there_are_no_prizes" />
 
             <TextView
                 android:id="@+id/prizes_claimed_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/prizes_you_ve_claimed"
-                android:layout_below="@id/no_prizes_set_by_big_image"
-                android:layout_alignStart="@id/bio_text_view"
                 android:textColor="@color/black"
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif"
-                android:textSize="15sp"/>
+                android:textSize="15sp"
+                app:layout_constraintTop_toBottomOf="@id/prizesToClaimRecyclerView"
+                app:layout_constraintStart_toStartOf="@id/prizesToClaimRecyclerView"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/prizesYouveClaimedRecyclerView"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_alignStart="@id/prizes_claimed_title"
-                android:layout_above="@id/your_spending_power"
-                android:layout_below="@id/prizes_claimed_title"
-                tools:ignore="NotSibling" />
+                android:layout_width="0dp"
+                android:layout_height="115dp"
+                android:layout_marginTop="5dp"
+                android:scrollbars="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/prizes_claimed_title"
+                app:layout_constraintStart_toStartOf="@id/prizes_claimed_title"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
 
             <ImageView
                 android:id="@+id/no_prizes_claimed_image"
                 android:layout_width="115dp"
                 android:layout_height="115dp"
                 android:src="@drawable/no_prizes_icon"
-                android:layout_marginTop ="10dp"
+                android:layout_marginTop ="5dp"
                 android:alpha=".7"
-                android:layout_alignStart="@id/prizes_claimed_title"
-                android:layout_below="@id/prizes_claimed_title"
+                app:layout_constraintTop_toBottomOf="@id/prizes_claimed_title"
+                app:layout_constraintStart_toStartOf="@id/prizes_claimed_title"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"
                 android:contentDescription="@string/shown_when_there_are_no_prizes" />
 
             <TextView
                 android:id="@+id/your_spending_power"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/your_spending_power"
-                android:layout_below="@id/no_prizes_claimed_image"
-                android:layout_alignStart="@id/bio_text_view"
                 android:textColor="@color/black"
-                android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif"
-                android:textSize="15sp"/>
+                android:textSize="15sp"
+                app:layout_constraintTop_toBottomOf="@id/prizesYouveClaimedRecyclerView"
+                app:layout_constraintStart_toStartOf="@id/prizesYouveClaimedRecyclerView"
+                />
 
             <TextView
                 android:id="@+id/spending_power"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/zero"
-                android:layout_below="@id/no_prizes_claimed_image"
-                android:layout_toEndOf="@id/your_spending_power"
                 android:textColor="@color/black"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"
                 android:fontFamily="sans-serif"
                 android:textStyle="bold"
-                android:textSize="15sp"/>
+                android:textSize="15sp"
+                android:layout_marginStart="5dp"
+                app:layout_constraintStart_toEndOf="@id/your_spending_power"
+                app:layout_constraintTop_toTopOf="@id/your_spending_power"
+                app:layout_constraintBottom_toBottomOf="@id/your_spending_power"/>
 
             <TextView
                 android:id="@+id/coin_after_spending_power"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/coins"
-                android:layout_below="@id/no_prizes_claimed_image"
-                android:layout_toEndOf="@id/spending_power"
                 android:textColor="@color/black"
-                android:layout_marginTop="10dp"
                 android:layout_marginStart="5dp"
                 android:fontFamily="sans-serif"
-                android:textSize="15sp"/>
+                android:textSize="15sp"
+                app:layout_constraintStart_toEndOf="@id/spending_power"
+                app:layout_constraintTop_toTopOf="@id/spending_power"
+                app:layout_constraintBottom_toBottomOf="@id/spending_power"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/user_profile_cardView"
-                android:layout_alignBottom="@+id/user_profile_cardView"
-                android:layout_toEndOf="@id/user_profile_cardView">
-                <TextView
-                    android:id="@+id/coin_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/zero"
-                    android:fontFamily="sans-serif"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
-
-                <TextView
-                    android:id="@+id/coin_count_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/coins_count_text"
-                    android:fontFamily="sans-serif"
-                    android:textSize="15sp"
-                    android:layout_below="@id/coin_count"
-                    android:textColor="@color/black"/>
-
-                <TextView
-                    android:id="@+id/bigs_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/zero"
-                    android:layout_alignTop="@id/coin_count"
-                    android:fontFamily="sans-serif"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_alignStart="@+id/bigs_count_title"
-                    android:layout_toEndOf="@id/coin_count"/>
-
-                <TextView
-                    android:id="@+id/bigs_count_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bigs"
-                    android:fontFamily="sans-serif"
-                    android:textSize="15sp"
-                    android:layout_below="@id/coin_count"
-                    android:textColor="@color/black"
-                    android:layout_marginStart="30dp"
-                    android:layout_toEndOf="@id/coin_count_title"/>
-
-                <TextView
-                    android:id="@+id/littles_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/zero"
-                    android:layout_alignTop="@id/bigs_count"
-                    android:fontFamily="sans-serif"
-                    android:textStyle="bold"
-                    android:textSize="15sp"
-                    android:textColor="@color/black"
-                    android:layout_alignStart="@+id/littles_count_title"
-                    android:layout_toEndOf="@id/bigs_count"/>
-
-                <TextView
-                    android:id="@+id/littles_count_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/littles_count_titles"
-                    android:fontFamily="sans-serif"
-                    android:textSize="15sp"
-                    android:layout_below="@id/coin_count"
-                    android:textColor="@color/black"
-                    android:layout_marginStart="30dp"
-                    android:layout_toEndOf="@id/bigs_count_title"/>
-
-                <Button
-                    android:id="@+id/remove_big_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="25dp"
-                    android:background="@drawable/rounded_button_green"
-                    android:layout_marginTop="2dp"
-                    android:layout_below="@+id/coin_count_title"
-                    android:layout_alignStart="@+id/coin_count"
-                    android:layout_alignEnd="@+id/littles_count_title"
-                    android:textSize="12sp"
-                    android:text="@string/remove_big"/>
-
-            </RelativeLayout>
-        </RelativeLayout>
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>

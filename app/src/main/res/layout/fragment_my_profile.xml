@@ -9,7 +9,7 @@
             name="currentUser"
             type="com.eightnineapps.coinly.models.CurrentUser"/>
     </data>
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="15dp"
@@ -17,296 +17,314 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:clipToPadding="false">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingEnd="5dp"
-        android:background="@drawable/my_profile_rounded_background"
-        tools:context=".views.activities.profiles.CreateProfileActivity"
-        tools:ignore="RtlSymmetry,UselessParent"
-        android:clipToPadding="false">
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="20dp"
-            android:layout_gravity="center"
-            app:cardCornerRadius="100dp">
-
-            <ImageView
-                android:id="@+id/my_profile_picture"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/user_profile_picture"
-                android:scaleType="centerCrop" />
-        </androidx.cardview.widget.CardView>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/cardView"
-            android:layout_alignBottom="@+id/cardView"
-            android:layout_toEndOf="@id/cardView">
-            <TextView
-                android:id="@+id/coin_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf(currentUser.coins.intValue()), default = @string/zero}"
-                android:fontFamily="sans-serif"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"/>
-
-            <TextView
-                android:id="@+id/coin_count_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/coins_count_text"
-                android:fontFamily="sans-serif"
-                android:textSize="15sp"
-                android:layout_below="@id/coin_count"
-                android:textColor="@color/black"/>
-
-            <TextView
-                android:id="@+id/bigs_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf(currentUser.numOfBigs.intValue()), default = @string/zero}"
-                android:layout_alignTop="@id/coin_count"
-                android:fontFamily="sans-serif"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:layout_alignStart="@+id/bigs_count_title"
-                android:layout_toEndOf="@id/coin_count"/>
-
-            <TextView
-                android:id="@+id/bigs_count_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/bigs"
-                android:fontFamily="sans-serif"
-                android:textSize="15sp"
-                android:layout_below="@id/coin_count"
-                android:textColor="@color/black"
-                android:layout_marginStart="30dp"
-                android:layout_toEndOf="@id/coin_count_title"/>
-
-            <TextView
-                android:id="@+id/littles_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf(currentUser.numOfLittles.intValue()), default = @string/zero}"
-                android:layout_alignTop="@id/bigs_count"
-                android:fontFamily="sans-serif"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:textColor="@color/black"
-                android:layout_alignStart="@+id/littles_count_title"
-                android:layout_toEndOf="@id/bigs_count"/>
-
-            <TextView
-                android:id="@+id/littles_count_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/littles_count_titles"
-                android:fontFamily="sans-serif"
-                android:textSize="15sp"
-                android:layout_below="@id/coin_count"
-                android:textColor="@color/black"
-                android:layout_marginStart="30dp"
-                android:layout_toEndOf="@id/bigs_count_title"/>
-
-            <Button
-                android:id="@+id/edit_profile_button"
-                android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                android:layout_marginTop="5dp"
-                android:textSize="12sp"
-                android:text="@string/edit_profile_button_text"
-                android:background="@drawable/rounded_button_green"
-                android:layout_below="@id/coin_count_title"
-                android:layout_alignStart="@id/coin_count_title"
-                android:layout_alignEnd="@id/littles_count_title"/>
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/my_display_name_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/cardView"
-            android:layout_below="@+id/cardView"
-            android:layout_gravity="center"
-            android:text="@{currentUser.displayName.toString(), default = @string/display_name}"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/bio_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{currentUser.bio.toString(), default = @string/bio}"
-            android:textColor="@color/black"
-            android:fontFamily="sans-serif-thin"
-            android:layout_alignStart="@id/my_display_name_textView"
-            android:layout_below="@id/my_display_name_textView"/>
-
-        <TextView
-            android:id="@+id/notifications_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/notifications_title"
-            android:layout_below="@id/bio_text_view"
-            android:layout_alignStart="@id/bio_text_view"
-            android:textColor="@color/black"
-            android:layout_marginTop="10dp"
-            android:fontFamily="sans-serif"
-            android:textSize="15sp"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginTop="10dp"
-            android:id="@+id/notificationsRecyclerView"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/notifications_title"
-            android:layout_above="@id/stats_title"
-            android:layout_alignStart="@id/notifications_title"
-            tools:context=".views.fragments.tablayout.AllBigsFragment"/>
-
-        <ImageView
-            android:id="@+id/no_notifications_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/up_to_date_icon"
-            android:alpha=".7"
-            android:layout_alignStart="@id/notifications_title"
-            android:layout_below="@id/notifications_title"
-            android:layout_marginTop ="10dp"
-            android:contentDescription="@string/shown_when_there_are_no_notifications" />
-
-        <TextView
-            android:id="@+id/stats_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/stats_title"
-            android:layout_below="@id/no_notifications_image"
-            android:layout_alignStart="@id/bio_text_view"
-            android:textColor="@color/black"
-            android:layout_marginTop="10dp"
-            android:fontFamily="sans-serif"
-            android:textSize="15sp"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/profile_body"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_alignStart="@+id/stats_title"
-            android:layout_alignEnd="@id/notificationsRecyclerView"
-            android:layout_below="@id/stats_title">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:background="@drawable/my_profile_rounded_background"
+            tools:context=".views.activities.profiles.CreateProfileActivity"
+            tools:ignore="RtlSymmetry,UselessParent"
+            android:clipToPadding="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:cardCornerRadius="100dp"
+                android:layout_marginEnd="5dp"
+                app:layout_constraintStart_toStartOf="@+id/profile_body"
+                app:layout_constraintTop_toTopOf="@id/profile_body"
+                app:layout_constraintEnd_toStartOf="@id/top_stats">
+
+                <ImageView
+                    android:id="@+id/my_profile_picture"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/user_profile_picture"
+                    android:scaleType="centerCrop" />
+            </androidx.cardview.widget.CardView>
+
+            <RelativeLayout
+                android:id="@+id/top_stats"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/cardView"
+                app:layout_constraintTop_toTopOf="@id/cardView"
+                app:layout_constraintBottom_toBottomOf="@id/cardView"
+                app:layout_constraintEnd_toEndOf="@id/profile_body">
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true">
+                    <TextView
+                        android:id="@+id/coin_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{String.valueOf(currentUser.coins.intValue()), default = @string/zero}"
+                        android:fontFamily="sans-serif"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:id="@+id/coin_count_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/coins_count_text"
+                        android:fontFamily="sans-serif"
+                        android:textSize="15sp"
+                        android:layout_below="@id/coin_count"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:id="@+id/bigs_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{String.valueOf(currentUser.numOfBigs.intValue()), default = @string/zero}"
+                        android:layout_alignTop="@id/coin_count"
+                        android:fontFamily="sans-serif"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:layout_alignStart="@+id/bigs_count_title"
+                        android:layout_toEndOf="@id/coin_count"/>
+
+                    <TextView
+                        android:id="@+id/bigs_count_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bigs"
+                        android:fontFamily="sans-serif"
+                        android:textSize="15sp"
+                        android:layout_below="@id/coin_count"
+                        android:textColor="@color/black"
+                        android:layout_marginStart="30dp"
+                        android:layout_toEndOf="@id/coin_count_title"/>
+
+                    <TextView
+                        android:id="@+id/littles_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{String.valueOf(currentUser.numOfLittles.intValue()), default = @string/zero}"
+                        android:layout_alignTop="@id/bigs_count"
+                        android:fontFamily="sans-serif"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        android:layout_alignStart="@+id/littles_count_title"
+                        android:layout_toEndOf="@id/bigs_count"/>
+
+                    <TextView
+                        android:id="@+id/littles_count_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/littles_count_titles"
+                        android:fontFamily="sans-serif"
+                        android:textSize="15sp"
+                        android:layout_below="@id/coin_count"
+                        android:textColor="@color/black"
+                        android:layout_marginStart="30dp"
+                        android:layout_toEndOf="@id/bigs_count_title"/>
+
+                    <Button
+                        android:id="@+id/edit_profile_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_marginTop="5dp"
+                        android:textSize="12sp"
+                        android:text="@string/edit_profile_button_text"
+                        android:background="@drawable/rounded_button_green"
+                        android:layout_below="@id/coin_count_title"
+                        android:layout_alignStart="@id/coin_count_title"
+                        android:layout_alignEnd="@id/littles_count_title"/>
+                </RelativeLayout>
+            </RelativeLayout>
 
             <TextView
-                android:id="@+id/my_profile_prizes_given_value"
-                android:layout_width="wrap_content"
+                android:id="@+id/my_display_name_textView"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
+                android:text="@{currentUser.displayName.toString(), default = @string/display_name}"
+                android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
-                android:text="@string/zero"
-                android:layout_marginEnd="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/cardView"
+                app:layout_constraintStart_toStartOf="@id/profile_body"
+                app:layout_constraintEnd_toEndOf="@id/profile_body"/>
 
             <TextView
-                android:id="@+id/prizes_given_label"
-                android:layout_width="wrap_content"
+                android:id="@+id/bio_text_view"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:text="@{currentUser.bio.toString(), default = @string/bio}"
                 android:textColor="@color/black"
-                android:text="@string/prizes_given"
                 android:fontFamily="sans-serif-thin"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/my_display_name_textView"
+                app:layout_constraintStart_toStartOf="@id/my_display_name_textView"
+                app:layout_constraintEnd_toEndOf="@id/profile_body"/>
 
             <TextView
-                android:id="@+id/my_profile_average_price_of_prizes_given_value"
-                android:layout_width="wrap_content"
+                android:id="@+id/stats_title"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:text="@string/stats_title"
+                android:textColor="@color/black"
+                android:layout_marginTop="5dp"
                 android:fontFamily="sans-serif"
                 android:textSize="15sp"
-                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/bio_text_view"
+                app:layout_constraintStart_toStartOf="@id/bio_text_view"
+                app:layout_constraintEnd_toEndOf="@id/profile_body"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/stats_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:layout_constraintTop_toBottomOf="@id/stats_title"
+                app:layout_constraintStart_toStartOf="@id/stats_title"
+                app:layout_constraintEnd_toEndOf="@id/profile_body">
+
+                <TextView
+                    android:id="@+id/my_profile_prizes_given_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="@string/zero"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:id="@+id/prizes_given_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/prizes_given"
+                    android:fontFamily="sans-serif-thin"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/my_profile_average_price_of_prizes_given_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="@string/zero"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/my_profile_prizes_claimed_value"/>
+
+                <TextView
+                    android:id="@+id/average_price_of_prizes_given_value_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/average_price_of_prizes_given_label"
+                    android:fontFamily="sans-serif-thin"
+                    app:layout_constraintTop_toTopOf="@id/my_profile_average_price_of_prizes_given_value"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/my_profile_prizes_claimed_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="@string/zero"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toBottomOf="@id/my_profile_prizes_given_value"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <TextView
+                    android:id="@+id/prizes_claimed_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/prizes_claimed_label"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="sans-serif-thin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/prizes_given_label"/>
+
+                <TextView
+                    android:id="@+id/my_profile_average_price_of_prizes_claimed_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="@string/zero"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toBottomOf="@id/my_profile_average_price_of_prizes_given_value"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <TextView
+                    android:id="@+id/average_price_of_prizes_claimed_value_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/average_price_of_prizes_claimed"
+                    android:fontFamily="sans-serif-thin"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toBottomOf="@+id/average_price_of_prizes_given_value_label"
+                    app:layout_constraintStart_toStartOf="@id/average_price_of_prizes_given_value_label"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/notifications_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/notifications_title"
                 android:textColor="@color/black"
-                android:text="@string/zero"
-                android:layout_marginEnd="20dp"
                 android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/my_profile_prizes_claimed_value"/>
-
-            <TextView
-                android:id="@+id/average_price_of_prizes_given_value_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="@string/average_price_of_prizes_given_label"
-                android:fontFamily="sans-serif-thin"
-                app:layout_constraintTop_toTopOf="@id/my_profile_average_price_of_prizes_given_value"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-            <TextView
-                android:id="@+id/my_profile_prizes_claimed_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
                 android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:text="@string/zero"
-                android:layout_marginEnd="20dp"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@id/my_profile_prizes_given_value"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/stats_content"
+                app:layout_constraintStart_toStartOf="@id/stats_title"
+                app:layout_constraintEnd_toEndOf="@id/profile_body"/>
 
-            <TextView
-                android:id="@+id/prizes_claimed_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="@string/prizes_claimed_label"
-                android:layout_marginTop="10dp"
-                android:fontFamily="sans-serif-thin"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/prizes_given_label"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="5dp"
+                android:id="@+id/notificationsRecyclerView"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                tools:context=".views.fragments.tablayout.AllBigsFragment"
+                app:layout_constraintTop_toBottomOf="@id/notifications_title"
+                app:layout_constraintStart_toStartOf="@id/notifications_title"
+                app:layout_constraintEnd_toEndOf="@id/profile_body"
+                app:layout_constraintBottom_toBottomOf="@id/profile_body"/>
 
-            <TextView
-                android:id="@+id/my_profile_average_price_of_prizes_claimed_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:text="@string/zero"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="20dp"
-                app:layout_constraintTop_toBottomOf="@id/my_profile_average_price_of_prizes_given_value"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <TextView
-                android:id="@+id/average_price_of_prizes_claimed_value_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="@string/average_price_of_prizes_claimed"
-                android:fontFamily="sans-serif-thin"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@+id/average_price_of_prizes_given_value_label"
-                app:layout_constraintStart_toStartOf="@id/average_price_of_prizes_given_value_label"/>
+            <ImageView
+                android:id="@+id/no_notifications_image"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/up_to_date_icon"
+                android:alpha=".7"
+                android:layout_marginTop ="5dp"
+                android:contentDescription="@string/shown_when_there_are_no_notifications"
+                app:layout_constraintTop_toBottomOf="@id/notifications_title"
+                app:layout_constraintStart_toStartOf="@id/notifications_title"
+                app:layout_constraintEnd_toEndOf="@id/profile_body"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </RelativeLayout>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
