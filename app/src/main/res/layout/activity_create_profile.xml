@@ -20,7 +20,11 @@
         android:background="@drawable/my_profile_rounded_background"
         tools:context=".views.activities.profiles.CreateProfileActivity"
         tools:ignore="RtlSymmetry,UselessParent"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
     <TextView
         android:id="@+id/profile_creation_page_title_textView"
@@ -41,9 +45,12 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         app:cardCornerRadius="100dp"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias=".2"
         app:layout_constraintTop_toBottomOf="@id/profile_creation_page_title_textView"
         app:layout_constraintStart_toStartOf="@id/user_profile_body"
-        app:layout_constraintEnd_toEndOf="@id/user_profile_body">
+        app:layout_constraintEnd_toEndOf="@id/user_profile_body"
+        app:layout_constraintBottom_toTopOf="@id/add_profile_picture_button">
 
         <ImageView
             android:id="@+id/user_profile_picture"
@@ -61,20 +68,23 @@
         android:layout_marginTop="10dp"
         android:text="@string/add"
         android:background="@drawable/rounded_button_green"
+        app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintTop_toBottomOf="@id/cardView"
         app:layout_constraintStart_toStartOf="@id/user_profile_body"
-        app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
+        app:layout_constraintEnd_toEndOf="@id/user_profile_body"
+        app:layout_constraintBottom_toTopOf="@id/real_name_editText"/>
 
     <EditText
         android:id="@+id/real_name_editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:inputType="textPersonName"
         android:hint="@string/real_name"
         android:layout_below="@id/add_profile_picture_button"
         android:autofillHints="Real name"
+        app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintTop_toBottomOf="@id/add_profile_picture_button"
         app:layout_constraintBottom_toTopOf="@id/display_name_editText"
         app:layout_constraintStart_toStartOf="@id/user_profile_body"
@@ -88,9 +98,11 @@
         android:inputType="textPersonName"
         android:hint="@string/display_name"
         android:autofillHints="Display name"
-app:layout_constraintTop_toBottomOf="@id/real_name_editText"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toBottomOf="@id/real_name_editText"
         app:layout_constraintStart_toStartOf="@id/user_profile_body"
-        app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
+        app:layout_constraintEnd_toEndOf="@id/user_profile_body"
+        app:layout_constraintBottom_toTopOf="@id/bio_title_textView"/>
 
     <TextView
         android:id="@+id/bio_title_textView"
@@ -102,14 +114,16 @@ app:layout_constraintTop_toBottomOf="@id/real_name_editText"
         android:textSize="15sp"
         android:layout_below="@id/display_name_editText"
         android:textColor="@color/black"
+        app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintTop_toBottomOf="@id/display_name_editText"
         app:layout_constraintStart_toStartOf="@id/bio_edit_text"
-        app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
+        app:layout_constraintEnd_toEndOf="@id/user_profile_body"
+        app:layout_constraintBottom_toTopOf="@id/bio_edit_text"/>
 
     <EditText
         android:id="@+id/bio_edit_text"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="50dp"
         android:background="@drawable/edit_text_background"
         android:autofillHints=""
         android:inputType="text"
@@ -117,9 +131,11 @@ app:layout_constraintTop_toBottomOf="@id/real_name_editText"
         tools:ignore="LabelFor"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
+        app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintTop_toBottomOf="@id/bio_title_textView"
         app:layout_constraintStart_toStartOf="@id/user_profile_body"
-        app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
+        app:layout_constraintEnd_toEndOf="@id/user_profile_body"
+        app:layout_constraintBottom_toTopOf="@id/done_button"/>
 
     <Button
         android:id="@+id/done_button"
@@ -129,6 +145,7 @@ app:layout_constraintTop_toBottomOf="@id/real_name_editText"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/rounded_button_green"
+        app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintTop_toBottomOf="@id/bio_edit_text"
         app:layout_constraintBottom_toBottomOf="@id/user_profile_body"
         app:layout_constraintStart_toStartOf="@id/user_profile_body"
