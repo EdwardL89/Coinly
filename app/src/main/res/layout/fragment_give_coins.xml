@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -11,12 +11,12 @@
         android:paddingBottom="10dp"
         tools:context=".views.activities.profiles.CreateProfileActivity">
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/user_profile_body"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingEnd="5dp"
+            android:padding="20dp"
             android:background="@drawable/my_profile_rounded_background"
             tools:context=".views.activities.profiles.CreateProfileActivity"
             tools:ignore="RtlSymmetry,UselessParent"
@@ -31,7 +31,9 @@
                 android:layout_marginTop="10dp"
                 android:textSize="15sp"
                 android:textColor="@color/black"
-                android:layout_centerHorizontal="true" />
+                app:layout_constraintStart_toStartOf="@id/user_profile_body"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"
+                app:layout_constraintTop_toTopOf="@id/user_profile_body"/>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView"
@@ -39,8 +41,9 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 app:cardCornerRadius="100dp"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/giving_coins_title_textView">
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"
+                app:layout_constraintStart_toStartOf="@id/user_profile_body"
+                app:layout_constraintTop_toBottomOf="@id/giving_coins_title_textView">
 
                 <ImageView
                     android:id="@+id/user_profile_picture"
@@ -56,11 +59,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="@{giveCoinsViewModel.observedUserDisplayName, default = @string/display_name}"
+                android:text="@string/display_name"
                 android:textSize="15sp"
                 android:textColor="@color/black"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/cardView"/>
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"
+                app:layout_constraintStart_toStartOf="@id/user_profile_body"
+                app:layout_constraintTop_toBottomOf="@id/cardView"/>
 
             <TextView
                 android:id="@+id/coins_giving_textView"
@@ -68,38 +72,40 @@
                 android:layout_height="wrap_content"
                 android:text="@string/coins_giving"
                 android:fontFamily="sans-serif"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="20dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="20dp"
                 android:textSize="15sp"
-                android:layout_below="@id/display_name_text_view"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toStartOf="@id/coins_giving_edit_text"
+                app:layout_constraintTop_toBottomOf="@id/display_name_text_view"
+                app:layout_constraintStart_toStartOf="@id/user_profile_body"/>
 
             <EditText
                 android:id="@+id/coins_giving_edit_text"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edit_text_background"
                 android:autofillHints=""
-                android:layout_marginEnd="15dp"
-                android:layout_marginStart="150dp"
-                android:layout_toEndOf="@+id/coins_giving_textView"
-                android:layout_alignTop="@+id/coins_giving_textView"
-                android:layout_alignBottom="@+id/coins_giving_textView"
                 android:inputType="number"
                 android:gravity="top|start"
-                tools:ignore="LabelFor" />
+                android:hint="@string/coins"
+                app:layout_constraintStart_toEndOf="@id/coins_giving_textView"
+                app:layout_constraintTop_toTopOf="@id/coins_giving_textView"
+                app:layout_constraintTop_toBottomOf="@+id/coins_giving_textView"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
 
             <TextView
                 android:id="@+id/optional_note_title_textView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/add_a_note_optional"
                 android:fontFamily="sans-serif"
                 android:layout_marginTop="20dp"
-                android:layout_marginStart="20dp"
                 android:textSize="15sp"
-                android:layout_below="@id/coins_giving_textView"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="@id/user_profile_body"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"
+                app:layout_constraintTop_toBottomOf="@id/coins_giving_textView"/>
 
             <EditText
                 android:id="@+id/optional_note_edit_text"
@@ -107,24 +113,25 @@
                 android:layout_height="100dp"
                 android:background="@drawable/edit_text_background"
                 android:autofillHints=""
-                android:layout_marginEnd="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_alignStart="@id/optional_note_title_textView"
-                android:layout_below="@id/optional_note_title_textView"
+                android:layout_marginTop="5dp"
                 android:inputType="text"
                 android:gravity="top|start"
-                tools:ignore="LabelFor" />
+                android:hint="@string/note"
+                app:layout_constraintStart_toStartOf="@id/user_profile_body"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"
+                app:layout_constraintTop_toBottomOf="@id/optional_note_title_textView"/>
 
             <LinearLayout
                 android:id="@+id/action_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/optional_note_edit_text"
-                android:layout_alignStart="@id/optional_note_edit_text"
                 android:paddingBottom="10dp"
-                android:layout_marginTop="30dp"
                 android:clipToPadding="false"
-                android:layout_alignEnd="@id/optional_note_edit_text">
+                app:layout_constraintVertical_bias=".9"
+                app:layout_constraintStart_toStartOf="@id/user_profile_body"
+                app:layout_constraintEnd_toEndOf="@id/user_profile_body"
+                app:layout_constraintTop_toBottomOf="@id/optional_note_edit_text"
+                app:layout_constraintBottom_toBottomOf="@id/user_profile_body">
                 <Button
                     android:id="@+id/give_coins_button"
                     android:layout_width="0dp"
@@ -150,6 +157,6 @@
                     tools:ignore="ButtonStyle" />
             </LinearLayout>
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
