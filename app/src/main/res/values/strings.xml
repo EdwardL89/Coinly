@@ -93,4 +93,5 @@
     <string name="delete">Delete</string>
     <string name="Request_Denial_Message">You don\'t have enough coins! Denying Request</string>
     <string name="note">Note</string>
+    <string name="reason">Reason</string>
 </resources>
