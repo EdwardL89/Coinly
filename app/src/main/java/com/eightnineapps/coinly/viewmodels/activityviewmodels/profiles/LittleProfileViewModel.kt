@@ -127,7 +127,7 @@ class LittleProfileViewModel: ViewModel() {
      * Adds a prize item to the set prizes recycler view
      */
     fun addSetPrizeToRecycler(prize: Prize) {
-        prizesSetAdapter!!.addItem(prize)
+        prizesSetAdapter?.addItem(prize)
     }
 
     /**

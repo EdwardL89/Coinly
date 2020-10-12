@@ -73,7 +73,7 @@ class MyProfileFragment : Fragment() {
      */
     override fun setMenuVisibility(menuVisible: Boolean) {
         super.setMenuVisibility(menuVisible)
-        if (menuVisible) checkForClearedNotifications()
+        if (menuVisible && this::myProfileFragmentViewModel.isInitialized) checkForClearedNotifications()
     }
 
     /**

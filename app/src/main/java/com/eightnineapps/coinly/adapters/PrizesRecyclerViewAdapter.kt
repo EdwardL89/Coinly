@@ -84,7 +84,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
         private fun deleteSetPrize(prizeId: String) {
             Firestore.deletePrize(observedUser.email!!, CurrentUser.getEmail()!!, prizeId).addOnSuccessListener {
                 Toast.makeText(context, "Prize deleted", Toast.LENGTH_SHORT).show()
-                ImgStorage.delete("set_prizes/${CurrentUser.getId()}/${observedUser.id}/${prizeId}")
+                ImgStorage.delete("set_prizes/${CurrentUser.getEmail()!!}/${observedUser.email}/${prizeId}")
             }
         }
 
@@ -123,7 +123,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
                     relocateImageInStorage(prize.id)
                     spendCoins(prize.price)
                     updateUIAfterClaimingPrize(prize)
-                    Toast.makeText(context, "Congratulations! You claimed prize!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Congratulations! You claimed a prize!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -133,7 +133,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
          * claimed_prizes folder.
          */
         private fun relocateImageInStorage(prizeId: String) { //Copy first, then delete
-            val prizePath = "${observedUser.id}/${CurrentUser.getId()}/$prizeId"
+            val prizePath = "${observedUser.email!!}/${CurrentUser.getEmail()!!}/$prizeId"
             ImgStorage.getReference("set_prizes/$prizePath").getBytes(5000000).addOnSuccessListener {
                 ImgStorage.insert(it, "claimed_prizes/$prizePath").addOnSuccessListener {
                     ImgStorage.delete("set_prizes/$prizePath")

@@ -2,6 +2,7 @@ package com.eightnineapps.coinly.views.fragments.profiles.little
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
@@ -30,6 +31,7 @@ class LittleProfileFragment: Fragment() {
 
     private val littleProfileViewModel: LittleProfileViewModel by activityViewModels()
     private val dialogCreator = PrizeDialogCreator()
+    private var savedContext: Context? = null
 
     /**
      * Overrides the onCreate method to allow the fragments to have an options menu and starts the
@@ -58,6 +60,14 @@ class LittleProfileFragment: Fragment() {
         setUpButtons()
         addPrizesSetToRecycler(view)
         addPrizesClaimedToRecycler(view)
+    }
+
+    /**
+     * Saves the context to be used in Toast messages in non-ui threads
+     */
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        savedContext = context
     }
 
     /**
@@ -256,7 +266,7 @@ class LittleProfileFragment: Fragment() {
     private fun saveSetPrizeToFirestore(prize: Prize) {
         littleProfileViewModel.savePrizeInFireStore(prize).addOnCompleteListener {
             littleProfileViewModel.addSetPrizeToRecycler(prize)
-            Toast.makeText(context, "Prize Set!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(savedContext, "Prize Set!", Toast.LENGTH_SHORT).show()
         }
     }
 
