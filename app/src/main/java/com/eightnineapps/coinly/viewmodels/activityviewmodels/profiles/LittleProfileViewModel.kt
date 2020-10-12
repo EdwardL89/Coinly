@@ -7,8 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.helpers.ImageUploadHelper
+import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
+import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.enums.PrizeTapLocation
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
@@ -162,6 +164,32 @@ class LittleProfileViewModel: ViewModel() {
     }
 
     /**
+     * Executes and sends a giving coins notification
+     */
+    fun sendAndExecuteGiveNotification(coinsGiving: Int, optionalNote: String): Task<Void> {
+        val notification = constructNotification(coinsGiving, optionalNote)
+        notification.execute()
+        observedUserInstance.coins += coinsGiving
+        return Firestore.addNotification(observedUserInstance.email!!, notification)
+    }
+
+    /**
+     * Constructs the notification to be sent to the little with all the information to inform them
+     * of the coins they've been given
+     */
+    private fun constructNotification(coinsGiving: Int, optionalNote: String): Notification {
+        val notification = Notification()
+        notification.id = generateId()
+        notification.coins = coinsGiving
+        notification.moreInformation = optionalNote
+        notification.type = NotificationType.GIVING_COINS
+        notification.toAddUserEmail = observedUserInstance.email!!
+        notification.profilePictureUri = CurrentUser.instance!!.profilePictureUri
+        notification.message = "${CurrentUser.instance!!.displayName} gave you $coinsGiving coins"
+        return notification
+    }
+
+    /**
      * Removes the observed Little
      */
     fun removeLittleAndSendBack() {
@@ -187,5 +215,4 @@ class LittleProfileViewModel: ViewModel() {
         Firestore.update(observedUserInstance, "numOfBigs", observedUserInstance.numOfBigs.toString())
         Firestore.removeBig(observedUserInstance.email!!, CurrentUser.getEmail()!!)
     }
-
 }

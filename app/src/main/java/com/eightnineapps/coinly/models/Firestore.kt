@@ -30,8 +30,8 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
         return database.collection("users").document(userEmail)
     }
 
-    fun addNotification(userEmail: String, notification: Notification) {
-        database.collection("users").document(userEmail).collection("notifications").document(notification.id).set(notification)
+    fun addNotification(userEmail: String, notification: Notification): Task<Void> {
+        return database.collection("users").document(userEmail).collection("notifications").document(notification.id).set(notification)
     }
 
     fun removeNotification(userEmail: String, notification: Notification) {

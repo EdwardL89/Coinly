@@ -11,13 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.classes.objects.Notification
-import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.models.CurrentUser
-import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LittleProfileViewModel
 import kotlinx.android.synthetic.main.fragment_give_coins.*
-import kotlin.random.Random
 
 /**
  * Lets a big give a chosen number of coins to a little
@@ -25,7 +21,6 @@ import kotlin.random.Random
 class GiveCoinsFragment : Fragment() {
 
     private val littleProfileViewModel: LittleProfileViewModel by activityViewModels()
-    private val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_give_coins, container, false)
@@ -54,14 +49,12 @@ class GiveCoinsFragment : Fragment() {
             if (hasEnteredCoins()) {
                 if (coinsIsPositive()) {
                     if (hasEnoughCoins(Integer.parseInt(coins_giving_edit_text.text.toString()))) {
-                        val coins = Integer.parseInt(coins_giving_edit_text.text.toString())
-                        val notification = constructNotification(coins, optional_note_edit_text.text.toString())
-                        notification.execute()
-                        Firestore.addNotification(littleProfileViewModel.observedUserInstance.email!!, notification)
-                        Toast.makeText(context, "Coins transferred!", Toast.LENGTH_SHORT).show()
-                        littleProfileViewModel.observedUserInstance.coins += coins
-                        hideSoftKeyboard()
-                        activity!!.onBackPressed()
+                        littleProfileViewModel
+                            .sendAndExecuteGiveNotification(
+                                Integer.parseInt(coins_giving_edit_text.text.toString()),
+                                optional_note_edit_text.text.toString())
+                            Toast.makeText(context, "Coins transferred!", Toast.LENGTH_SHORT).show()
+                        hideKeyboardAndReturn()
                     } else {
                         Toast.makeText(context, "You don't have that many coins!", Toast.LENGTH_SHORT).show()
                     }
@@ -73,9 +66,16 @@ class GiveCoinsFragment : Fragment() {
             }
         }
         cancel_give_coins_button.setOnClickListener {
-            hideSoftKeyboard()
-            activity!!.onBackPressed()
+            hideKeyboardAndReturn()
         }
+    }
+
+    /**
+     * Hides soft input keyboard and returns to the previous fragment
+     */
+    private fun hideKeyboardAndReturn() {
+        hideSoftKeyboard()
+        activity!!.onBackPressed()
     }
 
     /**
@@ -94,29 +94,6 @@ class GiveCoinsFragment : Fragment() {
      */
     private fun coinsIsPositive(): Boolean {
         return Integer.parseInt(coins_giving_edit_text.text.toString()) > 0
-    }
-
-    /**
-     * Constructs the notification to be sent to the little with all the information to inform them
-     * of the coins they've been given
-     */
-    private fun constructNotification(coinsGiving: Int, optionalNote: String): Notification {
-        val notification = Notification()
-        notification.id = generateId()
-        notification.coins = coinsGiving
-        notification.moreInformation = optionalNote
-        notification.type = NotificationType.GIVING_COINS
-        notification.toAddUserEmail = littleProfileViewModel.observedUserInstance.email!!
-        notification.profilePictureUri = CurrentUser.instance!!.profilePictureUri
-        notification.message = "${CurrentUser.instance!!.displayName} gave you $coinsGiving coins"
-        return notification
-    }
-
-    /**
-     * Generates a random 30 character, alphanumerical id for each user
-     */
-    private fun generateId(): String {
-        return (1..30).map { Random.nextInt(0, charPool.size) }.map(charPool::get).joinToString("")
     }
 
     /**
