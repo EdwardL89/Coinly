@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="10dp"
+            android:padding="20dp"
             android:background="@drawable/my_profile_rounded_background"
             tools:context=".views.activities.profiles.CreateProfileActivity"
             tools:ignore="RtlSymmetry,UselessParent"
@@ -37,10 +37,11 @@
                 android:id="@+id/cardView"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_gravity="center"
                 app:cardCornerRadius="100dp"
+                android:layout_marginEnd="5dp"
                 app:layout_constraintStart_toStartOf="@+id/profile_body"
-                app:layout_constraintTop_toTopOf="@id/profile_body">
+                app:layout_constraintTop_toTopOf="@id/profile_body"
+                app:layout_constraintEnd_toStartOf="@id/top_stats">
 
                 <ImageView
                     android:id="@+id/my_profile_picture"
@@ -51,93 +52,99 @@
             </androidx.cardview.widget.CardView>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/top_stats"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toEndOf="@id/cardView"
                 app:layout_constraintTop_toTopOf="@id/cardView"
                 app:layout_constraintBottom_toBottomOf="@id/cardView"
                 app:layout_constraintEnd_toEndOf="@id/profile_body">
-                <TextView
-                    android:id="@+id/coin_count"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(currentUser.coins.intValue()), default = @string/zero}"
-                    android:fontFamily="sans-serif"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
+                    android:layout_centerHorizontal="true">
+                    <TextView
+                        android:id="@+id/coin_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{String.valueOf(currentUser.coins.intValue()), default = @string/zero}"
+                        android:fontFamily="sans-serif"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
 
-                <TextView
-                    android:id="@+id/coin_count_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/coins_count_text"
-                    android:fontFamily="sans-serif"
-                    android:textSize="15sp"
-                    android:layout_below="@id/coin_count"
-                    android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/coin_count_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/coins_count_text"
+                        android:fontFamily="sans-serif"
+                        android:textSize="15sp"
+                        android:layout_below="@id/coin_count"
+                        android:textColor="@color/black"/>
 
-                <TextView
-                    android:id="@+id/bigs_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(currentUser.numOfBigs.intValue()), default = @string/zero}"
-                    android:layout_alignTop="@id/coin_count"
-                    android:fontFamily="sans-serif"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_alignStart="@+id/bigs_count_title"
-                    android:layout_toEndOf="@id/coin_count"/>
+                    <TextView
+                        android:id="@+id/bigs_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{String.valueOf(currentUser.numOfBigs.intValue()), default = @string/zero}"
+                        android:layout_alignTop="@id/coin_count"
+                        android:fontFamily="sans-serif"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:layout_alignStart="@+id/bigs_count_title"
+                        android:layout_toEndOf="@id/coin_count"/>
 
-                <TextView
-                    android:id="@+id/bigs_count_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bigs"
-                    android:fontFamily="sans-serif"
-                    android:textSize="15sp"
-                    android:layout_below="@id/coin_count"
-                    android:textColor="@color/black"
-                    android:layout_marginStart="30dp"
-                    android:layout_toEndOf="@id/coin_count_title"/>
+                    <TextView
+                        android:id="@+id/bigs_count_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bigs"
+                        android:fontFamily="sans-serif"
+                        android:textSize="15sp"
+                        android:layout_below="@id/coin_count"
+                        android:textColor="@color/black"
+                        android:layout_marginStart="30dp"
+                        android:layout_toEndOf="@id/coin_count_title"/>
 
-                <TextView
-                    android:id="@+id/littles_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(currentUser.numOfLittles.intValue()), default = @string/zero}"
-                    android:layout_alignTop="@id/bigs_count"
-                    android:fontFamily="sans-serif"
-                    android:textStyle="bold"
-                    android:textSize="15sp"
-                    android:textColor="@color/black"
-                    android:layout_alignStart="@+id/littles_count_title"
-                    android:layout_toEndOf="@id/bigs_count"/>
+                    <TextView
+                        android:id="@+id/littles_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{String.valueOf(currentUser.numOfLittles.intValue()), default = @string/zero}"
+                        android:layout_alignTop="@id/bigs_count"
+                        android:fontFamily="sans-serif"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        android:layout_alignStart="@+id/littles_count_title"
+                        android:layout_toEndOf="@id/bigs_count"/>
 
-                <TextView
-                    android:id="@+id/littles_count_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/littles_count_titles"
-                    android:fontFamily="sans-serif"
-                    android:textSize="15sp"
-                    android:layout_below="@id/coin_count"
-                    android:textColor="@color/black"
-                    android:layout_marginStart="30dp"
-                    android:layout_toEndOf="@id/bigs_count_title"/>
+                    <TextView
+                        android:id="@+id/littles_count_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/littles_count_titles"
+                        android:fontFamily="sans-serif"
+                        android:textSize="15sp"
+                        android:layout_below="@id/coin_count"
+                        android:textColor="@color/black"
+                        android:layout_marginStart="30dp"
+                        android:layout_toEndOf="@id/bigs_count_title"/>
 
-                <Button
-                    android:id="@+id/edit_profile_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="25dp"
-                    android:layout_marginTop="5dp"
-                    android:textSize="12sp"
-                    android:text="@string/edit_profile_button_text"
-                    android:background="@drawable/rounded_button_green"
-                    android:layout_below="@id/coin_count_title"
-                    android:layout_alignStart="@id/coin_count_title"
-                    android:layout_alignEnd="@id/littles_count_title"/>
+                    <Button
+                        android:id="@+id/edit_profile_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_marginTop="5dp"
+                        android:textSize="12sp"
+                        android:text="@string/edit_profile_button_text"
+                        android:background="@drawable/rounded_button_green"
+                        android:layout_below="@id/coin_count_title"
+                        android:layout_alignStart="@id/coin_count_title"
+                        android:layout_alignEnd="@id/littles_count_title"/>
+                </RelativeLayout>
             </RelativeLayout>
 
             <TextView
@@ -150,7 +157,7 @@
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"
                 app:layout_constraintTop_toBottomOf="@id/cardView"
-                app:layout_constraintStart_toStartOf="@id/cardView"
+                app:layout_constraintStart_toStartOf="@id/profile_body"
                 app:layout_constraintEnd_toEndOf="@id/profile_body"/>
 
             <TextView
@@ -160,8 +167,6 @@
                 android:text="@{currentUser.bio.toString(), default = @string/bio}"
                 android:textColor="@color/black"
                 android:fontFamily="sans-serif-thin"
-                android:layout_alignStart="@id/my_display_name_textView"
-                android:layout_below="@id/my_display_name_textView"
                 app:layout_constraintTop_toBottomOf="@id/my_display_name_textView"
                 app:layout_constraintStart_toStartOf="@id/my_display_name_textView"
                 app:layout_constraintEnd_toEndOf="@id/profile_body"/>
@@ -181,11 +186,11 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/stats_content"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 app:layout_constraintTop_toBottomOf="@id/stats_title"
-                app:layout_constraintStart_toStartOf="@id/profile_body"
+                app:layout_constraintStart_toStartOf="@id/stats_title"
                 app:layout_constraintEnd_toEndOf="@id/profile_body">
 
                 <TextView
@@ -297,14 +302,14 @@
                 android:fontFamily="sans-serif"
                 android:textSize="15sp"
                 app:layout_constraintTop_toBottomOf="@id/stats_content"
-                app:layout_constraintStart_toStartOf="@id/profile_body"
+                app:layout_constraintStart_toStartOf="@id/stats_title"
                 app:layout_constraintEnd_toEndOf="@id/profile_body"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_marginTop="5dp"
                 android:id="@+id/notificationsRecyclerView"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
                 tools:context=".views.fragments.tablayout.AllBigsFragment"
                 app:layout_constraintTop_toBottomOf="@id/notifications_title"
