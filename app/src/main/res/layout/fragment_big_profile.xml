@@ -209,6 +209,7 @@
                 android:layout_width="0dp"
                 android:layout_height="115dp"
                 android:layout_marginTop="5dp"
+                android:scrollbars="horizontal"
                 app:layout_constraintTop_toBottomOf="@id/prizes_title"
                 app:layout_constraintStart_toStartOf="@id/prizes_title"
                 app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
@@ -245,6 +246,7 @@
                 android:layout_width="0dp"
                 android:layout_height="115dp"
                 android:layout_marginTop="5dp"
+                android:scrollbars="horizontal"
                 app:layout_constraintTop_toBottomOf="@id/prizes_claimed_title"
                 app:layout_constraintStart_toStartOf="@id/prizes_claimed_title"
                 app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
