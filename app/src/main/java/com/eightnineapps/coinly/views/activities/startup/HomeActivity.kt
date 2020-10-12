@@ -32,8 +32,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var homeViewModel: HomeViewModel
-    private val authHelper =
-        AuthHelper()
+    private val authHelper = AuthHelper()
 
     /**
      * Provides access to data structures for all the below methods
@@ -160,11 +159,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tab!!.icon!!.colorFilter = PorterDuffColorFilter(tabSelectedIconColor, PorterDuff.Mode.SRC_IN)
             }
-
             override fun onTabUnselected(tab: TabLayout.Tab?) {
                 tab!!.icon!!.colorFilter = PorterDuffColorFilter(tabUnselectedIconColor, PorterDuff.Mode.SRC_IN)
             }
-
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 tab!!.icon!!.colorFilter = PorterDuffColorFilter(tabSelectedIconColor, PorterDuff.Mode.SRC_IN)
             }

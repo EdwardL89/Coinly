@@ -38,7 +38,7 @@ class EditProfileViewModel: ViewModel() {
      */
     fun commitProfileChanges(context: Context) {
         val writeBatch = Firestore.getInstance().batch()
-        val userReference = Firestore.read(currentUser.instance!!)
+        val userReference = Firestore.read(currentUser.instance!!.email!!)
         writeBatch.update(userReference, "bio", currentUser.bio.value)
         writeBatch.update(userReference, "realName", currentUser.realName.value)
         writeBatch.update(userReference, "displayName", currentUser.displayName.value)
@@ -63,7 +63,7 @@ class EditProfileViewModel: ViewModel() {
      */
     private fun updateProfilePicture() {
         ImgStorage.insert(userProfilePictureByteData, "profile_pictures/${currentUser.instance!!.id}").addOnSuccessListener {
-            ImgStorage.read(currentUser.instance!!).addOnSuccessListener {
+            ImgStorage.read(currentUser.instance!!.id).addOnSuccessListener {
                             uri -> currentUser.profilePictureUri.value = uri.toString()
                             Firestore.update(currentUser.instance!!, "profilePictureUri", currentUser.profilePictureUri.value!!)
                     }

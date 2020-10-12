@@ -128,6 +128,8 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/claimedPrizesFromYouRecyclerView"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop ="10dp"
@@ -161,6 +163,8 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/setPrizesRecyclerView"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop ="10dp"

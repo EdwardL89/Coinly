@@ -45,6 +45,7 @@ class ImageUploadHelper {
     /**
      * Converts a Uri to a Bitmap
      */
+    @Suppress("DEPRECATION")
     private fun convertUriToBitmap(selectedImageUri: Uri?, context: Context): Bitmap {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, selectedImageUri!!))

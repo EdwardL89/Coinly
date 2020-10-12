@@ -11,13 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.classes.objects.Notification
-import com.eightnineapps.coinly.enums.NotificationType
-import com.eightnineapps.coinly.models.CurrentUser
-import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.BigProfileViewModel
 import kotlinx.android.synthetic.main.fragment_request.*
-import kotlin.random.Random
 
 /**
  * Allows a little send a request to a big for coins
@@ -25,7 +20,6 @@ import kotlin.random.Random
 class RequestCoinsFragment : Fragment() {
 
     private val bigProfileViewModel: BigProfileViewModel by activityViewModels()
-    private val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_request, container, false)
@@ -54,11 +48,9 @@ class RequestCoinsFragment : Fragment() {
             if (hasEnteredCoinsAndReason()) {
                 if (coinsIsPositive()) {
                     if (hasEnoughCoins()) {
-                        val notification = constructRequestNotification(Integer.parseInt(coins_requesting_edit_text.text.toString()), request_reason_edit_text.text.toString())
-                        Firestore.addNotification(bigProfileViewModel.observedUserInstance.email!!, notification)
+                        bigProfileViewModel.sendNotification(Integer.parseInt(coins_requesting_edit_text.text.toString()), request_reason_edit_text.text.toString())
                         Toast.makeText(context, "Request sent!", Toast.LENGTH_SHORT).show()
-                        hideSoftKeyboard()
-                        activity!!.onBackPressed()
+                        hideKeyboardAndReturn()
                     } else {
                         Toast.makeText(context, "${bigProfileViewModel.observedUserInstance.displayName} doesn't have that many coins!", Toast.LENGTH_SHORT).show()
                     }
@@ -70,9 +62,16 @@ class RequestCoinsFragment : Fragment() {
             }
         }
         cancel_request_coins_button.setOnClickListener {
-            hideSoftKeyboard()
-            activity!!.onBackPressed()
+            hideKeyboardAndReturn()
         }
+    }
+
+    /**
+     * Hides soft input keyboard and returns to the previous fragment
+     */
+    private fun hideKeyboardAndReturn() {
+        hideSoftKeyboard()
+        activity!!.onBackPressed()
     }
 
     /**
@@ -105,29 +104,5 @@ class RequestCoinsFragment : Fragment() {
      */
     private fun hasEnteredCoinsAndReason(): Boolean {
         return coins_requesting_edit_text.text.toString() != "" && request_reason_edit_text.text.toString() != ""
-    }
-
-    /**
-     * Constructs and returns a notification that holds information about a coin request
-     */
-    private fun constructRequestNotification(coinsRequesting: Int, reasonForRequest: String): Notification {
-        val notification = Notification()
-        notification.id = generateId()
-        val myDisplayName = CurrentUser.instance!!.displayName
-        notification.coins = coinsRequesting
-        notification.moreInformation = reasonForRequest
-        notification.type = NotificationType.REQUESTING_COINS
-        notification.message = "$myDisplayName requested $coinsRequesting coins"
-        notification.moreInformation = "$myDisplayName is requesting $coinsRequesting coins. \n\n Reason:\n$reasonForRequest"
-        notification.profilePictureUri = CurrentUser.instance!!.profilePictureUri
-        notification.addingToUserEmail = CurrentUser.instance!!.email!!
-        return notification
-    }
-
-    /**
-     * Generates a random 30 character, alphanumerical id for each user
-     */
-    private fun generateId(): String {
-        return (1..30).map { Random.nextInt(0, charPool.size) }.map(charPool::get).joinToString("")
     }
 }

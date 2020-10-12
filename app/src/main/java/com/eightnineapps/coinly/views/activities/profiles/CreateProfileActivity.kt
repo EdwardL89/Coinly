@@ -5,20 +5,26 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.classes.helpers.ImageUploadHelper
+import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.CreateProfileViewModel
+import com.eightnineapps.coinly.views.activities.startup.HomeActivity
 import kotlinx.android.synthetic.main.activity_create_profile.*
-
 
 /**
  * Creates a new user
  */
 class CreateProfileActivity : AppCompatActivity() {
 
+    private val imgUploadHelper = ImageUploadHelper()
     private lateinit var createProfileViewModel: CreateProfileViewModel
 
     /**
@@ -47,7 +53,10 @@ class CreateProfileActivity : AppCompatActivity() {
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        createProfileViewModel.handleGallerySelectionCompletion(requestCode, resultCode, data, applicationContext, this, user_profile_picture)
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            Glide.with(applicationContext).load(data!!.data).into(user_profile_picture)
+            createProfileViewModel.saveSelectedImageByteData(imgUploadHelper.prepareForFirebaseStorageUpload(data, this))
+        }
     }
 
     /**
@@ -87,7 +96,7 @@ class CreateProfileActivity : AppCompatActivity() {
      */
     private fun setupAddProfilePictureButton() {
         add_profile_picture_button.setOnClickListener {
-            createProfileViewModel.imgUploadHelper.chooseImageFromGallery(this)
+            imgUploadHelper.chooseImageFromGallery(this)
         }
     }
 
@@ -96,8 +105,36 @@ class CreateProfileActivity : AppCompatActivity() {
      */
     private fun setupDoneButton() {
         done_button.setOnClickListener {
-            createProfileViewModel.verifyProfileCreationIsComplete(this, real_name_editText, display_name_editText, bio_edit_text)
+            val realName = real_name_editText.text.toString()
+            val displayName = display_name_editText.text.toString()
+            val bio = bio_edit_text.text.toString()
+            if (createProfileViewModel.noFieldsEmpty(realName, displayName, bio)) {
+                Toast.makeText(this, "Creating profile...", Toast.LENGTH_LONG).show()
+                uploadUser(createProfileViewModel.createNewUser(realName, displayName, bio))
+            } else {
+                Toast.makeText(this, "Info missing!", Toast.LENGTH_LONG).show()
+            }
         }
+    }
+
+    /**
+     * Executes the steps to upload a new user to firestore
+     */
+    private fun uploadUser(newUser: User) {
+        createProfileViewModel.saveProfilePicture(newUser.id).addOnSuccessListener {
+            createProfileViewModel.getProfilePictureUri(newUser.id).addOnSuccessListener { uri -> newUser.profilePictureUri = uri.toString()
+                createProfileViewModel.saveUser(newUser).addOnSuccessListener { goToHomePage(newUser)
+                }.addOnFailureListener { Log.w("INFO", "Could not upload user to Firestore") }
+            }.addOnFailureListener { Log.w("INFO", "Could not download from Storage") }
+        }.addOnFailureListener { Log.w("INFO", "Could not upload to Firebase storage") }
+    }
+
+    /**
+     * Launches an intent to go to the home page activity
+     */
+    private fun goToHomePage(user: User) {
+        startActivity(Intent(this, HomeActivity::class.java).putExtra("current_user", user)
+            .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
     }
 
     /**

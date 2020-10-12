@@ -9,10 +9,10 @@
         android:id="@+id/logo_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:src="@drawable/coinly_logo"
         android:layout_centerHorizontal="true"
-        android:contentDescription="@string/app_logo_description" />
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/app_logo_description"
+        android:src="@drawable/coinly_logo" />
 
     <ImageView
         android:id="@+id/email_icon"
@@ -44,7 +44,7 @@
         android:layout_toEndOf="@+id/email_icon"
         android:layout_below="@+id/logo_image_view"
         android:layout_alignEnd="@+id/logo_image_view"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="50dp"
         android:hint="@string/email"
         android:textColorHint="@color/white"
         android:backgroundTint="@color/white"
@@ -84,8 +84,9 @@
         android:id="@+id/sign_in_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/login_button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/login_button"/>
+        android:layout_marginBottom="10dp"/>
 
 </RelativeLayout>

@@ -7,22 +7,16 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.databinding.ActivityLinkupProfileBinding
-import com.eightnineapps.coinly.enums.NotificationType
-import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_BIG
-import com.eightnineapps.coinly.enums.NotificationType.ADDING_AS_LITTLE
-import com.eightnineapps.coinly.models.CurrentUser
-import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LinkupProfileViewModel
+import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.android.synthetic.main.activity_linkup_profile.*
 import kotlin.math.roundToInt
 
@@ -37,14 +31,11 @@ class LinkupProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         linkupProfileViewModel = ViewModelProvider(this).get(LinkupProfileViewModel::class.java)
         linkupProfileViewModel.observedUserInstance = intent.getSerializableExtra("observed_user") as User
-        super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_linkup_profile)
         binding.linkupProfileViewModel = linkupProfileViewModel
-        addCoinlyActionBarTitle()
-        addBackArrowToActionBar()
-        loadProfilePictureAndPrizesGiven()
+        super.onCreate(savedInstanceState)
+        setupProfilePage()
         setupButtons()
-        loadStats()
     }
 
     /**
@@ -68,132 +59,176 @@ class LinkupProfileActivity : AppCompatActivity() {
     }
 
     /**
-     * Set the text on the add-as buttons
+     * Sets up the required UI elements of the observed user's profile page
+     */
+    private fun setupProfilePage() {
+        addCoinlyActionBarTitle()
+        addBackArrowToActionBar()
+        loadProfilePicture()
+        loadStats()
+    }
+
+    /**
+     * determines the statuses for the big and little buttons
      */
     private fun setupButtons() {
-        linkupProfileViewModel.getUpdatedObservedUser(linkupProfileViewModel.observedUserInstance).addOnCompleteListener {
-            if (it.isSuccessful) {
-                linkupProfileViewModel.observedUserInstance = it.result?.toObject(User::class.java)!!
-                linkupProfileViewModel.retrieveObservedUserBigs().addOnSuccessListener {
-                    it2 -> for (doc in it2) {
-                        linkupProfileViewModel.observedUserInstanceBigs.add(doc["email"].toString())
-                    }
-                    linkupProfileViewModel.retrieveObservedUserLittles().addOnSuccessListener {
-                        it3 -> for (doc in it3) {
-                            linkupProfileViewModel.observedUserInstanceLittles.add(doc["email"].toString())
-                        }
-                        setUpAddAsButtons(true)
-                        setUpAddAsButtons(false)
-                    }
-                }
-            }
+        determineAddAsBigButtonStatus()
+        determineAddAsLittleButtonStatus()
+    }
+
+    /**
+     * Sets up the "add as big" button to reflect the current relationship status
+     * between the current and observed user
+     */
+    private fun determineAddAsBigButtonStatus() {
+        linkupProfileViewModel.queryForContainedLittle().addOnCompleteListener {
+            if (it.result!!.exists()) showAddedAsBig()
+            else determineBigConnectionStatus()
         }
     }
 
     /**
-     * Sets the title of the action bar to the app name in the custom font through an image view
+     * Sets up the "add as little" button to reflect the current relationship status
+     * between the current and observed user
      */
-    @SuppressLint("InflateParams")
-    private fun addCoinlyActionBarTitle() {
-        val actionBar = this.supportActionBar!!
-        actionBar.setDisplayShowCustomEnabled(true)
-        actionBar.setDisplayShowTitleEnabled(false)
-        actionBar.customView = LayoutInflater.from(this).inflate(R.layout.app_bar_title, null)
-        actionBar.setBackgroundDrawable(ColorDrawable(Color.parseColor("#ffffff")))
-    }
-
-    /**
-     * Sets up the add as buttons based on the status between the current and observed user
-     */
-    private fun setUpAddAsButtons(asBig: Boolean) {
-        Firestore.getNotifications(linkupProfileViewModel.observedUserInstance).get().addOnSuccessListener { it ->
-            val notificationMessageTemplate = "${CurrentUser.instance!!.displayName} wants to add you as a ${if (asBig) "big" else "little"}!"
-            val alreadyRequested = it.map{ queryDocumentSnapshot ->  queryDocumentSnapshot["message"] }.contains(notificationMessageTemplate)
-            val alreadyAdded = linkupProfileViewModel.alreadyAdded(asBig)
-            Firestore.getNotifications(CurrentUser.instance!!).get().addOnSuccessListener {
-                val alreadyReceivedRequest = it.find { doc ->
-                    doc["type"] == (if (asBig) ADDING_AS_LITTLE else ADDING_AS_BIG)  &&
-                    doc["toAddUserEmail"] == CurrentUser.instance!!.email &&
-                    doc["addingToUserEmail"] == CurrentUser.instance!!.email } != null
-
-                val addStatus = Triple(alreadyRequested, alreadyAdded, alreadyReceivedRequest)
-
-                if (!addStatus.first && !addStatus.second && !addStatus.third)
-                    (if (asBig) add_as_big_button else add_as_little_button).setOnClickListener {
-                        linkupProfileViewModel.sendAddNotification(asBig)
-                        showRequested(if (asBig) add_as_big_button else add_as_little_button)
-                    }
-                else if (addStatus.first) showRequested(if (asBig) add_as_big_button else add_as_little_button)
-                else if (addStatus.second) showAdded(asBig, if (asBig) add_as_big_button else add_as_little_button)
-                else updateButtonsForPendingRequests(if (asBig) ADDING_AS_LITTLE else ADDING_AS_BIG)
-            }
+    private fun determineAddAsLittleButtonStatus() {
+        linkupProfileViewModel.queryForContainedBig().addOnCompleteListener {
+            if (it.result!!.exists()) showAddedAsLittle()
+            else determineLittleConnectionStatus()
         }
     }
 
     /**
-     * Update the text on the buttons if there's already a pending request
+     * Determines the current connection status between the current and observed user
+     * in regards to adding the observed user as a big
      */
-    private fun updateButtonsForPendingRequests(type: NotificationType) {
-        Firestore.getNotifications(CurrentUser.instance!!).get().addOnSuccessListener {
-            val pendingNotification = it.find { queryDocumentSnapshot ->
-                queryDocumentSnapshot["type"] == type &&
-                        queryDocumentSnapshot["toAddUserEmail"] == CurrentUser.instance!!.email &&
-                        queryDocumentSnapshot["addingToUserEmail"] == linkupProfileViewModel.observedUserInstance.email
-            }!!.toObject(Notification::class.java)
-            val pendingRequestPair = if (type == ADDING_AS_BIG) Pair(pendingNotification, true) else Pair(pendingNotification, false)
-            if (pendingRequestPair.second) setUpAddAsLittleAsAcceptRequest(pendingRequestPair.first)
-            else setUpAddAsBigAsAcceptRequest(pendingRequestPair.first)
+    private fun determineBigConnectionStatus() {
+        linkupProfileViewModel.queryForAlreadyRequestedBig().addOnCompleteListener {
+            if (!it.result!!.isEmpty) showRequestedBig()
+            else checkForReceivedRequestFromBig()
+        }
+    }
+
+    /**
+     * Determines the current connection status between the current and observed user
+     * in regards to adding the observed user as a little
+     */
+    private fun determineLittleConnectionStatus() {
+        linkupProfileViewModel.queryForAlreadyRequestedLittle().addOnCompleteListener {
+            if (!it.result!!.isEmpty) showRequestedLittle()
+            else checkForReceivedRequestFromLittle()
+        }
+    }
+
+    /**
+     * Checks if the current user has already received a request to be added as a big
+     * by the observed user. If not, sets up the button as normal
+     */
+    private fun checkForReceivedRequestFromBig() {
+        linkupProfileViewModel.queryForReceivedRequestFromBig().addOnCompleteListener {
+            if (!it.result!!.isEmpty) showAcceptRequestFromBig(it.result!!.first())
+             else setupStandardAddBigButton()
+        }
+    }
+
+    /**
+     * Checks if the current user has already received a request to be added as a little
+     * by the observed user. If not, sets up the button as normal
+     */
+    private fun checkForReceivedRequestFromLittle() {
+        linkupProfileViewModel.queryForReceivedRequestFromLittle().addOnCompleteListener {
+            if (!it.result!!.isEmpty) showAcceptRequestFromLittle(it.result!!.first())
+            else setupStandardAddLittleButton()
+        }
+    }
+
+    /**
+     * Sets up the procedure to send an "add as big" notification to the observed user
+     */
+    private fun setupStandardAddBigButton() {
+        add_as_big_button.setOnClickListener {
+            linkupProfileViewModel.sendAddBigNotification()
+            showRequestedBig()
+        }
+    }
+
+    /**
+     * Sets up the procedure to send an "add as little" notification to the observed user
+     */
+    private fun setupStandardAddLittleButton() {
+        add_as_little_button.setOnClickListener {
+            linkupProfileViewModel.sendAddLittleNotification()
+            showRequestedLittle()
+        }
+    }
+
+    /**
+     * Edits the "add as big" button to display that the observed user has already been
+     * added as a big
+     */
+    private fun showAddedAsBig() {
+        add_as_big_button.text = getString(R.string.added_as_big)
+        add_as_big_button.isEnabled = false
+    }
+
+    /**
+     * Edits the "add as little" button to display that the observed user has already been
+     * added as a little
+     */
+    private fun showAddedAsLittle() {
+        add_as_little_button.text = getString(R.string.added_as_little)
+        add_as_little_button.isEnabled = false
+    }
+
+    /**
+     * Updates the "add as big" button to show that it's function has already been performed,
+     * and disables it
+     */
+    private fun showRequestedBig() {
+        add_as_big_button.text = getString(R.string.requested)
+        add_as_big_button.isEnabled = false
+    }
+
+    /**
+     * Updates the "add as little" button to show that it's function has already been performed,
+     * and disables it
+     */
+    private fun showRequestedLittle() {
+        add_as_little_button.text = getString(R.string.requested)
+        add_as_little_button.isEnabled = false
+    }
+
+    /**
+     * Updates the "add as big" button to let the user accept the already received request by the
+     * observed user to be added as a little
+     */
+    private fun showAcceptRequestFromBig(notificationSnapshot: DocumentSnapshot) {
+        add_as_big_button.text = getString(R.string.accept_request)
+        add_as_big_button.isEnabled = true
+        add_as_big_button.setOnClickListener {
+            linkupProfileViewModel.executeAndUpdateNotification(notificationSnapshot)
+            showAddedAsBig()
+        }
+    }
+
+    /**
+     * Updates the "add as little" button to let the user accept the already received request by the
+     * observed user to be added as a big
+     */
+    private fun showAcceptRequestFromLittle(notificationSnapshot: DocumentSnapshot) {
+        add_as_little_button.text = getString(R.string.accept_request)
+        add_as_little_button.isEnabled = true
+        add_as_little_button.setOnClickListener {
+            linkupProfileViewModel.executeAndUpdateNotification(notificationSnapshot)
+            showAddedAsLittle()
         }
     }
 
     /**
      * Populates the visible UI elements of this activity to their respective data for the user
      */
-    private fun loadProfilePictureAndPrizesGiven() {
+    private fun loadProfilePicture() {
         Glide.with(this).load(linkupProfileViewModel.observedUserInstance.profilePictureUri).into(user_profile_picture)
-    }
-
-    /**
-     * Disables the add button and displays a message to notify that the observed user has already
-     * been added
-     */
-    private fun showAdded(addedAsBig: Boolean, buttonToUpdate: Button) {
-        buttonToUpdate.text = if (addedAsBig) "Added as big" else getString(R.string.added_as_little)
-        buttonToUpdate.isEnabled = false
-    }
-
-    /**
-     * Updates a button to show that it's function has already been performed, and disables it
-     */
-    private fun showRequested(buttonToUpdate: Button) {
-        buttonToUpdate.text = getString(R.string.requested)
-        buttonToUpdate.isEnabled = false
-    }
-
-    /**
-     * Updates the add-as-little button to show an accept-request message since there's already a pending notification
-     */
-    private fun setUpAddAsLittleAsAcceptRequest(notification: Notification) {
-        add_as_little_button.text = getString(R.string.accept_request)
-        add_as_little_button.isEnabled = true
-        add_as_little_button.setOnClickListener {
-            linkupProfileViewModel.executeAndUpdateNotification(notification)
-            add_as_little_button.text = getString(R.string.added_as_little)
-            add_as_little_button.isEnabled = false
-        }
-    }
-
-    /**
-     * Updates the add-as-big button to show an accept-request message since there's already a pending notification
-     */
-    private fun setUpAddAsBigAsAcceptRequest(notification: Notification) {
-        add_as_big_button.text = getString(R.string.accept_request)
-        add_as_big_button.isEnabled = true
-        add_as_big_button.setOnClickListener {
-            linkupProfileViewModel.executeAndUpdateNotification(notification)
-            add_as_big_button.text = getString(R.string.added_as_big)
-            add_as_big_button.isEnabled = false
-        }
     }
 
     /**
@@ -224,5 +259,17 @@ class LinkupProfileActivity : AppCompatActivity() {
         animator.setEvaluator { fraction, startValue, endValue -> (startValue as Int + fraction * (endValue as Int - startValue)).roundToInt() }
         animator.duration = 2000
         animator.start()
+    }
+
+    /**
+     * Sets the title of the action bar to the app name in the custom font through an image view
+     */
+    @SuppressLint("InflateParams")
+    private fun addCoinlyActionBarTitle() {
+        val actionBar = this.supportActionBar!!
+        actionBar.setDisplayShowCustomEnabled(true)
+        actionBar.setDisplayShowTitleEnabled(false)
+        actionBar.customView = LayoutInflater.from(this).inflate(R.layout.app_bar_title, null)
+        actionBar.setBackgroundDrawable(ColorDrawable(Color.parseColor("#ffffff")))
     }
 }

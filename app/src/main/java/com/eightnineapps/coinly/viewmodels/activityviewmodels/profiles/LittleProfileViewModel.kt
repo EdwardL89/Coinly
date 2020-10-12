@@ -1,53 +1,117 @@
 package com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.view.View
-import android.widget.Toast
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.helpers.ImageUploadHelper
+import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
+import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.enums.PrizeTapLocation
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.models.ImgStorage
-import kotlinx.android.synthetic.main.fragment_little_profile.*
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.storage.UploadTask
 import java.io.ByteArrayOutputStream
 
 class LittleProfileViewModel: ViewModel() {
 
-    private lateinit var setPrizesRecyclerView: RecyclerView
-    private lateinit var claimedPrizesRecyclerView: RecyclerView
-    private val currentUserInstance = CurrentUser.instance
-    private var pictureOfNewPrizeSetByteData = ByteArrayOutputStream().toByteArray()
     lateinit var observedUserInstance: User
+    private var hasLoadedPrizesSet = false
+    private var hasLoadedPrizesClaimed = false
+    private var prizesSetQuery: Task<QuerySnapshot>? = null
+    private var prizesClaimedQuery: Task<QuerySnapshot>? = null
+    private var prizesSetAdapter: PrizesRecyclerViewAdapter? = null
+    private var prizesClaimedAdapter: PrizesRecyclerViewAdapter? = null
+    private val allPrizesSet = mutableListOf<Prize>()
+    private val allPrizesClaimed = mutableListOf<Prize>()
     private val imageUploadHelper = ImageUploadHelper()
-    var coinAmountHasChanged = false
+    private var pictureOfNewPrizeSetByteData = ByteArrayOutputStream().toByteArray()
 
     /**
-     * Removes the observed Big and navigates to the previous page
+     * Returns the adapter of the prizes set recycler view
      */
-    fun removeLittleAndSendBack(context: Context) {
-        CurrentUser.littleToBeRemoved = observedUserInstance
+    fun getPrizesSetAdapter() = prizesSetAdapter!!
 
-        currentUserInstance!!.numOfLittles -= 1
-        Firestore.update(currentUserInstance!!, "numOfLittles", currentUserInstance.numOfLittles.toString())
-        Firestore.removeLittle(currentUserInstance.email!!, observedUserInstance.email!!)
+    /**
+     * Returns the adapter of the prizes claimed recycler view
+     */
+    fun getPrizesClaimedAdapter() = prizesClaimedAdapter!!
 
-        observedUserInstance.numOfBigs -= 1
-        Firestore.update(observedUserInstance, "numOfBigs", observedUserInstance.numOfBigs.toString())
-        Firestore.removeBig(observedUserInstance.email!!, currentUserInstance.email!!)
-        CurrentUser.numberOfLittles.value = currentUserInstance.numOfLittles
+    /**
+     * Determines whether or not the prizes set have been loaded
+     */
+    fun hasLoadedPrizesSet() = hasLoadedPrizesSet
 
-        Toast.makeText(context, "Removed ${observedUserInstance.displayName} as a little", Toast.LENGTH_SHORT).show()
+    /**
+     * Determines whether or not the prizes claimed have been loaded
+     */
+    fun hasLoadedPrizesClaimed() = hasLoadedPrizesClaimed
 
-        (context as Activity).finish()
+    /**
+     * Returns the query to get the prizes set
+     */
+    fun getPrizesSetQuery() = prizesSetQuery
+
+    /**
+     * Returns the query to get the prizes claimed
+     */
+    fun getPrizesClaimedQuery() = prizesClaimedQuery
+
+    /**
+     * Launches the query to get the prizes set
+     */
+    fun startQueryForPrizesSet() {
+        prizesSetQuery = Firestore.getPrizesSet(observedUserInstance.email!!, CurrentUser.getEmail()!!).get()
+    }
+
+    /**
+     * Launches the query to get the prizes claimed
+     */
+    fun startQueryForPrizesClaimed() {
+        prizesClaimedQuery = Firestore.getPrizesClaimed(observedUserInstance.email!!, CurrentUser.getEmail()!!).get()
+    }
+
+    /**
+     * Instantiates the adapter for the prizes set recycler
+     */
+    fun createPrizesSetAdapter() {
+        prizesSetAdapter = PrizesRecyclerViewAdapter(allPrizesSet,
+            PrizeTapLocation.LITTLE_PRIZES_SET, observedUserInstance)
+    }
+
+    /**
+     * Instantiates the adapter for the prizes claimed recycler
+     */
+    fun createPrizesClaimedAdapter() {
+        prizesClaimedAdapter = PrizesRecyclerViewAdapter(allPrizesClaimed,
+            PrizeTapLocation.LITTLE_PRIZES_CLAIMED, observedUserInstance)
+    }
+
+    /**
+     * Saves all the prizes set retrieved from the query
+     */
+    fun compilePrizesSet(querySnapshot: QuerySnapshot) {
+        for (document in querySnapshot) {
+            allPrizesSet.add(document.toObject(Prize::class.java))
+        }
+        hasLoadedPrizesSet = true
+    }
+
+    /**
+     * Saves all the prizes claimed retrieved from the query
+     */
+    fun compilePrizesClaimed(querySnapshot: QuerySnapshot) {
+        for (document in querySnapshot) {
+            allPrizesClaimed.add(document.toObject(Prize::class.java))
+        }
+        hasLoadedPrizesClaimed = true
     }
 
     /**
@@ -60,75 +124,95 @@ class LittleProfileViewModel: ViewModel() {
     }
 
     /**
-     * Uploads image to storage nad updates the user's Uri
+     * Adds a prize item to the set prizes recycler view
      */
-    fun uploadNewSetPrize(prizeTitle: String, prizePrice: Int, context: Context) {
-        val prizeId = imageUploadHelper.generateId()
-        val prizePath = "set_prizes/${currentUserInstance!!.id}/${observedUserInstance.id}/$prizeId"
-        ImgStorage.insert(pictureOfNewPrizeSetByteData, prizePath).addOnSuccessListener {
-            ImgStorage.read(prizePath).addOnSuccessListener {
-                uri -> Firestore.setNewPrize(observedUserInstance.email!!, currentUserInstance.email!!, Prize(prizeTitle, prizePrice, uri.toString(), prizeId))
-                .addOnCompleteListener {
-                    updateSetRecyclerViewAdapterAndLayoutManager(context)
-                    Toast.makeText(context, "Prize Set!", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+    fun addSetPrizeToRecycler(prize: Prize) {
+        prizesSetAdapter?.addItem(prize)
     }
 
     /**
-     * Load the "Claimed prizes from you" recycler view with the appropriate prize items
+     * Starts a query to save a new prize in the firestore
      */
-    fun loadClaimedPrizes(recyclerView: RecyclerView, context: Context) {
-        claimedPrizesRecyclerView = recyclerView
-        claimedPrizesRecyclerView.removeAllViews()
-        updateClaimedRecyclerViewAdapterAndLayoutManager(context)
+    fun savePrizeInFireStore(prize: Prize): Task<Void> {
+        return Firestore.setNewPrize(observedUserInstance.email!!, CurrentUser.getEmail()!!, prize)
     }
 
     /**
-     * Load the "Your set prizes" recycler view with the appropriate prize items
+     * Generates a random 30-character Id
      */
-    fun loadSetPrizes(recyclerView: RecyclerView, context: Context) {
-        setPrizesRecyclerView = recyclerView
-        setPrizesRecyclerView.removeAllViews()
-        updateSetRecyclerViewAdapterAndLayoutManager(context)
+    fun generateId() = imageUploadHelper.generateId()
+
+    /**
+     * Generates a path to save a prize in based on the prize Id
+     */
+    fun generatePrizePath(prizeId: String): String {
+        return "set_prizes/${CurrentUser.getEmail()}/${observedUserInstance.email}/$prizeId"
     }
 
     /**
-     * Assigns the "Claimed prizes from you" recycler view's layout manager and adapter using the list whose data is being displayed
+     * Starts a query to save an image to storage
      */
-    private fun updateClaimedRecyclerViewAdapterAndLayoutManager(context: Context?) {
-        claimedPrizesRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        Firestore.getPrizesClaimed(observedUserInstance.email!!, currentUserInstance!!.email!!).get().addOnSuccessListener {
-            val allPrizesClaimed = mutableListOf<Prize>()
-            for (document in it) {
-                allPrizesClaimed.add(document.toObject(Prize::class.java))
-            }
-            claimedPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(allPrizesClaimed, context!!, PrizeTapLocation.LITTLE_PRIZES_CLAIMED, currentUserInstance, observedUserInstance)
-            if (allPrizesClaimed.isNotEmpty()) {
-                (context as Activity).no_prizes_claimed_from_you_image.visibility = View.INVISIBLE
-            } else {
-                (context as Activity).no_prizes_claimed_from_you_image.visibility = View.VISIBLE
-            }
-        }
+    fun insertPrizeImageToStorage(prizePath: String): UploadTask {
+        return ImgStorage.insert(pictureOfNewPrizeSetByteData, prizePath)
     }
 
     /**
-     * Assigns the "Your set prizes" recycler view's layout manager and adapter using the list whose data is being displayed
+     * Starts a query to download an image uri at the given path
      */
-    private fun updateSetRecyclerViewAdapterAndLayoutManager(context: Context?) {
-        setPrizesRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        Firestore.getPrizesSet(observedUserInstance.email!!, currentUserInstance!!.email!!).get().addOnSuccessListener {
-            val allPrizesSet = mutableListOf<Prize>()
-            for (document in it) {
-                allPrizesSet.add(document.toObject(Prize::class.java))
-            }
-            setPrizesRecyclerView.adapter = PrizesRecyclerViewAdapter(allPrizesSet, context!!, PrizeTapLocation.LITTLE_PRIZES_SET, currentUserInstance, observedUserInstance)
-            if (allPrizesSet.isNotEmpty()) {
-                (context as Activity).no_prizes_set_image.visibility = View.INVISIBLE
-            } else {
-                (context as Activity).no_prizes_set_image.visibility = View.VISIBLE
-            }
-        }
+    fun downloadImageUri(prizePath: String): Task<Uri> {
+        return ImgStorage.readImage(prizePath)
+    }
+
+    /**
+     * Executes and sends a giving coins notification
+     */
+    fun sendAndExecuteGiveNotification(coinsGiving: Int, optionalNote: String): Task<Void> {
+        val notification = constructNotification(coinsGiving, optionalNote)
+        notification.execute()
+        observedUserInstance.coins += coinsGiving
+        return Firestore.addNotification(observedUserInstance.email!!, notification)
+    }
+
+    /**
+     * Constructs the notification to be sent to the little with all the information to inform them
+     * of the coins they've been given
+     */
+    private fun constructNotification(coinsGiving: Int, optionalNote: String): Notification {
+        val notification = Notification()
+        notification.id = generateId()
+        notification.coins = coinsGiving
+        notification.moreInformation = optionalNote
+        notification.type = NotificationType.GIVING_COINS
+        notification.toAddUserEmail = observedUserInstance.email!!
+        notification.profilePictureUri = CurrentUser.instance!!.profilePictureUri
+        notification.message = "${CurrentUser.instance!!.displayName} gave you $coinsGiving coins"
+        return notification
+    }
+
+    /**
+     * Removes the observed Little
+     */
+    fun removeLittleAndSendBack() {
+        CurrentUser.littleToBeRemoved = observedUserInstance
+        removeLittleFromCurrentUser()
+        removeCurrentUserFromObservedUsersBigs()
+    }
+
+    /**
+     * Removes the observed user from the current user's little list
+     */
+    private fun removeLittleFromCurrentUser() {
+        CurrentUser.decrementLittles()
+        Firestore.removeLittle(CurrentUser.getEmail()!!, observedUserInstance.email!!)
+        Firestore.update(CurrentUser.instance!!, "numOfLittles", CurrentUser.numOfLittles.value.toString())
+    }
+
+    /**
+     * Removes the current user from the observed user's big list
+     */
+    private fun removeCurrentUserFromObservedUsersBigs() {
+        observedUserInstance.numOfBigs -= 1
+        Firestore.update(observedUserInstance, "numOfBigs", observedUserInstance.numOfBigs.toString())
+        Firestore.removeBig(observedUserInstance.email!!, CurrentUser.getEmail()!!)
     }
 }

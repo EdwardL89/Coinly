@@ -26,24 +26,20 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
         return database.collection("users").document(user.email!!).update(field, value)
     }
 
-    override fun read(user: User): DocumentReference {
-        return database.collection("users").document(user.email!!)
+    override fun read(userEmail: String): DocumentReference {
+        return database.collection("users").document(userEmail)
     }
 
-    fun read(email: String): DocumentReference {
-        return database.collection("users").document(email)
-    }
-
-    fun addNotification(userEmail: String, notification: Notification) {
-        database.collection("users").document(userEmail).collection("notifications").document(notification.id).set(notification)
+    fun addNotification(userEmail: String, notification: Notification): Task<Void> {
+        return database.collection("users").document(userEmail).collection("notifications").document(notification.id).set(notification)
     }
 
     fun removeNotification(userEmail: String, notification: Notification) {
         database.collection("users").document(userEmail).collection("notifications").document(notification.id).delete()
     }
 
-    fun getNotifications(user: User): CollectionReference {
-        return database.collection("users").document(user.email!!).collection("notifications")
+    fun getNotifications(userEmail: String): CollectionReference {
+        return database.collection("users").document(userEmail).collection("notifications")
     }
 
     fun getBigs(littleEmail: String): CollectionReference {
@@ -54,20 +50,23 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
         return database.collection("users").document(bigsEmail).collection("Littles")
     }
 
-    fun addBig(littleEmail: String, bigEmail: String) {
-        database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).set(mapOf("email" to bigEmail))
+    fun addBig(littleEmail: String, bigEmail: String, profilePictureUri: String, displayName: String) {
+        database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).set(mapOf("email" to bigEmail, "profilePictureUri" to profilePictureUri, "displayName" to displayName))
     }
 
-    fun addLittle(bigEmail: String, littleEmail: String) {
-        database.collection("users").document(bigEmail).collection("Littles").document(littleEmail).set(mapOf("email" to littleEmail))
+    fun addLittle(bigEmail: String, littleEmail: String, profilePictureUri: String, displayName: String) {
+        database.collection("users").document(bigEmail).collection("Littles").document(littleEmail).set(mapOf("email" to littleEmail, "profilePictureUri" to profilePictureUri, "displayName" to displayName))
     }
 
     fun removeBig(littleEmail: String, bigEmail: String) {
+        val prizesToDeleteFromStorage = mutableListOf<String>()
         database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).collection("Prizes").get().addOnSuccessListener {
             for (document in it) { //Max of 10 prizes can be set
+                prizesToDeleteFromStorage.add(document["id"].toString())
                 document.reference.delete()
             }
             database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).delete()
+            ImgStorage.deleteSetPrizes(prizesToDeleteFromStorage, "set_prizes/$bigEmail/$littleEmail/")
         }
     }
 

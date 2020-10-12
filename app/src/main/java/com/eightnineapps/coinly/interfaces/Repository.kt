@@ -12,6 +12,6 @@ interface Repository<T, S, U, out V> {
 
     fun update(user: User, field: String, value: String): Task<S>
 
-    fun read(user: User): U
+    fun read(userEmail: String): U
 
 }
