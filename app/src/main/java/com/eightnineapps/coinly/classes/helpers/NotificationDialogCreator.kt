@@ -10,7 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.enums.NotificationType
-import kotlinx.android.synthetic.main.notification_dialogue_layout.view.*
+import kotlinx.android.synthetic.main.dialog_notification_layout.view.*
 
 class NotificationDialogCreator {
 
@@ -49,7 +49,7 @@ class NotificationDialogCreator {
      */
     @SuppressLint("InflateParams")
     private fun createViewForAlertDialogue(notification: Notification, view: View): View {
-        val dialogueView = (view.context as Activity).layoutInflater.inflate(R.layout.notification_dialogue_layout, null)
+        val dialogueView = (view.context as Activity).layoutInflater.inflate(R.layout.dialog_notification_layout, null)
         setNotificationContent(dialogueView, notification)
         return dialogueView
     }

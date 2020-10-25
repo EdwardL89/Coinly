@@ -36,7 +36,7 @@ class RequestCoinsFragment : Fragment() {
      */
     private fun loadProfilePicture() {
         val observedUser = bigProfileViewModel.observedUserInstance
-        Glide.with(view!!).load(observedUser.profilePictureUri).into(view!!.findViewById(R.id.user_profile_picture))
+        Glide.with(requireView()).load(observedUser.profilePictureUri).into(requireView().findViewById(R.id.user_profile_picture))
         display_name_text_view.text = observedUser.displayName
     }
 
@@ -71,16 +71,16 @@ class RequestCoinsFragment : Fragment() {
      */
     private fun hideKeyboardAndReturn() {
         hideSoftKeyboard()
-        activity!!.onBackPressed()
+        requireActivity().onBackPressed()
     }
 
     /**
      * Hides the keyboard from the screen
      */
     private fun hideSoftKeyboard() {
-        val view = activity!!.currentFocus
+        val view = requireActivity().currentFocus
         view?.let { v ->
-            val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(v.windowToken, 0)
         }
     }

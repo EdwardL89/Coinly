@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.databinding.ActivityEditProfileBinding
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.EditProfileViewModel
-import com.firebase.ui.auth.data.model.User
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 
 /**

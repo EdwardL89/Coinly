@@ -164,7 +164,7 @@ class MyProfileFragment : Fragment() {
      * Loads the profile picture
      */
     private fun loadProfilePicture() {
-        Glide.with(activity!!).load(CurrentUser.profilePictureUri.value).into(
+        Glide.with(requireActivity()).load(CurrentUser.profilePictureUri.value).into(
             fragmentView.findViewById(R.id.my_profile_picture)
         )
     }

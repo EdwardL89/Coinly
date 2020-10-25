@@ -19,10 +19,10 @@ import com.eightnineapps.coinly.enums.PrizeTapLocation
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.models.ImgStorage
-import kotlinx.android.synthetic.main.claim_prize_dialogue_layout.*
+import kotlinx.android.synthetic.main.dialog_claim_prize_layout.*
 import kotlinx.android.synthetic.main.fragment_big_profile.*
 import kotlinx.android.synthetic.main.fragment_little_profile.*
-import kotlinx.android.synthetic.main.prize_info_dialogue_layout.*
+import kotlinx.android.synthetic.main.dialog_prize_info_layout.*
 import kotlinx.android.synthetic.main.prize_list_view_layout.view.*
 
 class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTapLocation, _observedUser: User): RecyclerView.Adapter<PrizesRecyclerViewAdapter.ViewHolder>() {
@@ -60,7 +60,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
          * Open a dialogue to show the prize title and price, with no other functionality
          */
         private fun openDialogueToShowPrizeInfo(prize: Prize, view: View) {
-            val dialog = dialogCreator.createAlertDialog(prize, view.context, R.layout.prize_info_dialogue_layout)
+            val dialog = dialogCreator.createAlertDialog(prize, view.context, R.layout.dialog_prize_info_layout)
             dialogCreator.showDialog(dialog)
             if (prizeTapLocation == PrizeTapLocation.LITTLE_PRIZES_SET) setUpButtonForDeletion(prize.id, dialog)
             else dialog.cancel_button.setOnClickListener { dialog.cancel() }
@@ -92,7 +92,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
          * Open a dialogue for the user to set the title and price of the new prize
          */
         private fun openDialogueToClaimPrize(prize: Prize, view: View) {
-            val dialog = dialogCreator.createAlertDialog(prize, view.context, R.layout.claim_prize_dialogue_layout)
+            val dialog = dialogCreator.createAlertDialog(prize, view.context, R.layout.dialog_claim_prize_layout)
             dialogCreator.showDialog(dialog)
             setUpDialogButtons(dialog, prize)
         }

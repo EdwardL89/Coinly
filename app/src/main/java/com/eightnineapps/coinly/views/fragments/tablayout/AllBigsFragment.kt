@@ -119,7 +119,7 @@ class AllBigsFragment : Fragment() {
      */
     private fun addSpaceBetweenItemsInRecycler(context: Context?, view: View) {
         val itemDecorator = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        itemDecorator.setDrawable(ContextCompat.getDrawable(context!!, R.drawable.space_between_list_items)!!)
+        itemDecorator.setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.space_between_list_items)!!)
         view.allBigsRecyclerView.addItemDecoration(itemDecorator)
     }
 }

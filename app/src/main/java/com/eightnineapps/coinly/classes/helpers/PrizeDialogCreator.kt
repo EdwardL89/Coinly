@@ -12,11 +12,11 @@ import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.objects.Prize
-import kotlinx.android.synthetic.main.claim_prize_dialogue_layout.view.*
-import kotlinx.android.synthetic.main.prize_info_dialogue_layout.view.*
-import kotlinx.android.synthetic.main.prize_info_dialogue_layout.view.prize_info_name
+import kotlinx.android.synthetic.main.dialog_claim_prize_layout.view.*
+import kotlinx.android.synthetic.main.dialog_prize_info_layout.view.*
+import kotlinx.android.synthetic.main.dialog_prize_info_layout.view.prize_info_name
 import kotlinx.android.synthetic.main.prize_list_view_layout.view.prize_picture
-import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.view.*
+import kotlinx.android.synthetic.main.dialog_set_new_prize_layout.view.*
 
 class PrizeDialogCreator {
 
@@ -48,8 +48,8 @@ class PrizeDialogCreator {
     private fun createViewForAlertDialogue(prize: Prize?, context: Context, layoutResource: Int): View {
         val dialogueView = (context as Activity).layoutInflater.inflate(layoutResource, null)
         when (layoutResource) {
-            R.layout.prize_info_dialogue_layout -> setPrizeInfoContent(dialogueView, prize!!)
-            R.layout.set_new_prize_dialogue_layout -> setNewPrizeInfo(dialogueView)
+            R.layout.dialog_prize_info_layout -> setPrizeInfoContent(dialogueView, prize!!)
+            R.layout.dialog_set_new_prize_layout -> setNewPrizeInfo(dialogueView)
             else -> setClaimPrizeContent(dialogueView, prize!!)
         }
         return dialogueView

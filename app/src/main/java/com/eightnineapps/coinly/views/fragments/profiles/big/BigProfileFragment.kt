@@ -30,7 +30,7 @@ class BigProfileFragment: Fragment() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bigProfileViewModel.observedUserInstance = activity!!.intent.getSerializableExtra("observed_user") as User
+        bigProfileViewModel.observedUserInstance = requireActivity().intent.getSerializableExtra("observed_user") as User
         bigProfileViewModel.startQueryForPrizesSet()
         bigProfileViewModel.startQueryForClaimedPrizes()
     }
@@ -136,7 +136,7 @@ class BigProfileFragment: Fragment() {
      */
     private fun loadProfile() {
         val observedUser = bigProfileViewModel.observedUserInstance
-        Glide.with(view!!).load(observedUser.profilePictureUri).into(view!!.findViewById(R.id.user_profile_picture))
+        Glide.with(requireView()).load(observedUser.profilePictureUri).into(requireView().findViewById(R.id.user_profile_picture))
         my_display_name_textView.text = observedUser.displayName
         bio_text_view.text = observedUser.bio
         coin_count.text = observedUser.coins.toString()

@@ -25,7 +25,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.fragment_little_profile.*
 import kotlinx.android.synthetic.main.fragment_little_profile.view.*
-import kotlinx.android.synthetic.main.set_new_prize_dialogue_layout.*
+import kotlinx.android.synthetic.main.dialog_set_new_prize_layout.*
 
 class LittleProfileFragment: Fragment() {
 
@@ -39,7 +39,7 @@ class LittleProfileFragment: Fragment() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        littleProfileViewModel.observedUserInstance = activity!!.intent.getSerializableExtra("observed_user") as User
+        littleProfileViewModel.observedUserInstance = requireActivity().intent.getSerializableExtra("observed_user") as User
         littleProfileViewModel.startQueryForPrizesSet()
         littleProfileViewModel.startQueryForPrizesClaimed()
     }
@@ -153,7 +153,7 @@ class LittleProfileFragment: Fragment() {
      */
     private fun loadProfile() {
         val observedUser = littleProfileViewModel.observedUserInstance
-        Glide.with(view!!).load(observedUser.profilePictureUri).into(view!!.findViewById(R.id.user_profile_picture))
+        Glide.with(requireView()).load(observedUser.profilePictureUri).into(requireView().findViewById(R.id.user_profile_picture))
         my_display_name_textView.text = observedUser.displayName
         bio_text_view.text = observedUser.bio
         coin_count.text = observedUser.coins.toString()
@@ -195,7 +195,7 @@ class LittleProfileFragment: Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (data != null) {
-            littleProfileViewModel.handleGallerySelectionCompletion(requestCode, resultCode, data, context!!)
+            littleProfileViewModel.handleGallerySelectionCompletion(requestCode, resultCode, data, requireContext())
             openDialogue(data)
         }
     }
@@ -206,7 +206,7 @@ class LittleProfileFragment: Fragment() {
     @SuppressLint("InflateParams")
     private fun openDialogue(data: Intent?) {
         dialogCreator.setImageDataForDialog(data)
-        val dialog = dialogCreator.createAlertDialog(null, context!!, R.layout.set_new_prize_dialogue_layout)
+        val dialog = dialogCreator.createAlertDialog(null, requireContext(), R.layout.dialog_set_new_prize_layout)
         dialogCreator.showDialog(dialog)
         setUpDialogButtons(dialog)
     }
@@ -234,12 +234,12 @@ class LittleProfileFragment: Fragment() {
      */
     private fun verifyPrizeBeforeSetting(title: String, price: String, dialog: AlertDialog): Boolean {
         if (hasReachedSetPrizeLimit()) {
-            Toast.makeText(context!!, "You've reached the prizes set limit!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "You've reached the prizes set limit!", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         } else if (title == "" || price == "") {
-            Toast.makeText(context!!, "Missing Fields", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Missing Fields", Toast.LENGTH_SHORT).show()
         } else if (price != "" && price[0] == '0') {
-            Toast.makeText(context!!, "Price cannot be 0", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Price cannot be 0", Toast.LENGTH_SHORT).show()
         } else {
             return true
         }
@@ -250,7 +250,7 @@ class LittleProfileFragment: Fragment() {
      * Starts the process of saving the set prize to the firestore and storage
      */
     private fun uploadSetPrize(prizeTitle: String, prizePrice: Int) {
-        Toast.makeText(context!!, "Uploading prize...", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Uploading prize...", Toast.LENGTH_SHORT).show()
         val prizeId = littleProfileViewModel.generateId()
         val prizePath = littleProfileViewModel.generatePrizePath(prizeId)
         littleProfileViewModel.insertPrizeImageToStorage(prizePath).addOnCompleteListener {
