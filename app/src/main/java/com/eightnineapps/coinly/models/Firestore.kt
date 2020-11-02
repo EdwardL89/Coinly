@@ -15,6 +15,8 @@ import com.google.firebase.firestore.QuerySnapshot
 object Firestore {
 
     private val database = FirebaseFirestore.getInstance()
+    private val numericFields = hashSetOf("numOfBigs", "numOfLittles", "coins", "numOfPrizesGiven",
+        "numOfPrizesClaimed", "avgPriceOfPrizesGiven", "avgPriceOfPrizesClaimed")
 
     //region Users
 
@@ -26,17 +28,22 @@ object Firestore {
     }
 
     fun update(userEmail: String, field: String, value: String): Task<Void> {
-        if (field == "numOfBigs" || field == "numOfLittles" || field == "coins" || field == "numOfPrizesGiven" || field == "numOfPrizesClaimed" || field == "avgPriceOfPrizesGiven" || field == "avgPriceOfPrizesClaimed")
-            return database.collection("users").document(userEmail).update(field, Integer.parseInt(value))
-        return database.collection("users").document(userEmail).update(field, value)
+        return database
+            .collection("users")
+            .document(userEmail)
+            .update(field, if (numericFields.contains(field)) Integer.parseInt(value) else value)
     }
 
     fun read(userEmail: String): DocumentReference {
-        return database.collection("users").document(userEmail)
+        return database
+            .collection("users")
+            .document(userEmail)
     }
 
     fun getAllUsers(): Task<QuerySnapshot> {
-        return database.collection("users").get()
+        return database
+            .collection("users")
+            .get()
     }
 
     //endregion Users
@@ -48,7 +55,8 @@ object Firestore {
             .collection("users")
             .document(userEmail)
             .collection("notifications")
-            .document(notification.id).set(notification)
+            .document(notification.id)
+            .set(notification)
     }
 
     fun removeNotification(userEmail: String, notificationId: String) {
@@ -89,13 +97,25 @@ object Firestore {
 
     fun removeBig(littleEmail: String, bigEmail: String) {
         val prizesToDeleteFromStorage = mutableListOf<String>()
-        database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).collection("Prizes").get().addOnSuccessListener {
+        database
+            .collection("users")
+            .document(littleEmail)
+            .collection("Bigs")
+            .document(bigEmail)
+            .collection("Prizes")
+            .get().addOnSuccessListener {
             for (document in it) { //Max of 10 prizes can be set
                 prizesToDeleteFromStorage.add(document["id"].toString())
                 document.reference.delete()
             }
-            database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).delete()
-            ImgStorage.deleteSetPrizes(prizesToDeleteFromStorage, "set_prizes/$bigEmail/$littleEmail/")
+            database
+                .collection("users")
+                .document(littleEmail)
+                .collection("Bigs")
+                .document(bigEmail)
+                .delete()
+            ImgStorage
+                .deleteSetPrizes(prizesToDeleteFromStorage, "set_prizes/$bigEmail/$littleEmail/")
         }
     }
 

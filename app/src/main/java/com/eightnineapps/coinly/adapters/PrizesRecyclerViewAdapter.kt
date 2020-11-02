@@ -2,7 +2,6 @@ package com.eightnineapps.coinly.adapters
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,9 +19,9 @@ import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.models.ImgStorage
 import kotlinx.android.synthetic.main.dialog_claim_prize_layout.*
+import kotlinx.android.synthetic.main.dialog_prize_info_layout.*
 import kotlinx.android.synthetic.main.fragment_big_profile.*
 import kotlinx.android.synthetic.main.fragment_little_profile.*
-import kotlinx.android.synthetic.main.dialog_prize_info_layout.*
 import kotlinx.android.synthetic.main.prize_list_view_layout.view.*
 
 class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTapLocation, _observedUser: User): RecyclerView.Adapter<PrizesRecyclerViewAdapter.ViewHolder>() {
@@ -49,7 +48,6 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
          */
         override fun onClick(v: View?) {
             val selectedPrize = prizeList[recyclerView!!.getChildLayoutPosition(v!!)]
-            Log.d("INFO", prizeTapLocation.toString())
             when (prizeTapLocation) {
                 PrizeTapLocation.BIG_PRIZES_SET -> openDialogueToClaimPrize(selectedPrize, v)
                 else -> openDialogueToShowPrizeInfo(selectedPrize, v)
