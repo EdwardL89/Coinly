@@ -65,7 +65,7 @@ class EditProfileViewModel: ViewModel() {
         ImgStorage.insert(userProfilePictureByteData, "profile_pictures/${currentUser.instance!!.id}").addOnSuccessListener {
             ImgStorage.read(currentUser.instance!!.id).addOnSuccessListener {
                             uri -> currentUser.profilePictureUri.value = uri.toString()
-                            Firestore.update(currentUser.instance!!, "profilePictureUri", currentUser.profilePictureUri.value!!)
+                            Firestore.update(currentUser.getEmail()!!, "profilePictureUri", currentUser.profilePictureUri.value!!)
                     }
             }
     }

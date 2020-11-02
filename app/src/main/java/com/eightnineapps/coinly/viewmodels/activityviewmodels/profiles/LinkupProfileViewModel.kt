@@ -98,7 +98,7 @@ class LinkupProfileViewModel: ViewModel() {
     fun executeAndUpdateNotification(notificationSnapshot: DocumentSnapshot) {
         val notification = notificationSnapshot.toObject(Notification::class.java)!!
         notification.execute()
-        Firestore.removeNotification(CurrentUser.getEmail()!!, notification)
+        Firestore.removeNotification(CurrentUser.getEmail()!!, notification.id)
     }
 
     /**

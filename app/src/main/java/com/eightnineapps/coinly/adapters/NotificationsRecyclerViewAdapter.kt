@@ -137,7 +137,7 @@ class NotificationsRecyclerViewAdapter(_notifications: MutableList<Notification>
      * Removes the notification at the given position
      */
     private fun removeNotification(position: Int, context: Context) {
-        Firestore.removeNotification(CurrentUser.instance!!.email!!, notificationList[position])
+        Firestore.removeNotification(CurrentUser.instance!!.email!!, notificationList[position].id)
         notificationList.removeAt(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, notificationList.size)

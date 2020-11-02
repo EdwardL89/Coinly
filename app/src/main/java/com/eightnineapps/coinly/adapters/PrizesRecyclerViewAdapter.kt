@@ -147,8 +147,8 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
         private fun spendCoins(price: Int) {
             observedUser.coins += price
             CurrentUser.subtractCoins(price)
-            Firestore.update(CurrentUser.instance!!, "coins", CurrentUser.coins.value.toString())
-            Firestore.update(observedUser, "coins", observedUser.coins.toString())
+            Firestore.update(CurrentUser.getEmail()!!, "coins", CurrentUser.coins.value.toString())
+            Firestore.update(observedUser.email!!, "coins", observedUser.coins.toString())
             updateClaimedStats(price)
             updateGivenStats(price)
         }
@@ -172,8 +172,8 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
             observedUser.numOfPrizesGiven++
             val newAverage = newTotalPrice / observedUser.numOfPrizesGiven
             observedUser.avgPriceOfPrizesGiven = newAverage
-            Firestore.update(observedUser, "avgPriceOfPrizesGiven", observedUser.avgPriceOfPrizesGiven.toString())
-            Firestore.update(observedUser, "numOfPrizesGiven", observedUser.numOfPrizesGiven.toString())
+            Firestore.update(observedUser.email!!, "avgPriceOfPrizesGiven", observedUser.avgPriceOfPrizesGiven.toString())
+            Firestore.update(observedUser.email!!, "numOfPrizesGiven", observedUser.numOfPrizesGiven.toString())
         }
 
         /**
@@ -185,8 +185,8 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
             CurrentUser.incrementPrizesClaimed()
             val newAverage = newTotalPrice / CurrentUser.numOfPrizesClaimed.value!!
             CurrentUser.updateAveragePriceOfPrizesClaimed(newAverage)
-            Firestore.update(CurrentUser.instance!!, "avgPriceOfPrizesClaimed", CurrentUser.avgPriceOfPrizesClaimed.value.toString())
-            Firestore.update(CurrentUser.instance!!, "numOfPrizesClaimed", CurrentUser.numOfPrizesClaimed.value.toString())
+            Firestore.update(CurrentUser.getEmail()!!, "avgPriceOfPrizesClaimed", CurrentUser.avgPriceOfPrizesClaimed.value.toString())
+            Firestore.update(CurrentUser.getEmail()!!, "numOfPrizesClaimed", CurrentUser.numOfPrizesClaimed.value.toString())
         }
     }
 

@@ -3,7 +3,6 @@ package com.eightnineapps.coinly.models
 import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
-import com.eightnineapps.coinly.interfaces.Repository
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
@@ -13,50 +12,79 @@ import com.google.firebase.firestore.QuerySnapshot
 /**
  * Model that provides access to the Firebase Firestore
  */
-object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
+object Firestore {
 
     private val database = FirebaseFirestore.getInstance()
 
-    override fun insert(data: User, path: String): Task<Void> {
-        return database.collection("users").document(data.email.toString()).set(data)
+    //region Users
+
+    fun insert(data: User): Task<Void> {
+        return database
+            .collection("users")
+            .document(data.email.toString())
+            .set(data)
     }
 
-    override fun update(user: User, field: String, value: String): Task<Void> {
+    fun update(userEmail: String, field: String, value: String): Task<Void> {
         if (field == "numOfBigs" || field == "numOfLittles" || field == "coins" || field == "numOfPrizesGiven" || field == "numOfPrizesClaimed" || field == "avgPriceOfPrizesGiven" || field == "avgPriceOfPrizesClaimed")
-            return database.collection("users").document(user.email!!).update(field, Integer.parseInt(value))
-        return database.collection("users").document(user.email!!).update(field, value)
+            return database.collection("users").document(userEmail).update(field, Integer.parseInt(value))
+        return database.collection("users").document(userEmail).update(field, value)
     }
 
-    override fun read(userEmail: String): DocumentReference {
+    fun read(userEmail: String): DocumentReference {
         return database.collection("users").document(userEmail)
     }
 
-    fun addNotification(userEmail: String, notification: Notification): Task<Void> {
-        return database.collection("users").document(userEmail).collection("notifications").document(notification.id).set(notification)
+    fun getAllUsers(): Task<QuerySnapshot> {
+        return database.collection("users").get()
     }
 
-    fun removeNotification(userEmail: String, notification: Notification) {
-        database.collection("users").document(userEmail).collection("notifications").document(notification.id).delete()
+    //endregion Users
+
+    //region Notifications
+
+    fun addNotification(userEmail: String, notification: Notification): Task<Void> {
+        return database
+            .collection("users")
+            .document(userEmail)
+            .collection("notifications")
+            .document(notification.id).set(notification)
+    }
+
+    fun removeNotification(userEmail: String, notificationId: String) {
+        database
+            .collection("users")
+            .document(userEmail)
+            .collection("notifications")
+            .document(notificationId)
+            .delete()
     }
 
     fun getNotifications(userEmail: String): CollectionReference {
-        return database.collection("users").document(userEmail).collection("notifications")
+        return database
+            .collection("users")
+            .document(userEmail)
+            .collection("notifications")
     }
+
+    //endregion Users
+
+    //region Bigs
 
     fun getBigs(littleEmail: String): CollectionReference {
-        return database.collection("users").document(littleEmail).collection("Bigs")
-    }
-
-    fun getLittles(bigsEmail: String): CollectionReference {
-        return database.collection("users").document(bigsEmail).collection("Littles")
+        return database
+            .collection("users")
+            .document(littleEmail)
+            .collection("Bigs")
     }
 
     fun addBig(littleEmail: String, bigEmail: String, profilePictureUri: String, displayName: String) {
-        database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).set(mapOf("email" to bigEmail, "profilePictureUri" to profilePictureUri, "displayName" to displayName))
-    }
-
-    fun addLittle(bigEmail: String, littleEmail: String, profilePictureUri: String, displayName: String) {
-        database.collection("users").document(bigEmail).collection("Littles").document(littleEmail).set(mapOf("email" to littleEmail, "profilePictureUri" to profilePictureUri, "displayName" to displayName))
+        database
+            .collection("users")
+            .document(littleEmail)
+            .collection("Bigs")
+            .document(bigEmail)
+            .set(mapOf("email" to bigEmail, "profilePictureUri" to profilePictureUri, "displayName" to displayName))
     }
 
     fun removeBig(littleEmail: String, bigEmail: String) {
@@ -71,33 +99,75 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
         }
     }
 
-    fun removeLittle(bigEmail: String, littleEmail: String) {
-        database.collection("users").document(bigEmail).collection("Littles").document(littleEmail).delete()
+    //endregion Bigs
+
+    //region Littles
+
+    fun getLittles(bigsEmail: String): CollectionReference {
+        return database
+            .collection("users")
+            .document(bigsEmail)
+            .collection("Littles")
     }
 
+    fun addLittle(bigEmail: String, littleEmail: String, profilePictureUri: String, displayName: String) {
+        database
+            .collection("users")
+            .document(bigEmail)
+            .collection("Littles")
+            .document(littleEmail)
+            .set(mapOf("email" to littleEmail, "profilePictureUri" to profilePictureUri, "displayName" to displayName))
+    }
+
+    fun removeLittle(bigEmail: String, littleEmail: String) {
+        database
+            .collection("users")
+            .document(bigEmail)
+            .collection("Littles")
+            .document(littleEmail)
+            .delete()
+    }
+
+    //endregion Littles
+
+    //region Prizes
+
     fun getPrizesSet(littleEmail: String, bigEmail: String): CollectionReference {
-        return database.collection("users").document(littleEmail).collection("Bigs").document(bigEmail).collection("Prizes")
+        return database
+            .collection("users")
+            .document(littleEmail)
+            .collection("Bigs")
+            .document(bigEmail)
+            .collection("Prizes")
     }
 
     fun getPrizesClaimed(littleEmail: String, bigEmail: String): CollectionReference {
-        return database.collection("users").document(littleEmail).collection("BigsYouClaimedFrom").document(bigEmail).collection("Prizes")
+        return database
+            .collection("users")
+            .document(littleEmail)
+            .collection("BigsYouClaimedFrom")
+            .document(bigEmail)
+            .collection("Prizes")
     }
 
     fun claimNewPrize(littleEmail: String, bigEmail: String, prize: Prize): Task<Void> {
-        return getPrizesClaimed(littleEmail, bigEmail).document(prize.id).set(prize)
+        return getPrizesClaimed(littleEmail, bigEmail)
+            .document(prize.id)
+            .set(prize)
     }
 
     fun setNewPrize(littleEmail: String, bigEmail: String, prize: Prize): Task<Void> {
-        return getPrizesSet(littleEmail, bigEmail).document(prize.id).set(prize)
+        return getPrizesSet(littleEmail, bigEmail)
+            .document(prize.id)
+            .set(prize)
     }
 
     fun deletePrize(littleEmail: String, bigEmail: String, prizeId: String): Task<Void> {
-        return getPrizesSet(littleEmail, bigEmail).document(prizeId).delete()
+        return getPrizesSet(littleEmail, bigEmail)
+            .document(prizeId).delete()
     }
 
-    fun getAllUsers(): Task<QuerySnapshot> {
-        return database.collection("users").get()
-    }
+    //endregion Prizes
 
     fun getBatch() = database.batch()
 }
