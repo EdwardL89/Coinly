@@ -130,29 +130,6 @@
                         android:layout_marginStart="30dp"
                         android:layout_toEndOf="@id/bigs_count_title"/>
 
-                    <Button
-                        android:id="@+id/add_as_big_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="25dp"
-                        android:background="@drawable/rounded_button_green"
-                        android:layout_marginTop="2dp"
-                        android:layout_below="@+id/coin_count_title"
-                        android:layout_alignStart="@+id/coin_count"
-                        android:layout_alignEnd="@+id/littles_count_title"
-                        android:textSize="12sp"
-                        android:text="@string/add_as_big"/>
-
-                    <Button
-                        android:id="@+id/add_as_little_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="25dp"
-                        android:background="@drawable/rounded_button_green"
-                        android:layout_marginTop="2dp"
-                        android:layout_below="@+id/add_as_big_button"
-                        android:layout_alignStart="@+id/coin_count"
-                        android:layout_alignEnd="@+id/littles_count_title"
-                        android:textSize="12sp"
-                        android:text="@string/add_as_little"/>
                 </RelativeLayout>
 
             </RelativeLayout>
@@ -296,6 +273,33 @@
                     app:layout_constraintStart_toStartOf="@id/average_price_of_prizes_given_value_label"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/add_as_big_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button_green"
+                android:layout_marginBottom="15dp"
+                android:textSize="12sp"
+                android:layout_marginEnd="5dp"
+                android:text="@string/add_as_big"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/add_as_little_button"/>
+
+            <Button
+                android:id="@+id/add_as_little_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button_green"
+                android:layout_marginBottom="15dp"
+                android:layout_below="@+id/add_as_big_button"
+                android:textSize="12sp"
+                android:layout_marginStart="5dp"
+                android:text="@string/add_as_little"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/add_as_big_button"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
