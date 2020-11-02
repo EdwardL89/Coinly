@@ -129,17 +129,6 @@
                         android:layout_marginStart="30dp"
                         android:layout_toEndOf="@id/bigs_count_title"/>
 
-                    <Button
-                        android:id="@+id/remove_little_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="25dp"
-                        android:background="@drawable/rounded_button_green"
-                        android:layout_marginTop="2dp"
-                        android:layout_below="@+id/coin_count_title"
-                        android:layout_alignStart="@+id/coin_count"
-                        android:layout_alignEnd="@+id/littles_count_title"
-                        android:textSize="12sp"
-                        android:text="@string/remove_little"/>
                 </RelativeLayout>
 
             </RelativeLayout>
@@ -169,52 +158,6 @@
                 app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
 
             <TextView
-                android:id="@+id/actions_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/actions"
-                android:textColor="@color/black"
-                android:layout_marginTop="10dp"
-                android:fontFamily="sans-serif"
-                android:textSize="15sp"
-                app:layout_constraintTop_toBottomOf="@id/bio_text_view"
-                app:layout_constraintStart_toStartOf="@id/bio_text_view"
-                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
-
-            <LinearLayout
-                android:id="@+id/action_buttons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:clipToPadding="false"
-                app:layout_constraintTop_toBottomOf="@id/actions_title">
-                <Button
-                    android:id="@+id/give_coins_button"
-                    android:layout_width="0dp"
-                    android:layout_height="25dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/rounded_button_green"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="5dp"
-                    android:textSize="12sp"
-                    android:text="@string/give_coins"
-                    tools:ignore="ButtonStyle" />
-
-                <Button
-                    android:id="@+id/set_prize_button"
-                    android:layout_width="0dp"
-                    android:layout_height="25dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/rounded_button_green"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="5dp"
-                    android:textSize="12sp"
-                    android:text="@string/set_prize"
-                    tools:ignore="ButtonStyle" />
-
-            </LinearLayout>
-
-            <TextView
                 android:id="@+id/claimed_prizes_from_you_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -223,8 +166,8 @@
                 android:fontFamily="sans-serif"
                 android:textSize="15sp"
                 android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@id/action_buttons"
-                app:layout_constraintStart_toStartOf="@id/action_buttons"
+                app:layout_constraintTop_toBottomOf="@id/bio_text_view"
+                app:layout_constraintStart_toStartOf="@id/bio_text_view"
                 app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -235,6 +178,7 @@
                 android:layout_height="100dp"
                 android:layout_marginTop ="5dp"
                 android:scrollbars="horizontal"
+                tools:listitem="@layout/prize_list_view_layout"
                 app:layout_constraintTop_toBottomOf="@id/claimed_prizes_from_you_title"
                 app:layout_constraintStart_toStartOf="@id/claimed_prizes_from_you_title"
                 app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
@@ -272,6 +216,7 @@
                 android:layout_height="100dp"
                 android:layout_marginTop ="5dp"
                 android:scrollbars="horizontal"
+                tools:listitem="@layout/prize_list_view_layout"
                 app:layout_constraintTop_toBottomOf="@+id/prizes_claimed_title"
                 app:layout_constraintStart_toStartOf="@id/prizes_claimed_title"
                 app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
@@ -287,6 +232,52 @@
                 app:layout_constraintStart_toStartOf="@id/prizes_claimed_title"
                 app:layout_constraintEnd_toEndOf="@id/user_profile_body"
                 android:contentDescription="@string/shown_when_there_are_no_prizes" />
+
+            <Button
+                android:id="@+id/give_coins_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_button_green"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="15dp"
+                android:textSize="12sp"
+                android:text="@string/give_coins"
+                tools:ignore="ButtonStyle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/remove_little_button"/>
+
+            <Button
+                android:id="@+id/remove_little_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button_green"
+                android:layout_marginTop="2dp"
+                android:layout_marginStart="5dp"
+                android:textSize="12sp"
+                android:layout_marginBottom="15dp"
+                android:text="@string/remove_little"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/give_coins_button"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <Button
+                android:id="@+id/set_prize_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_button_green"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="5dp"
+                android:textSize="12sp"
+                android:text="@string/set_prize"
+                tools:ignore="ButtonStyle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/give_coins_button"/>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
