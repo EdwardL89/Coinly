@@ -25,8 +25,8 @@ object ImgStorage : Repository<ByteArray, Uri, Task<Uri>, UploadTask> {
         TODO("Not yet implemented")
     }
 
-    override fun read(userId: String): Task<Uri> {
-        return imageStorage.reference.child("profile_pictures").child(userId).downloadUrl
+    override fun read(userEmail: String): Task<Uri> {
+        return imageStorage.reference.child("profile_pictures").child(userEmail).downloadUrl
     }
 
     fun delete(path: String): Task<Void> {

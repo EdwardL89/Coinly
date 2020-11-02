@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 
 /**
  * Model that provides access to the Firebase Firestore
@@ -94,6 +95,9 @@ object Firestore : Repository<User, Void, DocumentReference, Task<Void>> {
         return getPrizesSet(littleEmail, bigEmail).document(prizeId).delete()
     }
 
-    fun getInstance() = database
+    fun getAllUsers(): Task<QuerySnapshot> {
+        return database.collection("users").get()
+    }
 
+    fun getBatch() = database.batch()
 }

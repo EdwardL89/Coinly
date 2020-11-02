@@ -37,7 +37,7 @@ class EditProfileViewModel: ViewModel() {
      * Updates the user object in the firestore with the changes made
      */
     fun commitProfileChanges(context: Context) {
-        val writeBatch = Firestore.getInstance().batch()
+        val writeBatch = Firestore.getBatch()
         val userReference = Firestore.read(currentUser.instance!!.email!!)
         writeBatch.update(userReference, "bio", currentUser.bio.value)
         writeBatch.update(userReference, "realName", currentUser.realName.value)

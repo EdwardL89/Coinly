@@ -43,7 +43,7 @@ class LinkupFragmentViewModel: ViewModel() {
      * Initiates the query for all the users
      */
     fun startQueryForAllUsers() {
-        allUsersQueryTask = Firestore.getInstance().collection("users").get()
+        allUsersQueryTask = Firestore.getAllUsers()
     }
 
     /**
