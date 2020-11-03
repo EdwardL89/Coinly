@@ -151,6 +151,14 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
             Firestore.update(observedUser, "coins", observedUser.coins.toString())
             updateClaimedStats(price)
             updateGivenStats(price)
+            updateSpendingPower()
+        }
+
+        /**
+         * Updates the spending power text at the bottom of the profile
+         */
+        private fun updateSpendingPower() {
+            (context as Activity).spending_power.text = CurrentUser.coins.value.toString()
         }
 
         /**
