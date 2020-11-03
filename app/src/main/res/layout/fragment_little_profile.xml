@@ -23,7 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="20dp"
             android:background="@drawable/my_profile_rounded_background"
             tools:context=".views.activities.profiles.CreateProfileActivity"
             tools:ignore="RtlSymmetry,UselessParent"
@@ -34,6 +33,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 app:cardCornerRadius="100dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
                 app:layout_constraintStart_toStartOf="@+id/user_profile_body"
                 app:layout_constraintTop_toTopOf="@id/user_profile_body"
                 app:layout_constraintEnd_toStartOf="@id/top_stats">
@@ -50,6 +51,7 @@
                 android:id="@+id/top_stats"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
                 app:layout_constraintStart_toEndOf="@id/user_profile_cardView"
                 app:layout_constraintTop_toTopOf="@id/user_profile_cardView"
                 app:layout_constraintBottom_toBottomOf="@id/user_profile_cardView"
@@ -143,8 +145,8 @@
                 android:textStyle="bold"
                 android:layout_marginTop="5dp"
                 app:layout_constraintTop_toBottomOf="@id/user_profile_cardView"
-                app:layout_constraintStart_toStartOf="@id/user_profile_body"
-                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
+                app:layout_constraintStart_toStartOf="@id/user_profile_cardView"
+                app:layout_constraintEnd_toEndOf="@id/top_stats"/>
 
             <TextView
                 android:id="@+id/bio_text_view"
@@ -155,7 +157,7 @@
                 android:fontFamily="sans-serif-thin"
                 app:layout_constraintTop_toBottomOf="@id/my_display_name_textView"
                 app:layout_constraintStart_toStartOf="@id/my_display_name_textView"
-                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
+                app:layout_constraintEnd_toEndOf="@id/top_stats"/>
 
             <TextView
                 android:id="@+id/claimed_prizes_from_you_title"
@@ -168,7 +170,7 @@
                 android:layout_marginTop="10dp"
                 app:layout_constraintTop_toBottomOf="@id/bio_text_view"
                 app:layout_constraintStart_toStartOf="@id/bio_text_view"
-                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
+                app:layout_constraintEnd_toEndOf="@id/top_stats"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/claimedPrizesFromYouRecyclerView"
@@ -205,7 +207,7 @@
                 android:textSize="15sp"
                 app:layout_constraintTop_toBottomOf="@id/claimedPrizesFromYouRecyclerView"
                 app:layout_constraintStart_toStartOf="@id/claimed_prizes_from_you_title"
-                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
+                app:layout_constraintEnd_toEndOf="@id/top_stats"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/setPrizesRecyclerView"
@@ -235,16 +237,14 @@
                 android:id="@+id/give_coins_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:background="@drawable/rounded_button_green"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
-                android:layout_marginBottom="15dp"
                 android:textSize="12sp"
                 android:text="@string/give_coins"
                 tools:ignore="ButtonStyle"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/set_prize_button"
+                app:layout_constraintTop_toBottomOf="@id/set_prize_button"
                 app:layout_constraintEnd_toStartOf="@id/remove_little_button"/>
 
             <Button
@@ -252,29 +252,26 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_button_green"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginStart="5dp"
                 android:textSize="12sp"
-                android:layout_marginBottom="15dp"
                 android:text="@string/remove_little"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/give_coins_button"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/set_prize_button"
+                app:layout_constraintEnd_toEndOf="@id/top_stats"
+                app:layout_constraintStart_toEndOf="@id/give_coins_button" />
 
             <Button
                 android:id="@+id/set_prize_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:background="@drawable/rounded_button_green"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="5dp"
                 android:textSize="12sp"
+                android:layout_marginTop="10dp"
                 android:text="@string/set_prize"
                 tools:ignore="ButtonStyle"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/give_coins_button"/>
+                app:layout_constraintTop_toBottomOf="@id/setPrizesRecyclerView"
+                app:layout_constraintStart_toStartOf="@id/prizes_claimed_title"
+                app:layout_constraintEnd_toEndOf="@id/top_stats"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
