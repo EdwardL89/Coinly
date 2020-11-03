@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
@@ -20,10 +21,14 @@ import com.eightnineapps.coinly.enums.PrizeTapLocation
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.models.ImgStorage
+import kotlinx.android.synthetic.main.activity_big_profile_host.*
 import kotlinx.android.synthetic.main.dialog_claim_prize_layout.*
 import kotlinx.android.synthetic.main.dialog_prize_info_layout.*
 import kotlinx.android.synthetic.main.fragment_big_profile.*
+import kotlinx.android.synthetic.main.fragment_claimed_prizes.*
+import kotlinx.android.synthetic.main.fragment_claimed_prizes.view.*
 import kotlinx.android.synthetic.main.fragment_little_profile.*
+import kotlinx.android.synthetic.main.fragment_prizes_to_claim.*
 import kotlinx.android.synthetic.main.prize_list_view_layout.view.*
 
 class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTapLocation, _observedUser: User): RecyclerView.Adapter<PrizesRecyclerViewAdapter.ViewHolder>() {
@@ -168,8 +173,8 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
          * adds the claimed prize to the recycler
          */
         private fun updateUIAfterClaimingPrize(prize: Prize) {
-            (context as Activity).no_prizes_claimed_image.visibility = View.INVISIBLE
-            (context.prizesYouveClaimedRecyclerView.adapter as PrizesRecyclerViewAdapter).addItem(prize)
+            (context as Activity).fragment.no_prizes_claimed_image.visibility = View.INVISIBLE
+            (context.fragment.prizesYouveClaimedRecyclerView.adapter as PrizesRecyclerViewAdapter).addItem(prize)
             removeItem(prize.id, context)
         }
 
