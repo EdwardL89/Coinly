@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
@@ -20,9 +21,9 @@ import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.models.ImgStorage
 import kotlinx.android.synthetic.main.dialog_claim_prize_layout.*
+import kotlinx.android.synthetic.main.dialog_prize_info_layout.*
 import kotlinx.android.synthetic.main.fragment_big_profile.*
 import kotlinx.android.synthetic.main.fragment_little_profile.*
-import kotlinx.android.synthetic.main.dialog_prize_info_layout.*
 import kotlinx.android.synthetic.main.prize_list_view_layout.view.*
 
 class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTapLocation, _observedUser: User): RecyclerView.Adapter<PrizesRecyclerViewAdapter.ViewHolder>() {
@@ -71,6 +72,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
          */
         private fun setUpButtonForDeletion(prizeId: String, dialog: AlertDialog) {
             dialog.cancel_button.text = context.getString(R.string.delete)
+            dialog.cancel_button.setTextColor(ContextCompat.getColor(context, R.color.redDelete))
             dialog.cancel_button.setOnClickListener {
                 removeItem(prizeId, context)
                 deleteSetPrize(prizeId)
