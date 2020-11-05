@@ -3,6 +3,7 @@ package com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
@@ -81,17 +82,17 @@ class LittleProfileViewModel: ViewModel() {
     /**
      * Instantiates the adapter for the prizes set recycler
      */
-    fun createPrizesSetAdapter() {
+    fun createPrizesSetAdapter(view: View) {
         prizesSetAdapter = PrizesRecyclerViewAdapter(allPrizesSet,
-            PrizeTapLocation.LITTLE_PRIZES_SET, observedUserInstance)
+            PrizeTapLocation.LITTLE_PRIZES_SET, observedUserInstance, view)
     }
 
     /**
      * Instantiates the adapter for the prizes claimed recycler
      */
-    fun createPrizesClaimedAdapter() {
+    fun createPrizesClaimedAdapter(view: View) {
         prizesClaimedAdapter = PrizesRecyclerViewAdapter(allPrizesClaimed,
-            PrizeTapLocation.LITTLE_PRIZES_CLAIMED, observedUserInstance)
+            PrizeTapLocation.LITTLE_PRIZES_CLAIMED, observedUserInstance, view)
     }
 
     /**

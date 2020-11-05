@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.adapters.BigProfileAdapter
+import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.BigProfileViewModel
@@ -59,7 +60,6 @@ class BigProfileFragment: Fragment() {
             if (pos == 0) tab.text = "Prizes"
             else tab.text = "Claimed"
         }.attach()
-
     }
 
     /**

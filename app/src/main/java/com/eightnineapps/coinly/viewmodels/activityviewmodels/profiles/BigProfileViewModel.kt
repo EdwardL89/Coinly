@@ -1,5 +1,6 @@
 package com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles
 
+import android.view.View
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.objects.Notification
@@ -59,17 +60,17 @@ class BigProfileViewModel: ViewModel() {
     /**
      * Instantiates the adapter for the prizes set recycler
      */
-    fun createPrizesSetAdapter() {
+    fun createPrizesSetAdapter(view: View) {
         prizesSetAdapter = PrizesRecyclerViewAdapter(allPrizesSet,
-            PrizeTapLocation.BIG_PRIZES_SET, observedUserInstance)
+            PrizeTapLocation.BIG_PRIZES_SET, observedUserInstance, view)
     }
 
     /**
      * Instantiates the adapter for the prizes claimed recycler
      */
-    fun createPrizesClaimedAdapter() {
+    fun createPrizesClaimedAdapter(view: View) {
         prizesClaimedAdapter = PrizesRecyclerViewAdapter(allPrizesClaimed,
-            PrizeTapLocation.BIG_PRIZES_CLAIMED, observedUserInstance)
+            PrizeTapLocation.BIG_PRIZES_CLAIMED, observedUserInstance, view)
     }
 
     /**

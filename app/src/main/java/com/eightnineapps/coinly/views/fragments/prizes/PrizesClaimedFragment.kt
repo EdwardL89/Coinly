@@ -69,7 +69,7 @@ class PrizesClaimedFragment: Fragment() {
      */
     private fun handlePrizesClaimedQueryTask(prizesClaimedQueryTask: Task<QuerySnapshot>, view: View) {
         bigProfileViewModel.compilePrizesClaimed(prizesClaimedQueryTask.result!!)
-        bigProfileViewModel.createPrizesClaimedAdapter()
+        bigProfileViewModel.createPrizesClaimedAdapter(view)
         attachPrizesClaimedAdapter(view)
     }
 

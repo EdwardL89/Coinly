@@ -69,7 +69,7 @@ class PrizesToClaimFragment: Fragment() {
      */
     private fun handlePrizesSetQueryTask(prizesSetQueryTask: Task<QuerySnapshot>, view: View) {
         bigProfileViewModel.compilePrizesSet(prizesSetQueryTask.result!!)
-        bigProfileViewModel.createPrizesSetAdapter()
+        bigProfileViewModel.createPrizesSetAdapter(view)
         attachPrizesSetAdapter(view)
     }
 

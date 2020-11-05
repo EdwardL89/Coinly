@@ -111,7 +111,7 @@ class LittleProfileFragment: Fragment() {
      */
     private fun handlePrizesSetQueryTask(prizesSetQueryTask: Task<QuerySnapshot>, view: View) {
         littleProfileViewModel.compilePrizesSet(prizesSetQueryTask.result!!)
-        littleProfileViewModel.createPrizesSetAdapter()
+        littleProfileViewModel.createPrizesSetAdapter(view)
         attachPrizesSetAdapter(view)
     }
 
@@ -120,7 +120,7 @@ class LittleProfileFragment: Fragment() {
      */
     private fun handlePrizesClaimedQueryTask(prizesClaimedQueryTask: Task<QuerySnapshot>, view: View) {
         littleProfileViewModel.compilePrizesClaimed(prizesClaimedQueryTask.result!!)
-        littleProfileViewModel.createPrizesClaimedAdapter()
+        littleProfileViewModel.createPrizesClaimedAdapter(view)
         attachPrizesClaimedAdapter(view)
     }
 
