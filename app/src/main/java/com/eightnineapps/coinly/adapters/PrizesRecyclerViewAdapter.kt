@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.dialog_prize_info_layout.*
 import kotlinx.android.synthetic.main.fragment_big_profile.*
 import kotlinx.android.synthetic.main.fragment_little_profile.view.*
 import kotlinx.android.synthetic.main.fragment_prizes_to_claim.view.*
+import kotlinx.android.synthetic.main.fragment_your_set_prizes.view.*
 import kotlinx.android.synthetic.main.prize_list_view_layout.view.*
 
 class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTapLocation, _observedUser: User, view: View):
@@ -247,7 +248,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
      */
     private fun updateUIForNoPrizesSet() {
         if (prizeList.size == 0 && prizeTapLocation == PrizeTapLocation.LITTLE_PRIZES_SET) {
-            fragmentView.no_prizes_set_image.visibility = View.VISIBLE
+            fragmentView.no_set_prizes_image.visibility = View.VISIBLE
         } else if (prizeList.size == 0) {
             fragmentView.no_prizes_set_by_big_image.visibility = View.VISIBLE
         }

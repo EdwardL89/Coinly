@@ -16,16 +16,28 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.adapters.BigProfileAdapter
+import com.eightnineapps.coinly.adapters.LittleProfileAdapter
 import com.eightnineapps.coinly.classes.helpers.PrizeDialogCreator
 import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LittleProfileViewModel
 import com.eightnineapps.coinly.views.activities.startup.HomeActivity
 import com.google.android.gms.tasks.Task
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.fragment_little_profile.*
 import kotlinx.android.synthetic.main.fragment_little_profile.view.*
 import kotlinx.android.synthetic.main.dialog_set_new_prize_layout.*
+import kotlinx.android.synthetic.main.fragment_big_profile.*
+import kotlinx.android.synthetic.main.fragment_little_profile.bigs_count
+import kotlinx.android.synthetic.main.fragment_little_profile.bio_text_view
+import kotlinx.android.synthetic.main.fragment_little_profile.coin_count
+import kotlinx.android.synthetic.main.fragment_little_profile.littles_count
+import kotlinx.android.synthetic.main.fragment_little_profile.my_display_name_textView
+import kotlinx.android.synthetic.main.fragment_little_profile.tab_layout
+import kotlinx.android.synthetic.main.fragment_little_profile.view_pager
 
 class LittleProfileFragment: Fragment() {
 
@@ -40,8 +52,6 @@ class LittleProfileFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         littleProfileViewModel.observedUserInstance = requireActivity().intent.getSerializableExtra("observed_user") as User
-        littleProfileViewModel.startQueryForPrizesSet()
-        littleProfileViewModel.startQueryForPrizesClaimed()
     }
 
     /**
@@ -58,8 +68,7 @@ class LittleProfileFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         loadProfile()
         setUpButtons()
-        addPrizesSetToRecycler(view)
-        addPrizesClaimedToRecycler(view)
+        constructTabLayout()
     }
 
     /**
@@ -70,82 +79,15 @@ class LittleProfileFragment: Fragment() {
         savedContext = context
     }
 
-    /**
-     * Makes sure the query task is completed before continuing
-     */
-    private fun addPrizesSetToRecycler(view: View) {
-        if (littleProfileViewModel.hasLoadedPrizesSet()) {
-            attachPrizesSetAdapter(view)
-        } else {
-            val prizesSetQueryTask = littleProfileViewModel.getPrizesSetQuery()!!
-            if (prizesSetQueryTask.isComplete) {
-                handlePrizesSetQueryTask(prizesSetQueryTask, view)
-            } else {
-                prizesSetQueryTask.addOnCompleteListener {
-                    handlePrizesSetQueryTask(prizesSetQueryTask, view)
-                }
-            }
-        }
-    }
-
-    /**
-     * Makes sure the query task is completed before continuing
-     */
-    private fun addPrizesClaimedToRecycler(view: View) {
-        if (littleProfileViewModel.hasLoadedPrizesClaimed()) {
-            attachPrizesClaimedAdapter(view)
-        } else {
-            val prizesClaimedQueryTask = littleProfileViewModel.getPrizesClaimedQuery()!!
-            if (prizesClaimedQueryTask.isComplete) {
-                handlePrizesClaimedQueryTask(prizesClaimedQueryTask, view)
-            } else {
-                prizesClaimedQueryTask.addOnCompleteListener {
-                    handlePrizesClaimedQueryTask(prizesClaimedQueryTask, view)
-                }
-            }
-        }
-    }
-
-    /**
-     * Gathers all the prizes set and sets up the recyclerview to place them in
-     */
-    private fun handlePrizesSetQueryTask(prizesSetQueryTask: Task<QuerySnapshot>, view: View) {
-        littleProfileViewModel.compilePrizesSet(prizesSetQueryTask.result!!)
-        littleProfileViewModel.createPrizesSetAdapter(view)
-        attachPrizesSetAdapter(view)
-    }
-
-    /**
-     * Gathers all the prizes claimed and sets up the recyclerview to place them in
-     */
-    private fun handlePrizesClaimedQueryTask(prizesClaimedQueryTask: Task<QuerySnapshot>, view: View) {
-        littleProfileViewModel.compilePrizesClaimed(prizesClaimedQueryTask.result!!)
-        littleProfileViewModel.createPrizesClaimedAdapter(view)
-        attachPrizesClaimedAdapter(view)
-    }
-
-    /**
-     * Attaches the adapter to the prizes set recycler view and updates UI if it's empty
-     */
-    private fun attachPrizesSetAdapter(view: View) {
-        view.setPrizesRecyclerView.adapter = littleProfileViewModel.getPrizesSetAdapter()
-        if (littleProfileViewModel.getPrizesSetAdapter().itemCount == 0) {
-            view.no_prizes_set_image.visibility = View.VISIBLE
-        } else {
-            view.no_prizes_set_image.visibility = View.INVISIBLE
-        }
-    }
-
-    /**
-     * Attaches the adapter to the prizes claimed recycler view and updates UI if it's empty
-     */
-    private fun attachPrizesClaimedAdapter(view: View) {
-        view.claimedPrizesFromYouRecyclerView.adapter = littleProfileViewModel.getPrizesClaimedAdapter()
-        if (littleProfileViewModel.getPrizesClaimedAdapter().itemCount == 0) {
-            view.no_prizes_claimed_from_you_image.visibility = View.VISIBLE
-        } else {
-            view.no_prizes_claimed_from_you_image.visibility = View.INVISIBLE
-        }
+    private fun constructTabLayout() {
+        tab_layout.addTab(tab_layout.newTab().setText("Claimed From You"))
+        tab_layout.addTab(tab_layout.newTab().setText("Your Set Prizes"))
+        tab_layout.tabGravity = TabLayout.GRAVITY_FILL
+        view_pager.adapter = LittleProfileAdapter(this)
+        TabLayoutMediator(tab_layout, view_pager) { tab, pos ->
+            if (pos == 0) tab.text = "Claimed From You"
+            else tab.text = "Your Set Prizes"
+        }.attach()
     }
 
     /**
@@ -175,10 +117,10 @@ class LittleProfileFragment: Fragment() {
             (context as Activity).finish()
             redrawAllLittlesPage()
         }
-        set_prize_button.setOnClickListener {
-            val openGallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-            startActivityForResult(openGallery, 1)
-        }
+//        set_prize_button.setOnClickListener {
+//            val openGallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+//            startActivityForResult(openGallery, 1)
+//        }
     }
 
     /**
@@ -189,92 +131,92 @@ class LittleProfileFragment: Fragment() {
         HomeActivity.tabLayout.getTabAt(1)!!.select()
     }
 
-    /**
-     * Catches the result of the intent that opens the gallery to select a profile picture image
-     */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (data != null) {
-            littleProfileViewModel.handleGallerySelectionCompletion(requestCode, resultCode, data, requireContext())
-            openDialogue(data)
-        }
-    }
-
-    /**
-     * Open a dialogue for the user to set the title and price of the new prize
-     */
-    @SuppressLint("InflateParams")
-    private fun openDialogue(data: Intent?) {
-        dialogCreator.setImageDataForDialog(data)
-        val dialog = dialogCreator.createAlertDialog(null, requireContext(), R.layout.dialog_set_new_prize_layout)
-        dialogCreator.showDialog(dialog)
-        setUpDialogButtons(dialog)
-    }
-
-    /**
-     * Sets the actions the buttons in the set new prize dialog will do
-     */
-    private fun setUpDialogButtons(dialog: AlertDialog) {
-        dialog.cancel_set_new_prize_button.setOnClickListener {
-            dialog.cancel()
-        }
-        dialog.set_button.setOnClickListener {
-            val title = dialog.prize_title.text.toString()
-            val price = dialog.prize_price.text.toString()
-            if (verifyPrizeBeforeSetting(title, price, dialog)) {
-                no_prizes_set_image.visibility = View.INVISIBLE
-                uploadSetPrize(title, Integer.parseInt(price))
-                dialog.dismiss()
-            }
-        }
-    }
-
-    /**
-     * Verifies that the info entered by the user for the new set prize is valid
-     */
-    private fun verifyPrizeBeforeSetting(title: String, price: String, dialog: AlertDialog): Boolean {
-        if (hasReachedSetPrizeLimit()) {
-            Toast.makeText(requireContext(), "You've reached the prizes set limit!", Toast.LENGTH_SHORT).show()
-            dialog.dismiss()
-        } else if (title == "" || price == "") {
-            Toast.makeText(requireContext(), "Missing Fields", Toast.LENGTH_SHORT).show()
-        } else if (price != "" && price[0] == '0') {
-            Toast.makeText(requireContext(), "Price cannot be 0", Toast.LENGTH_SHORT).show()
-        } else {
-            return true
-        }
-        return false
-    }
-
-    /**
-     * Starts the process of saving the set prize to the firestore and storage
-     */
-    private fun uploadSetPrize(prizeTitle: String, prizePrice: Int) {
-        Toast.makeText(requireContext(), "Uploading prize...", Toast.LENGTH_SHORT).show()
-        val prizeId = littleProfileViewModel.generateId()
-        val prizePath = littleProfileViewModel.generatePrizePath(prizeId)
-        littleProfileViewModel.insertPrizeImageToStorage(prizePath).addOnCompleteListener {
-            littleProfileViewModel.downloadImageUri(prizePath).addOnCompleteListener {
-                uri -> saveSetPrizeToFirestore(Prize(prizeTitle, prizePrice, uri.result!!.toString(), prizeId))
-            }
-        }
-    }
-
-    /**
-     * Saves the recently set prize to the firestore
-     */
-    private fun saveSetPrizeToFirestore(prize: Prize) {
-        littleProfileViewModel.savePrizeInFireStore(prize).addOnCompleteListener {
-            littleProfileViewModel.addSetPrizeToRecycler(prize)
-            Toast.makeText(savedContext, "Prize Set!", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    /**
-     * Determines whether the user has set a number of prizes equal to the limit of how many one
-     * can set.
-     */
-    private fun hasReachedSetPrizeLimit(): Boolean {
-        return setPrizesRecyclerView.adapter!!.itemCount == 10
-    }
+//    /**
+//     * Catches the result of the intent that opens the gallery to select a profile picture image
+//     */
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (data != null) {
+//            littleProfileViewModel.handleGallerySelectionCompletion(requestCode, resultCode, data, requireContext())
+//            openDialogue(data)
+//        }
+//    }
+//
+//    /**
+//     * Open a dialogue for the user to set the title and price of the new prize
+//     */
+//    @SuppressLint("InflateParams")
+//    private fun openDialogue(data: Intent?) {
+//        dialogCreator.setImageDataForDialog(data)
+//        val dialog = dialogCreator.createAlertDialog(null, requireContext(), R.layout.dialog_set_new_prize_layout)
+//        dialogCreator.showDialog(dialog)
+//        setUpDialogButtons(dialog)
+//    }
+//
+//    /**
+//     * Sets the actions the buttons in the set new prize dialog will do
+//     */
+//    private fun setUpDialogButtons(dialog: AlertDialog) {
+//        dialog.cancel_set_new_prize_button.setOnClickListener {
+//            dialog.cancel()
+//        }
+//        dialog.set_button.setOnClickListener {
+//            val title = dialog.prize_title.text.toString()
+//            val price = dialog.prize_price.text.toString()
+//            if (verifyPrizeBeforeSetting(title, price, dialog)) {
+//                no_prizes_set_image.visibility = View.INVISIBLE
+//                uploadSetPrize(title, Integer.parseInt(price))
+//                dialog.dismiss()
+//            }
+//        }
+//    }
+//
+//    /**
+//     * Verifies that the info entered by the user for the new set prize is valid
+//     */
+//    private fun verifyPrizeBeforeSetting(title: String, price: String, dialog: AlertDialog): Boolean {
+//        if (hasReachedSetPrizeLimit()) {
+//            Toast.makeText(requireContext(), "You've reached the prizes set limit!", Toast.LENGTH_SHORT).show()
+//            dialog.dismiss()
+//        } else if (title == "" || price == "") {
+//            Toast.makeText(requireContext(), "Missing Fields", Toast.LENGTH_SHORT).show()
+//        } else if (price != "" && price[0] == '0') {
+//            Toast.makeText(requireContext(), "Price cannot be 0", Toast.LENGTH_SHORT).show()
+//        } else {
+//            return true
+//        }
+//        return false
+//    }
+//
+//    /**
+//     * Starts the process of saving the set prize to the firestore and storage
+//     */
+//    private fun uploadSetPrize(prizeTitle: String, prizePrice: Int) {
+//        Toast.makeText(requireContext(), "Uploading prize...", Toast.LENGTH_SHORT).show()
+//        val prizeId = littleProfileViewModel.generateId()
+//        val prizePath = littleProfileViewModel.generatePrizePath(prizeId)
+//        littleProfileViewModel.insertPrizeImageToStorage(prizePath).addOnCompleteListener {
+//            littleProfileViewModel.downloadImageUri(prizePath).addOnCompleteListener {
+//                uri -> saveSetPrizeToFirestore(Prize(prizeTitle, prizePrice, uri.result!!.toString(), prizeId))
+//            }
+//        }
+//    }
+//
+//    /**
+//     * Saves the recently set prize to the firestore
+//     */
+//    private fun saveSetPrizeToFirestore(prize: Prize) {
+//        littleProfileViewModel.savePrizeInFireStore(prize).addOnCompleteListener {
+//            littleProfileViewModel.addSetPrizeToRecycler(prize)
+//            Toast.makeText(savedContext, "Prize Set!", Toast.LENGTH_SHORT).show()
+//        }
+//    }
+//
+//    /**
+//     * Determines whether the user has set a number of prizes equal to the limit of how many one
+//     * can set.
+//     */
+//    private fun hasReachedSetPrizeLimit(): Boolean {
+//        return setPrizesRecyclerView.adapter!!.itemCount == 10
+//    }
 }
