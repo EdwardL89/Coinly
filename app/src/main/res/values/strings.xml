@@ -96,4 +96,5 @@
     <string name="back">Back</string>
     <string name="price_with_coins">Price: %1$s coins</string>
     <string name="coins_price">%1$s coins</string>
+    <string name="add_new_prize">Add new prize</string>
 </resources>

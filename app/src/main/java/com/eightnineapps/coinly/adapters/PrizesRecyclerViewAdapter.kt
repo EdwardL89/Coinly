@@ -22,7 +22,6 @@ import com.eightnineapps.coinly.models.ImgStorage
 import kotlinx.android.synthetic.main.dialog_claim_prize_layout.*
 import kotlinx.android.synthetic.main.dialog_prize_info_layout.*
 import kotlinx.android.synthetic.main.fragment_big_profile.*
-import kotlinx.android.synthetic.main.fragment_little_profile.view.*
 import kotlinx.android.synthetic.main.fragment_prizes_to_claim.view.*
 import kotlinx.android.synthetic.main.fragment_your_set_prizes.view.*
 import kotlinx.android.synthetic.main.prize_list_view_layout.view.*
