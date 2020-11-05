@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -37,6 +38,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
     inner class ViewHolder(_view: View): RecyclerView.ViewHolder(_view), View.OnClickListener {
 
         val singlePrizePictureImageView: ImageView = _view.prize_picture
+        val singlePrizePrice: TextView = _view.price
         private val dialogCreator = PrizeDialogCreator()
         private val context = _view.context
 
@@ -220,6 +222,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentPrize = prizeList[position]
         Glide.with(holder.itemView.context).load(currentPrize.uri).into(holder.singlePrizePictureImageView)
+        holder.singlePrizePrice.text = String.format(holder.itemView.context.getString(R.string.coins_price), currentPrize.price)
     }
 
     /**
