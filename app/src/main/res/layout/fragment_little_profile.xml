@@ -11,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:id="@+id/profile_background"
-        android:clipToPadding="false">
+        android:id="@+id/profile_background">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/user_profile_cardView"
