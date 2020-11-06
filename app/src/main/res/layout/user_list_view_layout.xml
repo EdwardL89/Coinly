@@ -7,9 +7,10 @@
     android:layout_height="70dp"
     android:background="@drawable/rounded_user_list_view"
     android:padding="5dp"
-    android:elevation="3dp"
-    android:layout_marginStart="2dp"
-    android:layout_marginEnd="2dp"
+    android:elevation="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
     android:id="@+id/item_body">
 
     <androidx.cardview.widget.CardView
