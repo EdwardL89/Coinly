@@ -8,34 +8,20 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@drawable/login_screen_gradient"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
         android:id="@+id/profile_background"
         android:clipToPadding="false">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/user_profile_body"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="20dp"
-            android:background="@drawable/my_profile_rounded_background"
-            tools:context=".views.activities.profiles.CreateProfileActivity"
-            tools:ignore="RtlSymmetry,UselessParent"
-            android:clipToPadding="false">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/user_profile_cardView"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    app:layout_constraintStart_toStartOf="@+id/user_profile_body"
-                    app:layout_constraintTop_toTopOf="@id/user_profile_body"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/top_stats"
                     app:cardCornerRadius="100dp">
 
@@ -51,15 +37,13 @@
                 android:id="@+id/top_stats"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
                 app:layout_constraintStart_toEndOf="@id/user_profile_cardView"
                 app:layout_constraintTop_toTopOf="@id/user_profile_cardView"
                 app:layout_constraintBottom_toBottomOf="@id/user_profile_cardView"
-                app:layout_constraintEnd_toEndOf="@id/user_profile_body">
+                app:layout_constraintEnd_toEndOf="parent">
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true">
                     <TextView
                         android:id="@+id/coin_count"
                         android:layout_width="wrap_content"
@@ -130,8 +114,6 @@
                         android:layout_marginStart="30dp"
                         android:layout_toEndOf="@id/bigs_count_title"/>
 
-                </RelativeLayout>
-
             </RelativeLayout>
 
             <TextView
@@ -144,8 +126,8 @@
                 android:textStyle="bold"
                 android:layout_marginTop="5dp"
                 app:layout_constraintTop_toBottomOf="@id/user_profile_cardView"
-                app:layout_constraintStart_toStartOf="@id/user_profile_body"
-                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
+                app:layout_constraintStart_toStartOf="@id/user_profile_cardView"
+                app:layout_constraintEnd_toEndOf="@id/top_stats"/>
 
             <TextView
                 android:id="@+id/bio_text_view"
@@ -167,9 +149,9 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif"
                 android:textSize="15sp"
-                app:layout_constraintTop_toBottomOf="@id/bio_text_view"
+                app:layout_constraintTop_toBottomOf="@id/add_as_big_button"
                 app:layout_constraintStart_toStartOf="@id/bio_text_view"
-                app:layout_constraintEnd_toEndOf="@id/user_profile_body"/>
+                app:layout_constraintEnd_toEndOf="@id/top_stats"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
@@ -177,7 +159,7 @@
                 android:layout_marginTop="5dp"
                 app:layout_constraintTop_toBottomOf="@id/stats_title"
                 app:layout_constraintStart_toStartOf="@id/stats_title"
-                app:layout_constraintEnd_toEndOf="@id/user_profile_body">
+                app:layout_constraintEnd_toEndOf="@id/top_stats">
 
                 <TextView
                     android:id="@+id/linkup_prizes_given_value"
@@ -277,31 +259,31 @@
             <Button
                 android:id="@+id/add_as_big_button"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:background="@drawable/rounded_button_green"
                 android:layout_marginBottom="15dp"
+                android:layout_marginTop="10dp"
                 android:textSize="12sp"
                 android:layout_marginEnd="5dp"
                 android:text="@string/add_as_big"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/user_profile_cardView"
+                app:layout_constraintTop_toBottomOf="@id/bio_text_view"
                 app:layout_constraintEnd_toStartOf="@id/add_as_little_button"/>
 
             <Button
                 android:id="@+id/add_as_little_button"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:background="@drawable/rounded_button_green"
                 android:layout_marginBottom="15dp"
+                android:layout_marginTop="10dp"
                 android:layout_below="@+id/add_as_big_button"
                 android:textSize="12sp"
                 android:layout_marginStart="5dp"
                 android:text="@string/add_as_little"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/top_stats"
+                app:layout_constraintTop_toBottomOf="@id/bio_text_view"
                 app:layout_constraintStart_toEndOf="@id/add_as_big_button"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
