@@ -97,4 +97,6 @@
     <string name="price_with_coins">Price: %1$s coins</string>
     <string name="coins_price">%1$s coins</string>
     <string name="add_new_prize">Add new prize</string>
+    <string name="confirm">Confirm</string>
+    <string name="confirmation_text">Remove %1$s?</string>
 </resources>

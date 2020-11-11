@@ -18,6 +18,7 @@ import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.BigProfil
 import com.eightnineapps.coinly.views.activities.startup.HomeActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.android.synthetic.main.dialog_confirm_removal.*
 import kotlinx.android.synthetic.main.fragment_big_profile.*
 
 class BigProfileFragment: Fragment() {
@@ -83,12 +84,18 @@ class BigProfileFragment: Fragment() {
             findNavController().navigate(R.id.action_bigProfileFragment_to_requestCoinsFragment, null)
         }
         remove_big_button.setOnClickListener {
-            bigProfileViewModel.removeBigAndSendBack()
-            Toast.makeText(context, "Removed ${bigProfileViewModel.observedUserInstance.displayName} as a big",
-                Toast.LENGTH_SHORT).show()
-            (context as Activity).finish()
-            redrawAllBigsPage()
+            val confirmationDialog = bigProfileViewModel.openConfirmationDialog(requireContext())
+            confirmationDialog.confirm_removal_button.setOnClickListener { removeBig() }
+            confirmationDialog.cancel_removal_button.setOnClickListener { confirmationDialog.cancel() }
         }
+    }
+
+    private fun removeBig() {
+        bigProfileViewModel.removeBigAndSendBack()
+        Toast.makeText(context, "Removed ${bigProfileViewModel.observedUserInstance.displayName} as a big",
+            Toast.LENGTH_SHORT).show()
+        (context as Activity).finish()
+        redrawAllBigsPage()
     }
 
     /**

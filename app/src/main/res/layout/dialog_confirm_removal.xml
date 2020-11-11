@@ -7,10 +7,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/claim_prize_title"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/claim_prize"
+        android:text="@string/confirm"
         android:fontFamily="sans-serif"
         android:layout_marginTop="10dp"
         android:textSize="15sp"
@@ -18,17 +18,17 @@
         android:layout_centerHorizontal="true" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/prize_cardView"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:id="@+id/cardView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginTop="10dp"
-        android:layout_below="@id/claim_prize_title"
+        android:layout_below="@id/title"
         android:layout_gravity="center"
         android:layout_centerHorizontal="true"
-        app:cardCornerRadius="50dp">
+        app:cardCornerRadius="100dp">
 
         <ImageView
-            android:id="@+id/prize_picture"
+            android:id="@+id/profile_picture"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/user_profile_picture"
@@ -36,54 +36,44 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/claimed_prize_title"
-        android:layout_below="@+id/prize_cardView"
+        android:id="@+id/confirmation_text_view"
+        android:layout_below="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
-        android:textSize="15sp"
-        android:textColor="@color/black"
-        android:gravity="center"/>
-
-    <TextView
-        android:id="@+id/claimed_prize_price"
-        android:layout_below="@id/claimed_prize_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_alignParentStart="true"
         android:textSize="15sp"
         android:textColor="@color/black"
         android:gravity="center"/>
 
     <LinearLayout
-        android:id="@+id/action_buttons"
+        android:id="@+id/action_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/claimed_prize_price"
+        android:layout_below="@+id/confirmation_text_view"
         android:paddingBottom="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:clipToPadding="false">
+
         <Button
-            android:id="@+id/claim_button"
+            android:id="@+id/confirm_removal_button"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_weight="1"
-            android:textColor="@color/greenButton"
+            android:layout_marginStart="5dp"
             android:background="@android:color/transparent"
             android:layout_marginTop="2dp"
-            android:layout_marginEnd="5dp"
             android:textSize="12sp"
-            android:text="@string/claim"
+            android:textColor="@color/redDelete"
+            android:text="@string/remove_big"
             tools:ignore="ButtonStyle" />
 
         <Button
-            android:id="@+id/cancel_claim_button"
+            android:id="@+id/cancel_removal_button"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_weight="1"

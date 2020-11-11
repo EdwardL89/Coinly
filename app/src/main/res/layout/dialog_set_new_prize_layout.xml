@@ -78,7 +78,7 @@
         <Button
             android:id="@+id/set_button"
             android:layout_width="0dp"
-            android:layout_height="25dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:layout_marginTop="2dp"
@@ -91,7 +91,7 @@
         <Button
             android:id="@+id/cancel_set_new_prize_button"
             android:layout_width="0dp"
-            android:layout_height="25dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:layout_marginStart="5dp"
             android:background="@android:color/transparent"
