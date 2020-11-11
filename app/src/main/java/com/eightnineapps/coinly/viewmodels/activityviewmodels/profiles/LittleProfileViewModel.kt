@@ -4,10 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.helpers.ImageUploadHelper
+import com.eightnineapps.coinly.classes.helpers.NotificationDialogCreator
 import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
@@ -26,6 +28,7 @@ class LittleProfileViewModel: ViewModel() {
     lateinit var observedUserInstance: User
     private var hasLoadedPrizesSet = false
     private var hasLoadedPrizesClaimed = false
+    private val dialogCreator = NotificationDialogCreator()
     private var prizesSetQuery: Task<QuerySnapshot>? = null
     private var prizesClaimedQuery: Task<QuerySnapshot>? = null
     private var prizesSetAdapter: PrizesRecyclerViewAdapter? = null
@@ -77,6 +80,15 @@ class LittleProfileViewModel: ViewModel() {
      */
     fun startQueryForPrizesClaimed() {
         prizesClaimedQuery = Firestore.getPrizesClaimed(observedUserInstance.email!!, CurrentUser.getEmail()!!).get()
+    }
+
+    /**
+     * Opens a dialog to confirm the removal of the big
+     */
+    fun openConfirmationDialog(context: Context): AlertDialog {
+        val alertDialog = dialogCreator.createConfirmationDialog(observedUserInstance, context)
+        dialogCreator.showDialog(alertDialog)
+        return alertDialog
     }
 
     /**

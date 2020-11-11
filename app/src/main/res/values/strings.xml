@@ -99,4 +99,5 @@
     <string name="add_new_prize">Add new prize</string>
     <string name="confirm">Confirm</string>
     <string name="confirmation_text">Remove %1$s?</string>
+    <string name="remove">Remove</string>
 </resources>

@@ -1,43 +1,25 @@
 package com.eightnineapps.coinly.views.fragments.profiles.little
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
-import com.eightnineapps.coinly.adapters.BigProfileAdapter
 import com.eightnineapps.coinly.adapters.LittleProfileAdapter
-import com.eightnineapps.coinly.classes.helpers.PrizeDialogCreator
-import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.LittleProfileViewModel
 import com.eightnineapps.coinly.views.activities.startup.HomeActivity
-import com.google.android.gms.tasks.Task
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.android.synthetic.main.dialog_confirm_removal.*
 import kotlinx.android.synthetic.main.fragment_little_profile.*
-import kotlinx.android.synthetic.main.fragment_little_profile.view.*
-import kotlinx.android.synthetic.main.dialog_set_new_prize_layout.*
-import kotlinx.android.synthetic.main.fragment_big_profile.*
-import kotlinx.android.synthetic.main.fragment_little_profile.bigs_count
-import kotlinx.android.synthetic.main.fragment_little_profile.bio_text_view
-import kotlinx.android.synthetic.main.fragment_little_profile.coin_count
-import kotlinx.android.synthetic.main.fragment_little_profile.littles_count
-import kotlinx.android.synthetic.main.fragment_little_profile.my_display_name_textView
-import kotlinx.android.synthetic.main.fragment_little_profile.tab_layout
-import kotlinx.android.synthetic.main.fragment_little_profile.view_pager
 
 class LittleProfileFragment: Fragment() {
 
@@ -110,12 +92,18 @@ class LittleProfileFragment: Fragment() {
             findNavController().navigate(R.id.action_littleProfileFragment_to_giveCoinsFragment, null)
         }
         remove_little_button.setOnClickListener {
-            littleProfileViewModel.removeLittleAndSendBack()
-            Toast.makeText(context, "Removed " +
-                    "${littleProfileViewModel.observedUserInstance.displayName} as a little", Toast.LENGTH_SHORT).show()
-            (context as Activity).finish()
-            redrawAllLittlesPage()
+            val confirmationDialog = littleProfileViewModel.openConfirmationDialog(requireContext())
+            confirmationDialog.confirm_removal_button.setOnClickListener { removeLittle() }
+            confirmationDialog.cancel_removal_button.setOnClickListener { confirmationDialog.cancel() }
         }
+    }
+
+    private fun removeLittle() {
+        littleProfileViewModel.removeLittleAndSendBack()
+        Toast.makeText(context, "Removed " +
+                "${littleProfileViewModel.observedUserInstance.displayName} as a little", Toast.LENGTH_SHORT).show()
+        (context as Activity).finish()
+        redrawAllLittlesPage()
     }
 
     /**

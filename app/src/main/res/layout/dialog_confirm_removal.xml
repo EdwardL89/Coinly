@@ -69,7 +69,7 @@
             android:layout_marginTop="2dp"
             android:textSize="12sp"
             android:textColor="@color/redDelete"
-            android:text="@string/remove_big"
+            android:text="@string/remove"
             tools:ignore="ButtonStyle" />
 
         <Button
