@@ -3,10 +3,13 @@ package com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import com.eightnineapps.coinly.adapters.PrizesRecyclerViewAdapter
 import com.eightnineapps.coinly.classes.helpers.ImageUploadHelper
+import com.eightnineapps.coinly.classes.helpers.NotificationDialogCreator
 import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
@@ -25,6 +28,7 @@ class LittleProfileViewModel: ViewModel() {
     lateinit var observedUserInstance: User
     private var hasLoadedPrizesSet = false
     private var hasLoadedPrizesClaimed = false
+    private val dialogCreator = NotificationDialogCreator()
     private var prizesSetQuery: Task<QuerySnapshot>? = null
     private var prizesClaimedQuery: Task<QuerySnapshot>? = null
     private var prizesSetAdapter: PrizesRecyclerViewAdapter? = null
@@ -79,19 +83,28 @@ class LittleProfileViewModel: ViewModel() {
     }
 
     /**
+     * Opens a dialog to confirm the removal of the big
+     */
+    fun openConfirmationDialog(context: Context): AlertDialog {
+        val alertDialog = dialogCreator.createConfirmationDialog(observedUserInstance, context)
+        dialogCreator.showDialog(alertDialog)
+        return alertDialog
+    }
+
+    /**
      * Instantiates the adapter for the prizes set recycler
      */
-    fun createPrizesSetAdapter() {
+    fun createPrizesSetAdapter(view: View) {
         prizesSetAdapter = PrizesRecyclerViewAdapter(allPrizesSet,
-            PrizeTapLocation.LITTLE_PRIZES_SET, observedUserInstance)
+            PrizeTapLocation.LITTLE_PRIZES_SET, observedUserInstance, view)
     }
 
     /**
      * Instantiates the adapter for the prizes claimed recycler
      */
-    fun createPrizesClaimedAdapter() {
+    fun createPrizesClaimedAdapter(view: View) {
         prizesClaimedAdapter = PrizesRecyclerViewAdapter(allPrizesClaimed,
-            PrizeTapLocation.LITTLE_PRIZES_CLAIMED, observedUserInstance)
+            PrizeTapLocation.LITTLE_PRIZES_CLAIMED, observedUserInstance, view)
     }
 
     /**
