@@ -102,6 +102,14 @@ class AllBigsFragment : Fragment() {
      */
     private fun attachAdapter(view: View) {
         view.allBigsRecyclerView.adapter = allBigsFragmentViewModel.getAdapter()
+        showOrHideEmptyBigsListMessage(view)
+    }
+
+    /**
+     * If the user has no bigs, show the message to direct the user to the linkup page
+     */
+    private fun showOrHideEmptyBigsListMessage(view: View) {
+        view.no_bigs_text_view.visibility = if (allBigsFragmentViewModel.getAdapter().itemCount == 0) View.VISIBLE else View.GONE
     }
 
     /**
