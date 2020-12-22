@@ -2,14 +2,18 @@ package com.eightnineapps.coinly.classes.helpers
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
+import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.objects.Notification
+import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.enums.NotificationType
+import kotlinx.android.synthetic.main.dialog_confirm_removal.view.*
 import kotlinx.android.synthetic.main.dialog_notification_layout.view.*
 
 class NotificationDialogCreator {
@@ -34,6 +38,16 @@ class NotificationDialogCreator {
     }
 
     /**
+     * Creates an alert dialogue to confirm removal of a big or little
+     */
+    fun createConfirmationDialog(user: User, context: Context): AlertDialog {
+        val builder = AlertDialog.Builder(context)
+        val dialogueView = createViewForConfirmationDialog(user, context)
+        builder.setView(dialogueView)
+        return builder.create()
+    }
+
+    /**
      * Sets the dimensions of the set new prize dialogue
      */
     private fun setDialogDimensions(dialog: AlertDialog): WindowManager.LayoutParams {
@@ -45,7 +59,26 @@ class NotificationDialogCreator {
     }
 
     /**
-     * Creates the view to go in the Alert Dialog
+     * Inflate the view for the confirmation dialog
+     */
+    @SuppressLint("InflateParams")
+    private fun createViewForConfirmationDialog(user: User, context: Context): View {
+        val dialogueView = (context as Activity).layoutInflater.inflate(R.layout.dialog_confirm_removal, null)
+        setRemovalDialogContent(dialogueView, user)
+        return dialogueView
+    }
+
+    /**
+     * Set the image and text content of the confirmation dialog
+     */
+    private fun setRemovalDialogContent(view: View, user: User) {
+        Glide.with(view.context).load(user.profilePictureUri).into(view.profile_picture)
+        view.confirmation_text_view.text =
+            String.format(view.context.getString(R.string.confirmation_text), user.displayName)
+    }
+
+    /**
+     * Inflate the view to go in the Alert Dialog
      */
     @SuppressLint("InflateParams")
     private fun createViewForAlertDialogue(notification: Notification, view: View): View {

@@ -92,4 +92,12 @@
     <string name="Request_Denial_Message">You don\'t have enough coins! Denying Request</string>
     <string name="note">Note</string>
     <string name="reason">Reason</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="back">Back</string>
+    <string name="price_with_coins">Price: %1$s coins</string>
+    <string name="coins_price">%1$s coins</string>
+    <string name="add_new_prize">Add new prize</string>
+    <string name="confirm">Confirm</string>
+    <string name="confirmation_text">Remove %1$s?</string>
+    <string name="remove">Remove</string>
 </resources>

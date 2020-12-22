@@ -67,7 +67,7 @@ class PrizeDialogCreator {
      */
     private fun setClaimPrizeContent(dialogView: View, prize: Prize) {
         dialogView.claimed_prize_title.text = prize.name
-        dialogView.claimed_prize_price.text = prize.price.toString()
+        dialogView.claimed_prize_price.text = String.format(dialogView.context.getString(R.string.price_with_coins), prize.price)
         Glide.with(dialogView.context.applicationContext).load(prize.uri).into(dialogView.prize_picture)
     }
 
@@ -76,7 +76,7 @@ class PrizeDialogCreator {
      */
     private fun setPrizeInfoContent(dialogView: View, prize: Prize) {
         dialogView.prize_info_name.text = prize.name
-        dialogView.prize_info_price.text = prize.price.toString()
+        dialogView.prize_info_price.text = String.format(dialogView.context.getString(R.string.price_with_coins), prize.price)
         Glide.with(dialogView.context.applicationContext).load(prize.uri).into(dialogView.prize_picture)
     }
 
