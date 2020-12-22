@@ -33,7 +33,7 @@ class AllBigsFragment : Fragment() {
     /**
      * Inflates the all bigs fragment
      */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return createBigsTab(inflater.inflate(R.layout.fragment_bigs, container, false))
     }
 

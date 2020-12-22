@@ -11,10 +11,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.AllLittlesFragmentViewModel
-import com.eightnineapps.coinly.views.activities.startup.HomeActivity.Companion.tabLayout
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
-import kotlinx.android.synthetic.main.fragment_bigs.view.*
 import kotlinx.android.synthetic.main.fragment_littles.view.*
 
 class AllLittlesFragment : Fragment() {
@@ -34,7 +32,7 @@ class AllLittlesFragment : Fragment() {
     /**
      * Inflates the my profile fragment
      */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return createLittlesTab(inflater.inflate(R.layout.fragment_littles, container, false))
     }
 
