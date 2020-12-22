@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.viewmodels.fragmentviewmodels.AllLittlesFragmentViewModel
-import com.eightnineapps.coinly.views.activities.startup.HomeActivity.Companion.tabLayout
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.fragment_littles.view.*
@@ -33,7 +32,7 @@ class AllLittlesFragment : Fragment() {
     /**
      * Inflates the my profile fragment
      */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return createLittlesTab(inflater.inflate(R.layout.fragment_littles, container, false))
     }
 
@@ -103,6 +102,14 @@ class AllLittlesFragment : Fragment() {
      */
     private fun attachAdapter(view: View) {
         view.allLittlesRecyclerView.adapter = allLittlesFragmentViewModel.getAdapter()
+        showOrHideEmptyLittlesListMessage(view)
+    }
+
+    /**
+     * If the user has no littles, show the message to direct the user to the linkup page
+     */
+    private fun showOrHideEmptyLittlesListMessage(view: View) {
+        view.no_littles_text_view.visibility = if (allLittlesFragmentViewModel.getAdapter().itemCount == 0) View.VISIBLE else View.GONE
     }
 
     /**

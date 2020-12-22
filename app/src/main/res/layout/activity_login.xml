@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/login_screen_gradient">
 
@@ -11,7 +12,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/app_logo_description"
         android:layout_marginTop="10dp"
-        app:layout_constraintVertical_bias=".3"
+        app:layout_constraintVertical_bias=".4"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,7 +26,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/email_icon"
         app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="@id/logo_image_view"
+        app:layout_constraintStart_toStartOf="@id/login_button"
         app:layout_constraintEnd_toStartOf="@id/email_edit_text"
         app:layout_constraintTop_toTopOf="@id/email_edit_text"
         app:layout_constraintBottom_toBottomOf="@id/email_edit_text"
@@ -37,7 +38,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/password_lock_icon"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="@id/logo_image_view"
+        app:layout_constraintStart_toStartOf="@id/login_button"
         app:layout_constraintEnd_toStartOf="@id/password_edit_text"
         app:layout_constraintTop_toTopOf="@id/password_edit_text"
         app:layout_constraintBottom_toBottomOf="@id/password_edit_text"
@@ -55,7 +56,7 @@
         android:autofillHints="@string/email"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@id/email_icon"
-        app:layout_constraintEnd_toEndOf="@id/logo_image_view"
+        app:layout_constraintEnd_toEndOf="@id/login_button"
         app:layout_constraintTop_toBottomOf="@id/logo_image_view"
         app:layout_constraintBottom_toTopOf="@id/password_edit_text"
         android:inputType="textEmailAddress"/>
@@ -72,35 +73,50 @@
         android:inputType="textPassword"
         app:layout_constraintStart_toEndOf="@id/lock_icon"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintEnd_toEndOf="@id/logo_image_view"
+        app:layout_constraintEnd_toEndOf="@id/login_button"
         app:layout_constraintTop_toBottomOf="@id/email_edit_text"
         app:layout_constraintBottom_toTopOf="@id/login_button"/>
 
     <Button
         android:id="@+id/login_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login"
         android:textColor="@color/white"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:elevation="10dp"
         android:background="@drawable/rounded_button_green"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/password_edit_text"
-        app:layout_constraintBottom_toTopOf="@id/sign_in_button"/>
+        app:layout_constraintBottom_toTopOf="@id/sign_in_holder"/>
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/sign_in_holder"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/login_button"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.gms.common.SignInButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/sign_in_button"
+            android:text="@string/sign_in_with_google"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_button_green"/>
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

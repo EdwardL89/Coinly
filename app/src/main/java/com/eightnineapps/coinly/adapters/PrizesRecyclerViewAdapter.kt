@@ -1,13 +1,14 @@
 package com.eightnineapps.coinly.adapters
 
 import android.app.Activity
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
@@ -21,19 +22,23 @@ import com.eightnineapps.coinly.models.ImgStorage
 import kotlinx.android.synthetic.main.dialog_claim_prize_layout.*
 import kotlinx.android.synthetic.main.dialog_prize_info_layout.*
 import kotlinx.android.synthetic.main.fragment_big_profile.*
-import kotlinx.android.synthetic.main.fragment_little_profile.*
+import kotlinx.android.synthetic.main.fragment_prizes_to_claim.view.*
+import kotlinx.android.synthetic.main.fragment_your_set_prizes.view.*
 import kotlinx.android.synthetic.main.prize_list_view_layout.view.*
 
-class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTapLocation, _observedUser: User): RecyclerView.Adapter<PrizesRecyclerViewAdapter.ViewHolder>() {
+class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTapLocation, _observedUser: User, view: View):
+    RecyclerView.Adapter<PrizesRecyclerViewAdapter.ViewHolder>() {
 
-    private var prizeList = _items.toMutableList()
-    private var prizeTapLocation = _prizeTapLocation
+    private val prizeList = _items.toMutableList()
+    private val prizeTapLocation = _prizeTapLocation
     private var recyclerView: RecyclerView? = null
-    private var observedUser = _observedUser
+    private val observedUser = _observedUser
+    private val fragmentView = view
 
     inner class ViewHolder(_view: View): RecyclerView.ViewHolder(_view), View.OnClickListener {
 
         val singlePrizePictureImageView: ImageView = _view.prize_picture
+        val singlePrizePrice: TextView = _view.price
         private val dialogCreator = PrizeDialogCreator()
         private val context = _view.context
 
@@ -69,8 +74,9 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
          */
         private fun setUpButtonForDeletion(prizeId: String, dialog: AlertDialog) {
             dialog.cancel_button.text = context.getString(R.string.delete)
+            dialog.cancel_button.setTextColor(ContextCompat.getColor(context, R.color.redDelete))
             dialog.cancel_button.setOnClickListener {
-                removeItem(prizeId, context)
+                removeItem(prizeId)
                 deleteSetPrize(prizeId)
                 dialog.cancel()
             }
@@ -149,6 +155,14 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
             Firestore.update(observedUser.email!!, "coins", observedUser.coins.toString())
             updateClaimedStats(price)
             updateGivenStats(price)
+            updateSpendingPower()
+        }
+
+        /**
+         * Updates the spending power text at the bottom of the profile
+         */
+        private fun updateSpendingPower() {
+            (context as Activity).spending_power.text = CurrentUser.coins.value.toString()
         }
 
         /**
@@ -156,9 +170,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
          * adds the claimed prize to the recycler
          */
         private fun updateUIAfterClaimingPrize(prize: Prize) {
-            (context as Activity).no_prizes_claimed_image.visibility = View.INVISIBLE
-            (context.prizesYouveClaimedRecyclerView.adapter as PrizesRecyclerViewAdapter).addItem(prize)
-            removeItem(prize.id, context)
+            removeItem(prize.id)
         }
 
         /**
@@ -210,6 +222,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentPrize = prizeList[position]
         Glide.with(holder.itemView.context).load(currentPrize.uri).into(holder.singlePrizePictureImageView)
+        holder.singlePrizePrice.text = String.format(holder.itemView.context.getString(R.string.coins_price), currentPrize.price)
     }
 
     /**
@@ -223,20 +236,20 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
     /**
      * Removes a prize from the recycler and updates the UI
      */
-    fun removeItem(id: String, context: Context) {
+    fun removeItem(id: String) {
         prizeList.remove(prizeList.first { it.id == id })
         notifyDataSetChanged()
-        updateUIForNoPrizesSet(context)
+        updateUIForNoPrizesSet()
     }
 
     /**
      * Displays the "no prizes set" icon when the recycler is empty
      */
-    private fun updateUIForNoPrizesSet(context: Context) {
+    private fun updateUIForNoPrizesSet() {
         if (prizeList.size == 0 && prizeTapLocation == PrizeTapLocation.LITTLE_PRIZES_SET) {
-            (context as Activity).no_prizes_set_image.visibility = View.VISIBLE
+            fragmentView.no_set_prizes_image.visibility = View.VISIBLE
         } else if (prizeList.size == 0) {
-            (context as Activity).no_prizes_set_by_big_image.visibility = View.VISIBLE
+            fragmentView.no_prizes_set_by_big_image.visibility = View.VISIBLE
         }
     }
 

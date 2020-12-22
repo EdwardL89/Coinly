@@ -11,14 +11,15 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.adapters.BigProfileAdapter
 import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.profiles.BigProfileViewModel
 import com.eightnineapps.coinly.views.activities.startup.HomeActivity
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.android.synthetic.main.dialog_confirm_removal.*
 import kotlinx.android.synthetic.main.fragment_big_profile.*
-import kotlinx.android.synthetic.main.fragment_big_profile.view.*
 
 class BigProfileFragment: Fragment() {
 
@@ -31,8 +32,6 @@ class BigProfileFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bigProfileViewModel.observedUserInstance = requireActivity().intent.getSerializableExtra("observed_user") as User
-        bigProfileViewModel.startQueryForPrizesSet()
-        bigProfileViewModel.startQueryForClaimedPrizes()
     }
 
     /**
@@ -48,87 +47,19 @@ class BigProfileFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadProfile()
+        constructTabLayout()
         setUpButtons()
-        addPrizesSetToRecycler(view)
-        addPrizesClaimedToRecycler(view)
     }
 
-    /**
-     * Makes sure the query task is completed before continuing
-     */
-    private fun addPrizesSetToRecycler(view: View) {
-        if (bigProfileViewModel.hasLoadedPrizesSet()) {
-            attachPrizesSetAdapter(view)
-        } else {
-            val prizesSetQueryTask = bigProfileViewModel.getPrizesSetQuery()!!
-            if (prizesSetQueryTask.isComplete) {
-                handlePrizesSetQueryTask(prizesSetQueryTask, view)
-            } else {
-                prizesSetQueryTask.addOnCompleteListener {
-                    handlePrizesSetQueryTask(prizesSetQueryTask, view)
-                }
-            }
-        }
-    }
-
-    /**
-     * Makes sure the query task is completed before continuing
-     */
-    private fun addPrizesClaimedToRecycler(view: View) {
-        if (bigProfileViewModel.hasLoadedPrizesClaimed()) {
-            attachPrizesClaimedAdapter(view)
-        } else {
-            val prizesClaimedQueryTask = bigProfileViewModel.getPrizesClaimedQuery()!!
-            if (prizesClaimedQueryTask.isComplete) {
-                handlePrizesClaimedQueryTask(prizesClaimedQueryTask, view)
-            } else {
-                prizesClaimedQueryTask.addOnCompleteListener {
-                    handlePrizesClaimedQueryTask(prizesClaimedQueryTask, view)
-                }
-            }
-        }
-    }
-
-    /**
-     * Gathers all the prizes set and sets up the recyclerview to place them in
-     */
-    private fun handlePrizesSetQueryTask(prizesSetQueryTask: Task<QuerySnapshot>, view: View) {
-        bigProfileViewModel.compilePrizesSet(prizesSetQueryTask.result!!)
-        bigProfileViewModel.createPrizesSetAdapter()
-        attachPrizesSetAdapter(view)
-    }
-
-    /**
-     * Gathers all the prizes claimed and sets up the recyclerview to place them in
-     */
-    private fun handlePrizesClaimedQueryTask(prizesClaimedQueryTask: Task<QuerySnapshot>, view: View) {
-        bigProfileViewModel.compilePrizesClaimed(prizesClaimedQueryTask.result!!)
-        bigProfileViewModel.createPrizesClaimedAdapter()
-        attachPrizesClaimedAdapter(view)
-    }
-
-    /**
-     * Attaches the adapter to the prizes set recycler view and updates UI if it's empty
-     */
-    private fun attachPrizesSetAdapter(view: View) {
-        view.prizesToClaimRecyclerView.adapter = bigProfileViewModel.getPrizesSetAdapter()
-        if (bigProfileViewModel.getPrizesSetAdapter().itemCount == 0) {
-            view.no_prizes_set_by_big_image.visibility = View.VISIBLE
-        } else {
-            view.no_prizes_set_by_big_image.visibility = View.INVISIBLE
-        }
-    }
-
-    /**
-     * Attaches the adapter to the prizes claimed recycler view and updates UI if it's empty
-     */
-    private fun attachPrizesClaimedAdapter(view: View) {
-        view.prizesYouveClaimedRecyclerView.adapter = bigProfileViewModel.getPrizesClaimedAdapter()
-        if (bigProfileViewModel.getPrizesClaimedAdapter().itemCount == 0) {
-            view.no_prizes_claimed_image.visibility = View.VISIBLE
-        } else {
-            view.no_prizes_claimed_image.visibility = View.INVISIBLE
-        }
+    private fun constructTabLayout() {
+        tab_layout.addTab(tab_layout.newTab().setText("Prizes"))
+        tab_layout.addTab(tab_layout.newTab().setText("Claimed"))
+        tab_layout.tabGravity = TabLayout.GRAVITY_FILL
+        view_pager.adapter = BigProfileAdapter(this)
+        TabLayoutMediator(tab_layout, view_pager) { tab, pos ->
+            if (pos == 0) tab.text = "Prizes"
+            else tab.text = "Claimed"
+        }.attach()
     }
 
     /**
@@ -153,19 +84,25 @@ class BigProfileFragment: Fragment() {
             findNavController().navigate(R.id.action_bigProfileFragment_to_requestCoinsFragment, null)
         }
         remove_big_button.setOnClickListener {
-            bigProfileViewModel.removeBigAndSendBack()
-            Toast.makeText(context, "Removed ${bigProfileViewModel.observedUserInstance.displayName} as a big",
-                Toast.LENGTH_SHORT).show()
-            (context as Activity).finish()
-            redrawAllBigsPage()
+            val confirmationDialog = bigProfileViewModel.openConfirmationDialog(requireContext())
+            confirmationDialog.confirm_removal_button.setOnClickListener { removeBig() }
+            confirmationDialog.cancel_removal_button.setOnClickListener { confirmationDialog.cancel() }
         }
+    }
+
+    private fun removeBig() {
+        bigProfileViewModel.removeBigAndSendBack()
+        Toast.makeText(context, "Removed ${bigProfileViewModel.observedUserInstance.displayName} as a big",
+            Toast.LENGTH_SHORT).show()
+        (context as Activity).finish()
+        redrawAllBigsPage()
     }
 
     /**
      * Refreshes the all big's fragment by re-selecting it
      */
     private fun redrawAllBigsPage() {
-        HomeActivity.tabLayout.getTabAt(1)!!.select()
+        HomeActivity.tabLayout.getTabAt(3)!!.select()
         HomeActivity.tabLayout.getTabAt(0)!!.select()
     }
 }

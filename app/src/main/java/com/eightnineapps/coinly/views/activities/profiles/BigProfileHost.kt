@@ -1,12 +1,14 @@
 package com.eightnineapps.coinly.views.activities.profiles
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.eightnineapps.coinly.R
 
@@ -36,6 +38,7 @@ class BigProfileHost : AppCompatActivity() {
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.itemId == android.R.id.home) {
+            hideSoftKeyboard()
             onBackPressed()
             true
         } else {
@@ -62,5 +65,16 @@ class BigProfileHost : AppCompatActivity() {
     private fun addBackArrowToActionBar() {
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.arrow_back)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+
+    /**
+     * Hides the keyboard from the screen
+     */
+    private fun hideSoftKeyboard() {
+        val view = this.currentFocus
+        view?.let { v ->
+            val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(v.windowToken, 0)
+        }
     }
 }
