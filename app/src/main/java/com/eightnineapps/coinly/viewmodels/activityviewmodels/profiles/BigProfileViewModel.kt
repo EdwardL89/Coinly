@@ -144,7 +144,7 @@ class BigProfileViewModel: ViewModel() {
     private fun removeBigFromCurrentUser() {
         CurrentUser.decrementBigs()
         Firestore.removeBig(CurrentUser.getEmail()!!, observedUserInstance.email!!)
-        Firestore.update(CurrentUser.instance!!, "numOfBigs", CurrentUser.numOfBigs.value.toString())
+        Firestore.update(CurrentUser.getEmail()!!, "numOfBigs", CurrentUser.numOfBigs.value.toString())
     }
 
     /**
@@ -152,7 +152,7 @@ class BigProfileViewModel: ViewModel() {
      */
     private fun removeCurrentUserFromObservedUsersLittles() {
         observedUserInstance.numOfLittles -= 1
-        Firestore.update(observedUserInstance, "numOfLittles", observedUserInstance.numOfLittles.toString())
+        Firestore.update(observedUserInstance.email!!, "numOfLittles", observedUserInstance.numOfLittles.toString())
         Firestore.removeLittle(observedUserInstance.email!!, CurrentUser.getEmail()!!)
     }
 

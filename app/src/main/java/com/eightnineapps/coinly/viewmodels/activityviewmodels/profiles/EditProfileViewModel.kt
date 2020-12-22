@@ -37,7 +37,7 @@ class EditProfileViewModel: ViewModel() {
      * Updates the user object in the firestore with the changes made
      */
     fun commitProfileChanges(context: Context) {
-        val writeBatch = Firestore.getInstance().batch()
+        val writeBatch = Firestore.getBatch()
         val userReference = Firestore.read(currentUser.instance!!.email!!)
         writeBatch.update(userReference, "bio", currentUser.bio.value)
         writeBatch.update(userReference, "realName", currentUser.realName.value)
@@ -65,7 +65,7 @@ class EditProfileViewModel: ViewModel() {
         ImgStorage.insert(userProfilePictureByteData, "profile_pictures/${currentUser.instance!!.id}").addOnSuccessListener {
             ImgStorage.read(currentUser.instance!!.id).addOnSuccessListener {
                             uri -> currentUser.profilePictureUri.value = uri.toString()
-                            Firestore.update(currentUser.instance!!, "profilePictureUri", currentUser.profilePictureUri.value!!)
+                            Firestore.update(currentUser.getEmail()!!, "profilePictureUri", currentUser.profilePictureUri.value!!)
                     }
             }
     }
