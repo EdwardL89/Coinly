@@ -1,6 +1,5 @@
 package com.eightnineapps.coinly.classes.objects
 
-import android.util.Log
 import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
