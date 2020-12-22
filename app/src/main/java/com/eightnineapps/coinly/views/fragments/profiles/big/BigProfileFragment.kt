@@ -102,7 +102,7 @@ class BigProfileFragment: Fragment() {
      * Refreshes the all big's fragment by re-selecting it
      */
     private fun redrawAllBigsPage() {
-        HomeActivity.tabLayout.getTabAt(1)!!.select()
+        HomeActivity.tabLayout.getTabAt(3)!!.select()
         HomeActivity.tabLayout.getTabAt(0)!!.select()
     }
 }

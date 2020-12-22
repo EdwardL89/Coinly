@@ -92,6 +92,8 @@
     <string name="Request_Denial_Message">You don\'t have enough coins! Denying Request</string>
     <string name="note">Note</string>
     <string name="reason">Reason</string>
+    <string name="no_bigs_message">Go to the linkup page to add your first big!</string>
+    <string name="no_littles_message">Go to the linkup page to add your first little!</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="back">Back</string>
     <string name="price_with_coins">Price: %1$s coins</string>
