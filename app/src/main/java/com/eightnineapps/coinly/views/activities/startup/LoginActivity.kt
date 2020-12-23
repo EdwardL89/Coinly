@@ -37,7 +37,6 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         loginViewModel = ViewModelProvider(this, loginViewModelFactory).get(LoginViewModel::class.java)
-        checkForReturningUser()
         setContentView(R.layout.activity_login)
         setupSignInButton()
     }
@@ -69,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.attemptToSignIntoFirebase(GoogleSignIn.getSignedInAccountFromIntent(data).getResult(ApiException::class.java)!!)
             .addOnCompleteListener(this as Activity) {
                 if (!it.isSuccessful) Toast.makeText(this, "Sign-in failed", Toast.LENGTH_SHORT).show()
-                checkForReturningUser()
+                else checkForReturningUser()
             }
     }
 
@@ -78,7 +77,7 @@ class LoginActivity : AppCompatActivity() {
      * which activity to launch
      */
     private fun checkForReturningUser() {
-        loginViewModel.attemptToGetCurrentUSer()?.addOnCompleteListener {
+        loginViewModel.attemptToGetCurrentUSer().addOnCompleteListener {
             if (it.isSuccessful) {
                 handleUserQuery(it)
             } else {

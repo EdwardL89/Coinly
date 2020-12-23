@@ -23,11 +23,12 @@ class LoginViewModel constructor(private val authHelper: AuthHelper) : ViewModel
     /**
      * Queries the firestore to see if the current user has created a profile
      */
-    fun attemptToGetCurrentUSer(): Task<DocumentSnapshot>? {
-        if (authHelper.getAuthUser() != null) {
-            return Firestore.read(authHelper.getAuthUserEmail()).get()
+    fun attemptToGetCurrentUSer(): Task<DocumentSnapshot> {
+        return if (authHelper.getAuthUser() != null) {
+            Firestore.read(authHelper.getAuthUserEmail()).get()
+        } else {
+            Firestore.read("Failure").get()
         }
-        return null
     }
 
     /**
