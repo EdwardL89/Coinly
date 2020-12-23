@@ -102,4 +102,7 @@
     <string name="confirm">Confirm</string>
     <string name="confirmation_text">Remove %1$s?</string>
     <string name="remove">Remove</string>
+    <string name="all_prizes_claimed_menu_item">All Prizes Claimed</string>
+    <string name="transaction_history">Transaction History</string>
+    <string name="notifications">Notifications</string>
 </resources>

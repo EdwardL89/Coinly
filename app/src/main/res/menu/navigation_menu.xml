@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:id="@+id/prizes_claimed"
+        android:title="@string/all_prizes_claimed_menu_item"/>
+    <item android:id="@+id/transaction_history"
+        android:title="@string/transaction_history"/>
+    <item android:id="@+id/notifications"
+        android:title="@string/notifications"/>
     <item android:id="@+id/sign_out"
         android:icon="@drawable/signout_icon"
         android:title="@string/sign_out"/>
