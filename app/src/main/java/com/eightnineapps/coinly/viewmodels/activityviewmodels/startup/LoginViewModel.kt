@@ -1,6 +1,5 @@
 package com.eightnineapps.coinly.viewmodels.activityviewmodels.startup
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.classes.helpers.AuthHelper

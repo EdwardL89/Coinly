@@ -77,7 +77,7 @@ class LoginActivity : AppCompatActivity() {
      * which activity to launch
      */
     private fun checkForReturningUser() {
-        loginViewModel.attemptToGetCurrentUSer()?.addOnCompleteListener {
+        loginViewModel.attemptToGetCurrentUSer().addOnCompleteListener {
             if (it.isSuccessful) {
                 handleUserQuery(it)
             } else {
