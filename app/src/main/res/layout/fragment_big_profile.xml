@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/profile_background">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/user_profile_cardView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            app:cardCornerRadius="100dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/top_stats">
+
+            <ImageView
+                android:id="@+id/user_profile_picture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/user_profile_picture"
+                android:scaleType="centerCrop" />
+        </androidx.cardview.widget.CardView>
+
+        <RelativeLayout
+            android:id="@+id/top_stats"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintStart_toEndOf="@id/user_profile_cardView"
+            app:layout_constraintTop_toTopOf="@id/user_profile_cardView"
+            app:layout_constraintBottom_toBottomOf="@id/user_profile_cardView"
+            app:layout_constraintEnd_toEndOf="parent">
+                <TextView
+                    android:id="@+id/coin_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero"
+                    android:fontFamily="sans-serif"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/coin_count_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/coins_count_text"
+                    android:fontFamily="sans-serif"
+                    android:textSize="15sp"
+                    android:layout_below="@id/coin_count"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/bigs_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero"
+                    android:layout_alignTop="@id/coin_count"
+                    android:fontFamily="sans-serif"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_alignStart="@+id/bigs_count_title"
+                    android:layout_toEndOf="@id/coin_count"/>
+
+                <TextView
+                    android:id="@+id/bigs_count_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bigs"
+                    android:fontFamily="sans-serif"
+                    android:textSize="15sp"
+                    android:layout_below="@id/coin_count"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="30dp"
+                    android:layout_toEndOf="@id/coin_count_title"/>
+
+                <TextView
+                    android:id="@+id/littles_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero"
+                    android:layout_alignTop="@id/bigs_count"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:layout_alignStart="@+id/littles_count_title"
+                    android:layout_toEndOf="@id/bigs_count"/>
+
+                <TextView
+                    android:id="@+id/littles_count_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/littles_count_titles"
+                    android:fontFamily="sans-serif"
+                    android:textSize="15sp"
+                    android:layout_below="@id/coin_count"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="30dp"
+                    android:layout_toEndOf="@id/bigs_count_title"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/my_display_name_textView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/display_name"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_cardView"
+            app:layout_constraintStart_toStartOf="@id/user_profile_cardView"
+            app:layout_constraintEnd_toEndOf="@id/top_stats"/>
+
+        <TextView
+            android:id="@+id/bio_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/bio"
+            android:textColor="@color/black"
+            android:fontFamily="sans-serif-thin"
+            app:layout_constraintTop_toBottomOf="@id/my_display_name_textView"
+            app:layout_constraintStart_toStartOf="@id/my_display_name_textView"
+            app:layout_constraintEnd_toEndOf="@id/top_stats"/>
+
+        <Button
+            android:id="@+id/request_coins_button"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:background="@drawable/rounded_button_green"
+            android:textSize="12sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginEnd="5dp"
+            android:text="@string/request_coins"
+            tools:ignore="ButtonStyle"
+            app:layout_constraintEnd_toStartOf="@id/remove_big_button"
+            app:layout_constraintTop_toBottomOf="@id/bio_text_view"
+            app:layout_constraintStart_toStartOf="@id/bio_text_view"/>
+
+        <Button
+            android:id="@+id/remove_big_button"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:background="@drawable/rounded_button_green"
+            android:textSize="12sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginStart="5dp"
+            android:text="@string/remove_big"
+            app:layout_constraintStart_toEndOf="@id/request_coins_button"
+            app:layout_constraintTop_toBottomOf="@id/bio_text_view"
+            app:layout_constraintEnd_toEndOf="@id/top_stats"/>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            app:tabTextColor="@color/black"
+            app:tabSelectedTextColor="@color/lightGreen"
+            app:tabIndicatorColor="@color/lightGreen"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/request_coins_button"
+            app:layout_constraintTop_toBottomOf="@id/your_spending_power"
+            app:layout_constraintEnd_toEndOf="@id/top_stats"/>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/tab_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/your_spending_power"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/your_spending_power"
+            android:textColor="@color/black"
+            android:fontFamily="sans-serif"
+            android:layout_marginTop="10dp"
+            android:textSize="15sp"
+            app:layout_constraintTop_toBottomOf="@id/request_coins_button"
+            app:layout_constraintStart_toStartOf="@id/user_profile_cardView"
+            />
+
+        <TextView
+            android:id="@+id/spending_power"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/zero"
+            android:textColor="@color/black"
+            android:fontFamily="sans-serif"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_marginStart="5dp"
+            app:layout_constraintStart_toEndOf="@id/your_spending_power"
+            app:layout_constraintTop_toTopOf="@id/your_spending_power"
+            app:layout_constraintBottom_toBottomOf="@id/your_spending_power"/>
+
+        <TextView
+            android:id="@+id/coin_after_spending_power"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/coins"
+            android:textColor="@color/black"
+            android:layout_marginStart="5dp"
+            android:fontFamily="sans-serif"
+            android:textSize="15sp"
+            app:layout_constraintStart_toEndOf="@id/spending_power"
+            app:layout_constraintTop_toTopOf="@id/spending_power"
+            app:layout_constraintBottom_toBottomOf="@id/spending_power"
+            app:layout_constraintEnd_toEndOf="@id/top_stats"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
