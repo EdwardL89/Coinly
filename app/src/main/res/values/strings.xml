@@ -23,7 +23,6 @@
     <string name="added_as_little">Added as little</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="login">Login</string>
     <string name="app_logo_description">app_logo</string>
     <string name="email_icon_description">email_icon_description</string>
     <string name="password_icon_description">password icon description</string>
@@ -103,4 +102,7 @@
     <string name="confirmation_text">Remove %1$s?</string>
     <string name="remove">Remove</string>
     <string name="from_eightnine_software">From EightNine Software</string>
+    <string name="register">Register</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="forgot_password"><u>FORGOT PASSWORD</u></string>
 </resources>

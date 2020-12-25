@@ -75,13 +75,41 @@
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintEnd_toEndOf="@id/login_button"
         app:layout_constraintTop_toBottomOf="@id/email_edit_text"
+        app:layout_constraintBottom_toTopOf="@id/confirm_password_edit_text"/>
+
+    <ImageView
+        android:id="@+id/second_lock_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/password_lock_icon"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@id/login_button"
+        app:layout_constraintEnd_toStartOf="@id/password_edit_text"
+        app:layout_constraintTop_toTopOf="@id/confirm_password_edit_text"
+        app:layout_constraintBottom_toBottomOf="@id/confirm_password_edit_text"
+        android:contentDescription="@string/password_icon_description" />
+
+    <EditText
+        android:id="@+id/confirm_password_edit_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:hint="@string/confirm_password"
+        android:textColorHint="@color/white"
+        android:backgroundTint="@color/white"
+        android:autofillHints="@string/password"
+        android:inputType="textPassword"
+        app:layout_constraintStart_toEndOf="@id/lock_icon"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintEnd_toEndOf="@id/login_button"
+        app:layout_constraintTop_toBottomOf="@id/password_edit_text"
         app:layout_constraintBottom_toTopOf="@id/login_button"/>
 
     <Button
         android:id="@+id/login_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/login"
+        android:text="@string/register"
         android:textColor="@color/white"
         android:layout_marginTop="20dp"
         android:layout_marginStart="10dp"
@@ -89,7 +117,7 @@
         android:elevation="10dp"
         android:background="@drawable/rounded_button_green"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintTop_toBottomOf="@id/password_edit_text"
+        app:layout_constraintTop_toBottomOf="@id/confirm_password_edit_text"
         app:layout_constraintBottom_toTopOf="@id/sign_in_holder"/>
 
     <FrameLayout
@@ -118,5 +146,16 @@
             android:background="@drawable/rounded_button_green"/>
 
     </FrameLayout>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/sign_in_holder"
+        app:layout_constraintEnd_toEndOf="@id/sign_in_holder"
+        app:layout_constraintTop_toBottomOf="@id/sign_in_holder"
+        android:layout_marginTop="10dp"
+        android:text="@string/forgot_password"
+        android:gravity="center"
+        android:textColor="@color/white"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
