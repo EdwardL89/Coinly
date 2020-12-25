@@ -38,6 +38,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         loginViewModel = ViewModelProvider(this, loginViewModelFactory).get(LoginViewModel::class.java)
         setContentView(R.layout.activity_login)
+        setupForgotPassword()
+        setupRegisterButton()
         setupSignInButton()
     }
 
@@ -60,7 +62,7 @@ class LoginActivity : AppCompatActivity() {
             try {
                 signIntoFirebase(data)
             } catch (e: ApiException) {
-                Toast.makeText(this, "Sign-in attempt failed", Toast.LENGTH_SHORT).show()
+                Log.w("INFO", "Sign in attempt failed or was canceled with back press")
             }
         }
     }
@@ -104,13 +106,31 @@ class LoginActivity : AppCompatActivity() {
     }
 
     /**
-     * Creates the Google sign-in button and initiates the Firebase authentication process
+     * Sets up the Google sign-in button and initiates the Firebase authentication process
      */
     private fun setupSignInButton() {
         sign_in_button.setOnClickListener {
             startActivityForResult(GoogleSignIn.getClient(this, GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build())
                 .signInIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION), 1)
+        }
+    }
+
+    /**
+     * Sets up the register button to create an account with an email and password
+     */
+    private fun setupRegisterButton() {
+        register_button.setOnClickListener {
+
+        }
+    }
+
+    /**
+     * Sets up the forgot password text button
+     */
+    private fun setupForgotPassword() {
+        forgot_password_text_button.setOnClickListener {
+
         }
     }
 }

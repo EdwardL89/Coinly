@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/email_icon"
         app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="@id/login_button"
+        app:layout_constraintStart_toStartOf="@id/register_button"
         app:layout_constraintEnd_toStartOf="@id/email_edit_text"
         app:layout_constraintTop_toTopOf="@id/email_edit_text"
         app:layout_constraintBottom_toBottomOf="@id/email_edit_text"
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/password_lock_icon"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="@id/login_button"
+        app:layout_constraintStart_toStartOf="@id/register_button"
         app:layout_constraintEnd_toStartOf="@id/password_edit_text"
         app:layout_constraintTop_toTopOf="@id/password_edit_text"
         app:layout_constraintBottom_toBottomOf="@id/password_edit_text"
@@ -54,9 +54,10 @@
         android:textColorHint="@color/white"
         android:backgroundTint="@color/white"
         android:autofillHints="@string/email"
+        android:textCursorDrawable="@null"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@id/email_icon"
-        app:layout_constraintEnd_toEndOf="@id/login_button"
+        app:layout_constraintEnd_toEndOf="@id/register_button"
         app:layout_constraintTop_toBottomOf="@id/logo_image_view"
         app:layout_constraintBottom_toTopOf="@id/password_edit_text"
         android:inputType="textEmailAddress"/>
@@ -71,9 +72,10 @@
         android:backgroundTint="@color/white"
         android:autofillHints="@string/password"
         android:inputType="textPassword"
+        android:textCursorDrawable="@null"
         app:layout_constraintStart_toEndOf="@id/lock_icon"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintEnd_toEndOf="@id/login_button"
+        app:layout_constraintEnd_toEndOf="@id/register_button"
         app:layout_constraintTop_toBottomOf="@id/email_edit_text"
         app:layout_constraintBottom_toTopOf="@id/confirm_password_edit_text"/>
 
@@ -83,7 +85,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/password_lock_icon"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="@id/login_button"
+        app:layout_constraintStart_toStartOf="@id/register_button"
         app:layout_constraintEnd_toStartOf="@id/password_edit_text"
         app:layout_constraintTop_toTopOf="@id/confirm_password_edit_text"
         app:layout_constraintBottom_toBottomOf="@id/confirm_password_edit_text"
@@ -99,14 +101,15 @@
         android:backgroundTint="@color/white"
         android:autofillHints="@string/password"
         android:inputType="textPassword"
+        android:textCursorDrawable="@null"
         app:layout_constraintStart_toEndOf="@id/lock_icon"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintEnd_toEndOf="@id/login_button"
+        app:layout_constraintEnd_toEndOf="@id/register_button"
         app:layout_constraintTop_toBottomOf="@id/password_edit_text"
-        app:layout_constraintBottom_toTopOf="@id/login_button"/>
+        app:layout_constraintBottom_toTopOf="@id/register_button"/>
 
     <Button
-        android:id="@+id/login_button"
+        android:id="@+id/register_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/register"
@@ -128,7 +131,7 @@
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/login_button"
+        app:layout_constraintTop_toBottomOf="@id/register_button"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.gms.common.SignInButton
@@ -148,14 +151,17 @@
     </FrameLayout>
 
     <TextView
+        android:id="@+id/forgot_password_text_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:clickable="true"
         app:layout_constraintStart_toStartOf="@id/sign_in_holder"
         app:layout_constraintEnd_toEndOf="@id/sign_in_holder"
         app:layout_constraintTop_toBottomOf="@id/sign_in_holder"
         android:layout_marginTop="10dp"
         android:text="@string/forgot_password"
         android:gravity="center"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:focusable="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
