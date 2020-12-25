@@ -57,7 +57,11 @@ class LoginActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) {
-            try { signIntoFirebase(data) } catch (e: ApiException) { checkForReturningUser() }
+            try {
+                signIntoFirebase(data)
+            } catch (e: ApiException) {
+                Toast.makeText(this, "Sign-in attempt failed", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
