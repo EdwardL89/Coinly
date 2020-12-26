@@ -44,6 +44,15 @@
         app:layout_constraintBottom_toBottomOf="@id/password_edit_text"
         android:contentDescription="@string/password_icon_description" />
 
+    <TextView
+        android:id="@+id/email_error_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintBottom_toTopOf="@id/email_edit_text"
+        app:layout_constraintStart_toStartOf="@id/email_edit_text"/>
+
     <EditText
         android:id="@+id/email_edit_text"
         android:layout_width="0dp"
@@ -61,6 +70,16 @@
         app:layout_constraintTop_toBottomOf="@id/logo_image_view"
         app:layout_constraintBottom_toTopOf="@id/password_edit_text"
         android:inputType="textEmailAddress"/>
+
+    <TextView
+        android:id="@+id/password_error_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintTop_toBottomOf="@id/email_edit_text"
+        app:layout_constraintBottom_toTopOf="@id/password_edit_text"
+        app:layout_constraintStart_toStartOf="@id/password_edit_text"/>
 
     <EditText
         android:id="@+id/password_edit_text"

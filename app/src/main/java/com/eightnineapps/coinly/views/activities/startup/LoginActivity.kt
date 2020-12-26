@@ -145,9 +145,11 @@ class LoginActivity : AppCompatActivity() {
     }
 
     /**
-     * Setup edit texts for password matching
+     * Setup edit texts for password matching and error message display
      */
     private fun setupEditTexts() {
+        email_edit_text.setOnFocusChangeListener { _, _ -> email_error_text_view.visibility = View.INVISIBLE}
+        password_edit_text.setOnFocusChangeListener { _, _ -> password_error_text_view.visibility = View.INVISIBLE  }
         confirm_password_edit_text.addTextChangedListener {
             if (it.toString() == password_edit_text.text.toString()) {
                 passwords_do_not_match_text_view.visibility = View.INVISIBLE
@@ -186,15 +188,30 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Notify the user their password is too weak
+     */
     private fun handleWeakPassword() {
-        Toast.makeText(this, "Weak Password", Toast.LENGTH_SHORT).show()
+        password_edit_text.clearFocus()
+        password_error_text_view.text = getString(R.string.password_too_weak)
+        password_error_text_view.visibility = View.VISIBLE
     }
 
+    /**
+     * Notify the user their email is malformed
+     */
     private fun handleWrongEmail() {
-        Toast.makeText(this, "Malformed Email", Toast.LENGTH_SHORT).show()
+        email_edit_text.clearFocus()
+        email_error_text_view.text = getString(R.string.invalid_email)
+        email_error_text_view.visibility = View.VISIBLE
     }
 
+    /**
+     * Notify the user an account already exists with the given email
+     */
     private fun handleExistingEmail() {
-        Toast.makeText(this, "Email Exists", Toast.LENGTH_SHORT).show()
+        email_edit_text.clearFocus()
+        email_error_text_view.text = getString(R.string.already_exists)
+        email_error_text_view.visibility = View.VISIBLE
     }
 }
