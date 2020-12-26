@@ -4,17 +4,21 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.objects.User
+import com.eightnineapps.coinly.enums.RegistrationErrorType
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.startup.LoginViewModel
 import com.eightnineapps.coinly.views.activities.profiles.CreateProfileActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.firestore.DocumentSnapshot
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_login.*
@@ -41,6 +45,7 @@ class LoginActivity : AppCompatActivity() {
         setupForgotPassword()
         setupRegisterButton()
         setupSignInButton()
+        setupEditTexts()
     }
 
     /**
@@ -121,7 +126,12 @@ class LoginActivity : AppCompatActivity() {
      */
     private fun setupRegisterButton() {
         register_button.setOnClickListener {
-
+            if (validInput()) {
+                loginViewModel.registerNewUser(
+                    email_edit_text.text.toString(),
+                    confirm_password_edit_text.text.toString()
+                ).addOnCompleteListener { task -> handleRegistrationAttempt(task) }
+            }
         }
     }
 
@@ -132,5 +142,59 @@ class LoginActivity : AppCompatActivity() {
         forgot_password_text_button.setOnClickListener {
 
         }
+    }
+
+    /**
+     * Setup edit texts for password matching
+     */
+    private fun setupEditTexts() {
+        confirm_password_edit_text.addTextChangedListener {
+            if (it.toString() == password_edit_text.text.toString()) {
+                passwords_do_not_match_text_view.visibility = View.INVISIBLE
+            } else {
+                passwords_do_not_match_text_view.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    /**
+     * Makes sure no edit texts are empty
+     */
+    private fun validInput(): Boolean {
+        return if (email_edit_text.text.toString().isEmpty() ||
+            confirm_password_edit_text.text.toString().isEmpty() ||
+            password_edit_text.text.toString().isEmpty()) {
+            Toast.makeText(this, "Missing info!", Toast.LENGTH_SHORT).show()
+            false
+        } else {
+            true
+        }
+    }
+
+    /**
+     * Determines the next step after registration attempt
+     */
+    private fun handleRegistrationAttempt(task: Task<AuthResult>) {
+        if (task.isSuccessful) {
+            checkForReturningUser()
+        } else {
+            when (loginViewModel.handleRegistrationException(task.exception)) {
+                RegistrationErrorType.WEAK_PASSWORD -> handleWeakPassword()
+                RegistrationErrorType.MALFORMED_EMAIL -> handleWrongEmail()
+                RegistrationErrorType.EXISTING_EMAIL -> handleExistingEmail()
+            }
+        }
+    }
+
+    private fun handleWeakPassword() {
+        Toast.makeText(this, "Weak Password", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun handleWrongEmail() {
+        Toast.makeText(this, "Malformed Email", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun handleExistingEmail() {
+        Toast.makeText(this, "Email Exists", Toast.LENGTH_SHORT).show()
     }
 }

@@ -71,6 +71,7 @@
         android:textColorHint="@color/white"
         android:backgroundTint="@color/white"
         android:autofillHints="@string/password"
+        android:layout_marginTop="10dp"
         android:inputType="textPassword"
         android:textCursorDrawable="@null"
         app:layout_constraintStart_toEndOf="@id/lock_icon"
@@ -91,6 +92,17 @@
         app:layout_constraintBottom_toBottomOf="@id/confirm_password_edit_text"
         android:contentDescription="@string/password_icon_description" />
 
+    <TextView
+        android:id="@+id/passwords_do_not_match_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:text="@string/passwords_don_t_match"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintTop_toBottomOf="@id/password_edit_text"
+        app:layout_constraintBottom_toTopOf="@id/confirm_password_edit_text"
+        app:layout_constraintStart_toStartOf="@id/confirm_password_edit_text"/>
+
     <EditText
         android:id="@+id/confirm_password_edit_text"
         android:layout_width="0dp"
@@ -101,6 +113,7 @@
         android:backgroundTint="@color/white"
         android:autofillHints="@string/password"
         android:inputType="textPassword"
+        android:layout_marginTop="10dp"
         android:textCursorDrawable="@null"
         app:layout_constraintStart_toEndOf="@id/lock_icon"
         app:layout_constraintVertical_chainStyle="packed"
