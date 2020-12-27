@@ -1,11 +1,14 @@
 package com.eightnineapps.coinly.views.activities.startup
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.objects.User
@@ -15,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.firestore.DocumentSnapshot
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_login.*
@@ -32,6 +36,18 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel = ViewModelProvider(this, loginViewModelFactory).get(LoginViewModel::class.java)
         setContentView(R.layout.activity_login)
         setupSignInButton()
+        setupLoginButton()
+        setupEditTexts()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        clearFields()
+    }
+
+    private fun clearFields() {
+        email_edit_text.setText("")
+        password_edit_text.setText("")
     }
 
     /**
@@ -52,6 +68,74 @@ class LoginActivity : AppCompatActivity() {
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build())
                 .signInIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION), 1)
         }
+    }
+
+    private fun setupLoginButton() {
+        login_button.setOnClickListener {
+            hideSoftKeyboard()
+            if (validInput()) {
+                loginViewModel.loginUser(email_edit_text.text.toString(),
+                    password_edit_text.text.toString()
+                ).addOnCompleteListener { task -> handleLoginAttempt(task) }
+            }
+        }
+    }
+
+    /**
+     * Hides the keyboard from the screen
+     */
+    private fun hideSoftKeyboard() {
+        val view = currentFocus
+        view?.let { v ->
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(v.windowToken, 0)
+        }
+    }
+
+    private fun validInput(): Boolean {
+        return if (email_edit_text.text.toString().isEmpty() ||
+            password_edit_text.text.toString().isEmpty()) {
+            Toast.makeText(this, "Missing info!", Toast.LENGTH_SHORT).show()
+            false
+        } else {
+            true
+        }
+    }
+
+    private fun handleLoginAttempt(task: Task<AuthResult>) {
+        if (task.isSuccessful) {
+            checkForReturningUser()
+        } else {
+            val exceptionMsg = task.exception.toString()
+            when {
+                exceptionMsg.contains("password") -> handleWrongPassword()
+                exceptionMsg.contains("email") -> handleBadEmail()
+                else -> handleNoUser()
+            }
+        }
+    }
+
+    private fun setupEditTexts() {
+        email_edit_text.setOnFocusChangeListener { _, _ -> email_error_text_view.visibility = View.INVISIBLE}
+        password_edit_text.setOnFocusChangeListener { _, _ -> password_error_text_view.visibility = View.INVISIBLE}
+    }
+
+    private fun handleNoUser() {
+        email_edit_text.clearFocus()
+        email_error_text_view.text = getString(R.string.no_account)
+        email_error_text_view.visibility = View.VISIBLE
+    }
+
+    private fun handleBadEmail() {
+        email_edit_text.clearFocus()
+        email_error_text_view.text = getString(R.string.invalid_email)
+        email_error_text_view.visibility = View.VISIBLE
+    }
+
+    private fun handleWrongPassword() {
+        password_edit_text.clearFocus()
+        password_error_text_view.text = getString(R.string.wrong_password)
+        password_error_text_view.visibility = View.VISIBLE
     }
 
     /**

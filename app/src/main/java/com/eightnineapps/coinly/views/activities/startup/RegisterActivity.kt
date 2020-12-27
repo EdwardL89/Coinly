@@ -1,8 +1,10 @@
 package com.eightnineapps.coinly.views.activities.startup
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -11,7 +13,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.objects.User
-import com.eightnineapps.coinly.enums.RegistrationErrorType
+import com.eightnineapps.coinly.enums.AuthErrorType
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.startup.LoginViewModel
 import com.eightnineapps.coinly.views.activities.profiles.CreateProfileActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -44,6 +46,17 @@ class RegisterActivity : AppCompatActivity() {
         setupRegisterButton()
         setupSignUpButton()
         setupEditTexts()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        clearFields()
+    }
+
+    private fun clearFields() {
+        email_edit_text.setText("")
+        password_edit_text.setText("")
+        confirm_password_edit_text.setText("")
     }
 
     /**
@@ -127,9 +140,7 @@ class RegisterActivity : AppCompatActivity() {
      */
     private fun setupSignUpButton() {
         sign_up_button.setOnClickListener {
-            email_edit_text.setText("")
-            password_edit_text.setText("")
-            confirm_password_edit_text.setText("")
+            clearFields()
             email_error_text_view.visibility = View.INVISIBLE
             startActivityForResult(GoogleSignIn.getClient(this, GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build())
@@ -188,9 +199,9 @@ class RegisterActivity : AppCompatActivity() {
             checkForReturningUser()
         } else {
             when (loginViewModel.handleRegistrationException(task.exception)) {
-                RegistrationErrorType.WEAK_PASSWORD -> handleWeakPassword()
-                RegistrationErrorType.MALFORMED_EMAIL -> handleWrongEmail()
-                RegistrationErrorType.EXISTING_EMAIL -> handleExistingEmail()
+                AuthErrorType.WEAK_PASSWORD -> handleWeakPassword()
+                AuthErrorType.MALFORMED_EMAIL -> handleWrongEmail()
+                AuthErrorType.EXISTING_EMAIL -> handleExistingEmail()
             }
         }
     }

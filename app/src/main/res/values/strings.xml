@@ -111,4 +111,6 @@
     <string name="invalid_email">Invalid Email</string>
     <string name="already_exists">Account with that email already exists</string>
     <string name="login">Login</string>
+    <string name="wrong_password">Wrong password. Did you sign up with Google?</string>
+    <string name="no_account">Account does not exist with that email</string>
 </resources>

@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.classes.helpers.AuthHelper
-import com.eightnineapps.coinly.enums.RegistrationErrorType
+import com.eightnineapps.coinly.enums.AuthErrorType
 import com.eightnineapps.coinly.models.Firestore
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
@@ -59,13 +59,20 @@ class LoginViewModel constructor(private val authHelper: AuthHelper) : ViewModel
     }
 
     /**
+     * Signs in a user with a password and email
+     */
+    fun loginUser(email: String, password: String): Task<AuthResult> {
+        return authHelper.getAuth().signInWithEmailAndPassword(email, password)
+    }
+
+    /**
      * Determines the next step when a registration exception is thrown
      */
-    fun handleRegistrationException(exception: Exception?): RegistrationErrorType {
+    fun handleRegistrationException(exception: Exception?): AuthErrorType {
         return when (exception) {
-            is FirebaseAuthWeakPasswordException -> RegistrationErrorType.WEAK_PASSWORD
-            is FirebaseAuthInvalidCredentialsException -> RegistrationErrorType.MALFORMED_EMAIL
-            else -> RegistrationErrorType.EXISTING_EMAIL
+            is FirebaseAuthWeakPasswordException -> AuthErrorType.WEAK_PASSWORD
+            is FirebaseAuthInvalidCredentialsException -> AuthErrorType.MALFORMED_EMAIL
+            else -> AuthErrorType.EXISTING_EMAIL
         }
     }
 }
