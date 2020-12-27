@@ -45,7 +45,7 @@ class CreateProfileActivity : AppCompatActivity() {
      */
     override fun onBackPressed() {
         super.onBackPressed()
-        createProfileViewModel.authHelper.signOut(this, applicationContext)
+        createProfileViewModel.authHelper.signOut(this)
     }
 
     /**

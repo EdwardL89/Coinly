@@ -1,5 +1,6 @@
 package com.eightnineapps.coinly.viewmodels.activityviewmodels.startup
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.classes.helpers.AuthHelper
@@ -9,7 +10,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 import com.google.firebase.firestore.DocumentSnapshot
-import java.lang.Exception
 import javax.inject.Inject
 
 class LoginViewModel constructor(private val authHelper: AuthHelper) : ViewModel() {
@@ -20,6 +20,18 @@ class LoginViewModel constructor(private val authHelper: AuthHelper) : ViewModel
             return  LoginViewModel(authHelper) as T
         }
     }
+
+    /**
+     * Queries the Firebase for an account with the given email
+     */
+    fun checkIfEmailIsUsed(email: String): Task<SignInMethodQueryResult> {
+        return authHelper.getSignInMethodsForEmail(email)
+    }
+
+    /**
+     * Signs out from the temporary login used for registration purposes
+     */
+    fun signOutFromAuth(context: Context) = authHelper.signOut(context)
 
     /**
      * Queries the firestore to see if the current user has created a profile

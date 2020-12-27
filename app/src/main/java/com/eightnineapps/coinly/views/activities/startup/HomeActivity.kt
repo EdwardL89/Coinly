@@ -63,7 +63,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
             }
             R.id.sign_out -> {
-                authHelper.signOut(this, applicationContext)
+                authHelper.signOutAndReturn(this, applicationContext)
             }
         }
         drawer_layout.closeDrawer(GravityCompat.START)
