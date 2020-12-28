@@ -1,10 +1,8 @@
 package com.eightnineapps.coinly.views.activities.startup
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -48,11 +46,17 @@ class RegisterActivity : AppCompatActivity() {
         setupEditTexts()
     }
 
+    /**
+     * Clear all edit texts when page is loaded
+     */
     override fun onResume() {
         super.onResume()
         clearFields()
     }
 
+    /**
+     * Clears all edit texts
+     */
     private fun clearFields() {
         email_edit_text.setText("")
         password_edit_text.setText("")

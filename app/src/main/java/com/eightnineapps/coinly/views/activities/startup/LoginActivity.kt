@@ -40,11 +40,17 @@ class LoginActivity : AppCompatActivity() {
         setupEditTexts()
     }
 
+    /**
+     * Clear all edit texts when page is loaded
+     */
     override fun onResume() {
         super.onResume()
         clearFields()
     }
 
+    /**
+     * Clears all edit texts
+     */
     private fun clearFields() {
         email_edit_text.setText("")
         password_edit_text.setText("")
@@ -63,6 +69,7 @@ class LoginActivity : AppCompatActivity() {
      */
     private fun setupSignInButton() {
         sign_in_button.setOnClickListener {
+            clearFields()
             startActivityForResult(
                 GoogleSignIn.getClient(this, GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build())
@@ -70,6 +77,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Sets up the login button with email and password
+     */
     private fun setupLoginButton() {
         login_button.setOnClickListener {
             hideSoftKeyboard()
@@ -92,6 +102,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Makes sure there's no missing information
+     */
     private fun validInput(): Boolean {
         return if (email_edit_text.text.toString().isEmpty() ||
             password_edit_text.text.toString().isEmpty()) {
@@ -102,6 +115,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Determine next steps depending on whether the login was successful
+     */
     private fun handleLoginAttempt(task: Task<AuthResult>) {
         if (task.isSuccessful) {
             checkForReturningUser()
@@ -115,23 +131,35 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Hides all error messages when edit texts are focused on
+     */
     private fun setupEditTexts() {
         email_edit_text.setOnFocusChangeListener { _, _ -> email_error_text_view.visibility = View.INVISIBLE}
         password_edit_text.setOnFocusChangeListener { _, _ -> password_error_text_view.visibility = View.INVISIBLE}
     }
 
+    /**
+     * Displays the error message for non-existent account
+     */
     private fun handleNoUser() {
         email_edit_text.clearFocus()
         email_error_text_view.text = getString(R.string.no_account)
         email_error_text_view.visibility = View.VISIBLE
     }
 
+    /**
+     * Displays the error message for an invalid email
+     */
     private fun handleBadEmail() {
         email_edit_text.clearFocus()
         email_error_text_view.text = getString(R.string.invalid_email)
         email_error_text_view.visibility = View.VISIBLE
     }
 
+    /**
+     * Displays the error message for a wrong password
+     */
     private fun handleWrongPassword() {
         password_edit_text.clearFocus()
         password_error_text_view.text = getString(R.string.wrong_password)
