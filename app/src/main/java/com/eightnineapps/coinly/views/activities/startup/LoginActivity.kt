@@ -49,19 +49,34 @@ class LoginActivity : AppCompatActivity() {
     }
 
     /**
-     * Clears all edit texts
-     */
-    private fun clearFields() {
-        email_edit_text.setText("")
-        password_edit_text.setText("")
-    }
-
-    /**
      * Makes for a clean transition back to the previous activity with no animation or flashes
      */
     override fun finish() {
         super.finish()
         overridePendingTransition(0, 0)
+    }
+
+    /**
+     * Called when sign in attempt is complete
+     * Determines whether Google account sign-in was successful
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) {
+            try {
+                signIntoFirebase(data)
+            } catch (e: ApiException) {
+                Log.w("INFO", "Sign in attempt failed or was canceled with back press")
+            }
+        }
+    }
+
+    /**
+     * Clears all edit texts
+     */
+    private fun clearFields() {
+        email_edit_text.setText("")
+        password_edit_text.setText("")
     }
 
     /**
@@ -164,21 +179,6 @@ class LoginActivity : AppCompatActivity() {
         password_edit_text.clearFocus()
         password_error_text_view.text = getString(R.string.wrong_password)
         password_error_text_view.visibility = View.VISIBLE
-    }
-
-    /**
-     * Called when sign in attempt is complete
-     * Determines whether Google account sign-in was successful
-     */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1) {
-            try {
-                signIntoFirebase(data)
-            } catch (e: ApiException) {
-                Log.w("INFO", "Sign in attempt failed or was canceled with back press")
-            }
-        }
     }
 
     /**

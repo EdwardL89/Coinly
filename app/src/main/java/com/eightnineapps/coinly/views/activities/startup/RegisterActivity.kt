@@ -15,6 +15,7 @@ import com.eightnineapps.coinly.enums.AuthErrorType
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.startup.LoginViewModel
 import com.eightnineapps.coinly.views.activities.profiles.CreateProfileActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
@@ -90,10 +91,10 @@ class RegisterActivity : AppCompatActivity() {
      * Determines whether or not the selected email has been used for an account already
      */
     private fun checkForExistingEmail(data: Intent?) {
-        val selectedEmail = GoogleSignIn.getSignedInAccountFromIntent(data).getResult(ApiException::class.java)!!.email!!
-        loginViewModel.checkIfEmailIsUsed(selectedEmail).addOnCompleteListener {
+        val googleSignInAccountData = GoogleSignIn.getSignedInAccountFromIntent(data).getResult(ApiException::class.java)!!
+        loginViewModel.checkIfEmailIsUsed(googleSignInAccountData.email!!).addOnCompleteListener {
             if (it.result!!.signInMethods!!.isEmpty()) {
-                signIntoFirebase(data)
+                signIntoFirebase(googleSignInAccountData)
             } else {
                 loginViewModel.signOutFromAuth(this)
                 handleExistingEmail()
@@ -104,8 +105,8 @@ class RegisterActivity : AppCompatActivity() {
     /**
      * Signs into firebase authentication and redirects the user
      */
-    private fun signIntoFirebase(data: Intent?) {
-        loginViewModel.attemptToSignIntoFirebase(GoogleSignIn.getSignedInAccountFromIntent(data).getResult(ApiException::class.java)!!)
+    private fun signIntoFirebase(googleSignInAccount: GoogleSignInAccount) {
+        loginViewModel.attemptToSignIntoFirebase(googleSignInAccount)
             .addOnCompleteListener(this as Activity) {
                 if (!it.isSuccessful) Toast.makeText(this, "Sign-in failed", Toast.LENGTH_SHORT).show()
                 else checkForReturningUser()
@@ -118,11 +119,8 @@ class RegisterActivity : AppCompatActivity() {
      */
     private fun checkForReturningUser() {
         loginViewModel.attemptToGetCurrentUSer().addOnCompleteListener {
-            if (it.isSuccessful) {
-                handleUserQuery(it)
-            } else {
-                Log.e("INFO", it.exception.toString())
-            }
+            if (it.isSuccessful) handleUserQuery(it)
+            else Log.e("INFO", it.exception.toString())
         }
     }
 
