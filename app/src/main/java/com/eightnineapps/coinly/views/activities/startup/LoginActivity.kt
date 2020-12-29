@@ -80,6 +80,9 @@ class LoginActivity : AppCompatActivity() {
         password_edit_text.setText("")
     }
 
+    /**
+     * Sets up the click listeners for all buttons regarding password reset
+     */
     private fun setupForgotPassword() {
         forgot_password_text_button.setOnClickListener {
             toggleLoginUI(View.INVISIBLE)
@@ -99,6 +102,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Attempts to send a password reset email provided a non-empty email string
+     */
     private fun validateAndSendResetEmail() {
         val emailText = email_edit_text.text.toString()
         if (emailText.isNotEmpty()) {
@@ -108,6 +114,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Determines the next action depending on whether sending the password reset email worked
+     */
     private fun handleResetAttempt(task: Task<Void>) {
         if (task.isSuccessful) {
             Toast.makeText(this, "Email sent!", Toast.LENGTH_SHORT).show()
@@ -120,6 +129,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Displays an error message depending on the error type
+     */
     private fun handleResetErrors(resetError: String) {
         when {
             resetError.contains("email") -> handleBadEmail()
@@ -127,6 +139,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Toggles the visibility of the UI elements relating to standard login
+     */
     private fun toggleLoginUI(visibility: Int) {
         login_button.visibility = visibility
         sign_in_holder.visibility = visibility
@@ -135,6 +150,9 @@ class LoginActivity : AppCompatActivity() {
         forgot_password_text_button.visibility = visibility
     }
 
+    /**
+     * Toggles the visibility of the UI elements relating to password reset
+     */
     private fun toggleResetOrCancelButtons(visibility: Int) {
         send_reset_button.visibility = visibility
         cancel_button.visibility = visibility
