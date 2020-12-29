@@ -75,4 +75,11 @@ class LoginViewModel constructor(private val authHelper: AuthHelper) : ViewModel
             else -> AuthErrorType.EXISTING_EMAIL
         }
     }
+
+    /**
+     * Sends an email to reset password
+     */
+    fun sendResetEmail(email: String): Task<Void> {
+        return authHelper.getAuth().sendPasswordResetEmail(email)
+    }
 }

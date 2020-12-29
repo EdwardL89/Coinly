@@ -35,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         loginViewModel = ViewModelProvider(this, loginViewModelFactory).get(LoginViewModel::class.java)
         setContentView(R.layout.activity_login)
+        setupForgotPassword()
         setupSignInButton()
         setupLoginButton()
         setupEditTexts()
@@ -77,6 +78,66 @@ class LoginActivity : AppCompatActivity() {
     private fun clearFields() {
         email_edit_text.setText("")
         password_edit_text.setText("")
+    }
+
+    private fun setupForgotPassword() {
+        forgot_password_text_button.setOnClickListener {
+            toggleLoginUI(View.INVISIBLE)
+            toggleResetOrCancelButtons(View.VISIBLE)
+        }
+        send_reset_button.setOnClickListener {
+            hideSoftKeyboard()
+            validateAndSendResetEmail()
+            email_error_text_view.visibility = View.INVISIBLE
+        }
+        cancel_button.setOnClickListener {
+            toggleLoginUI(View.VISIBLE)
+            toggleResetOrCancelButtons(View.INVISIBLE)
+            email_edit_text.clearFocus()
+            clearFields()
+            email_error_text_view.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun validateAndSendResetEmail() {
+        val emailText = email_edit_text.text.toString()
+        if (emailText.isNotEmpty()) {
+            loginViewModel.sendResetEmail(emailText).addOnCompleteListener { task -> handleResetAttempt(task) }
+        } else {
+            Toast.makeText(this, "Enter your email", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun handleResetAttempt(task: Task<Void>) {
+        if (task.isSuccessful) {
+            Toast.makeText(this, "Email sent!", Toast.LENGTH_SHORT).show()
+            toggleLoginUI(View.VISIBLE)
+            toggleResetOrCancelButtons(View.INVISIBLE)
+            email_edit_text.clearFocus()
+            clearFields()
+        } else {
+            handleResetErrors(task.exception.toString())
+        }
+    }
+
+    private fun handleResetErrors(resetError: String) {
+        when {
+            resetError.contains("email") -> handleBadEmail()
+            resetError.contains("no user") -> handleNoUser()
+        }
+    }
+
+    private fun toggleLoginUI(visibility: Int) {
+        login_button.visibility = visibility
+        sign_in_holder.visibility = visibility
+        password_edit_text.visibility = if (visibility == View.INVISIBLE) View.GONE else View.VISIBLE
+        lock_icon.visibility = if (visibility == View.INVISIBLE) View.GONE else View.VISIBLE
+        forgot_password_text_button.visibility = visibility
+    }
+
+    private fun toggleResetOrCancelButtons(visibility: Int) {
+        send_reset_button.visibility = visibility
+        cancel_button.visibility = visibility
     }
 
     /**

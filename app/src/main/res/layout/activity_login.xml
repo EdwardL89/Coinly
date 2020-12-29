@@ -114,6 +114,23 @@
         app:layout_constraintTop_toBottomOf="@id/password_edit_text"
         app:layout_constraintBottom_toTopOf="@id/sign_in_holder"/>
 
+    <Button
+        android:id="@+id/send_reset_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/send_reset_password_link"
+        android:textColor="@color/white"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:elevation="10dp"
+        android:visibility="invisible"
+        android:background="@drawable/rounded_button_green"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@id/login_button"
+        app:layout_constraintEnd_toEndOf="@id/login_button"
+        app:layout_constraintTop_toTopOf="@id/login_button"
+        app:layout_constraintBottom_toBottomOf="@id/login_button"/>
+
     <FrameLayout
         android:id="@+id/sign_in_holder"
         android:layout_width="0dp"
@@ -154,5 +171,19 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:focusable="true" />
+
+    <Button
+        android:id="@+id/cancel_button"
+        android:text="@string/cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textColor="@color/white"
+        android:visibility="invisible"
+        android:background="@drawable/rounded_button_green"
+        app:layout_constraintStart_toStartOf="@id/login_button"
+        app:layout_constraintEnd_toEndOf="@id/login_button"
+        app:layout_constraintTop_toTopOf="@id/sign_in_holder"
+        app:layout_constraintBottom_toBottomOf="@id/sign_in_holder"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

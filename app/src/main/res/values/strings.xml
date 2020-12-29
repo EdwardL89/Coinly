@@ -113,4 +113,5 @@
     <string name="login">Login</string>
     <string name="wrong_password">Wrong password. Did you sign up with Google?</string>
     <string name="no_account">Account does not exist with that email</string>
+    <string name="send_reset_password_link">Send Reset Password Link</string>
 </resources>
