@@ -72,6 +72,9 @@ class CreateProfileViewModel : ViewModel() {
         return newUser
     }
 
+    /**
+     * Retrieves the token used for the current user's cloud function
+     */
     fun retrieveCloudToken(): Task<String> {
         return FirebaseMessaging.getInstance().token
     }

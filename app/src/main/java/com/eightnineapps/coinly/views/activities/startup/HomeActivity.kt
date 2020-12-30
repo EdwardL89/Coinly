@@ -1,10 +1,14 @@
 package com.eightnineapps.coinly.views.activities.startup
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -49,6 +53,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         homeViewModel.setCurrentUser(intent)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        createNotificationChannel()
         addCoinlyActionBarTitle()
         addTabLayout()
         setUpDrawer()
@@ -167,5 +172,20 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         })
         tabLayout.getTabAt(0)?.select()
+    }
+
+    /**
+     * Creates a channel to receive and display Android notifications from FCM messages
+     */
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("123", "0", importance).apply {
+                description = "all notifications"
+            }
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }
