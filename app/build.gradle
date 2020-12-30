@@ -60,7 +60,6 @@ dependencies {
     //Lifecycle
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_extension_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_viewmodel_version"
-    implementation 'com.google.firebase:firebase-messaging:20.1.0'
 
     //Dependency injection
     kapt "com.google.dagger:hilt-android-compiler:$hilt_compiler_version"
@@ -75,6 +74,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$recyclerview_layout_version"
 
     //Firebase
+    implementation 'com.google.firebase:firebase-messaging:21.0.1'
     implementation "com.firebaseui:firebase-ui-auth:$ui_auth_version"
     implementation "com.google.firebase:firebase-auth:$firebase_auth_version"
     implementation "com.google.firebase:firebase-firestore:$firestore_version"

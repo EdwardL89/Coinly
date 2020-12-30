@@ -7,6 +7,7 @@ import com.eightnineapps.coinly.classes.objects.User
 import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.models.ImgStorage
 import com.google.android.gms.tasks.Task
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.UploadTask
 import java.io.ByteArrayOutputStream
 import kotlin.random.Random
@@ -64,9 +65,14 @@ class CreateProfileViewModel : ViewModel() {
     /**
      * Instantiates and returns a new User object with the given attributes
      */
-    fun createNewUser(realName: String, displayName: String, bio: String): User {
+    fun createNewUser(realName: String, displayName: String, bio: String, cloudToken: String): User {
         val newUser =  User(realName, displayName, generateId(), authHelper.getAuthUserEmail(), bio)
         newUser.coins = STARTING_COIN_AMOUNT
+        newUser.token = cloudToken
         return newUser
+    }
+
+    fun retrieveCloudToken(): Task<String> {
+        return FirebaseMessaging.getInstance().token
     }
 }

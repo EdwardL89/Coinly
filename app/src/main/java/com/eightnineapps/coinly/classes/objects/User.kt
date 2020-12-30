@@ -20,5 +20,6 @@ class User(_realName: String = "", _displayName: String = "", _id: String = "", 
     var realName = _realName
     var displayName = _displayName
     var profilePictureUri: String = ""
+    var token = ""
 
 }
