@@ -15,8 +15,8 @@ exports.notificationListener = functions.firestore
         userDoc.forEach(doc => {
             const message = {
                 data: {
-                    title: notificationDoc.type,
-                    body: "You've got a new notification!"
+                    title: createNotificationTitle(notificationDoc.type),
+                    body: notificationDoc.message
                 },
                 token: doc.data().token
             };
@@ -28,3 +28,15 @@ exports.notificationListener = functions.firestore
               });
         });
     });
+
+function createNotificationTitle(str) {
+    if (str.localeCompare("GIVING_COINS") == 0) {
+        return "Coins Received"
+    } else if (str.localeCompare("REQUESTING_COINS") == 0) {
+        return "Coins Requested"
+    } else if (str.localeCompare("CLAIMING_PRIZE") == 0) {
+        return "Prize Claimed From You"
+    } else {
+        return "Linkup Requested"
+    }
+}
