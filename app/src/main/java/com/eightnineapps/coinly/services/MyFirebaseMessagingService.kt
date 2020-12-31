@@ -6,8 +6,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.models.CurrentUser
+import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.views.activities.startup.SplashScreenActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -34,5 +37,13 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
             .setContentIntent(pendingIntent)
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(0, notificationBuilder.build())
+    }
+
+    /**
+     * Replaces the current user's token if it's compromised (security)
+     */
+    override fun onNewToken(token: String) {
+        super.onNewToken(token)
+        if (CurrentUser.getEmail() != null) Firestore.update(CurrentUser.getEmail()!!, "token", token)
     }
 }
