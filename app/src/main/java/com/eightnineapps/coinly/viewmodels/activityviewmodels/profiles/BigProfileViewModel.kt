@@ -164,7 +164,6 @@ class BigProfileViewModel: ViewModel() {
         notification.id = generateId()
         val myDisplayName = CurrentUser.instance!!.displayName
         notification.coins = coinsRequesting
-        notification.moreInformation = reasonForRequest
         notification.type = NotificationType.REQUESTING_COINS
         notification.message = "$myDisplayName requested $coinsRequesting coins"
         notification.moreInformation = "$myDisplayName is requesting $coinsRequesting coins. \n\n Reason:\n$reasonForRequest"
