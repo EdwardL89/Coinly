@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.adapters.ViewPagerAdapter
 import com.eightnineapps.coinly.classes.helpers.AuthHelper
+import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.startup.HomeViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
@@ -55,6 +56,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_home)
         createNotificationChannel()
         addCoinlyActionBarTitle()
+        refreshUserDeviceToken()
         addTabLayout()
         setUpDrawer()
     }
@@ -102,6 +104,15 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (drawerToggle.onOptionsItemSelected(item)) return true
         return super.onOptionsItemSelected(item)
+    }
+
+    /**
+     * Refreshes the user's FCM token in case a new device was used to login
+     */
+    private fun refreshUserDeviceToken() {
+        homeViewModel.retrieveCloudToken().addOnCompleteListener {
+            Firestore.update(authHelper.getAuthUserEmail(), "token", it.result.toString())
+        }
     }
 
     /**

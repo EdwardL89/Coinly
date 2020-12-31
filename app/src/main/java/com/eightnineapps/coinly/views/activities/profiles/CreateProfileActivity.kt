@@ -110,9 +110,7 @@ class CreateProfileActivity : AppCompatActivity() {
             val bio = bio_edit_text.text.toString()
             if (createProfileViewModel.noFieldsEmpty(realName, displayName, bio)) {
                 Toast.makeText(this, "Creating profile...", Toast.LENGTH_LONG).show()
-                createProfileViewModel.retrieveCloudToken().addOnCompleteListener {
-                    uploadUser(createProfileViewModel.createNewUser(realName, displayName, bio, it.result.toString()))
-                }
+                uploadUser(createProfileViewModel.createNewUser(realName, displayName, bio))
             } else {
                 Toast.makeText(this, "Info missing!", Toast.LENGTH_LONG).show()
             }
