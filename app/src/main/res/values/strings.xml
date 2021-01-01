@@ -23,7 +23,6 @@
     <string name="added_as_little">Added as little</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="login">Login</string>
     <string name="app_logo_description">app_logo</string>
     <string name="email_icon_description">email_icon_description</string>
     <string name="password_icon_description">password icon description</string>
@@ -94,6 +93,7 @@
     <string name="reason">Reason</string>
     <string name="no_bigs_message">Go to the linkup page to add your next big!</string>
     <string name="no_littles_message">Go to the linkup page to add your next little!</string>
+    <string name="sign_up_with_google">Sign up with Google</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="back">Back</string>
     <string name="price_with_coins">Price: %1$s coins</string>
@@ -106,4 +106,15 @@
     <string name="transaction_history">Transaction History</string>
     <string name="notifications">Notifications</string>
     <string name="from_eightnine_software">From EightNine Software</string>
+    <string name="register">Register</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="forgot_password"><u>FORGOT PASSWORD</u></string>
+    <string name="passwords_don_t_match">Passwords do not match</string>
+    <string name="password_too_weak">Password too weak</string>
+    <string name="invalid_email">Invalid Email</string>
+    <string name="already_exists">Account with that email already exists</string>
+    <string name="login">Login</string>
+    <string name="wrong_password">Wrong password. Did you sign up with Google?</string>
+    <string name="no_account">Account does not exist with that email</string>
+    <string name="send_reset_password_link">Send Reset Password Link</string>
 </resources>

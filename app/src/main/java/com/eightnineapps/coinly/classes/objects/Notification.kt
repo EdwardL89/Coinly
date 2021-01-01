@@ -24,9 +24,12 @@ class Notification: Serializable {
             NotificationType.ADDING_AS_BIG -> executeAddAsBig()
             NotificationType.ADDING_AS_LITTLE -> executeAddAsLittle()
             NotificationType.GIVING_COINS -> addressCoinsGiven()
+            NotificationType.CLAIMING_PRIZE -> addressClaimedPrize()
             else -> acceptRequest()
         }
     }
+
+    private fun addressClaimedPrize() {}
 
     /**
      * Addresses the coins given. Keep in mind the giver will be executing the notification,

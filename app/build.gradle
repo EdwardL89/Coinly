@@ -74,6 +74,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$recyclerview_layout_version"
 
     //Firebase
+    implementation 'com.google.firebase:firebase-messaging:21.0.1'
     implementation "com.firebaseui:firebase-ui-auth:$ui_auth_version"
     implementation "com.google.firebase:firebase-auth:$firebase_auth_version"
     implementation "com.google.firebase:firebase-firestore:$firestore_version"

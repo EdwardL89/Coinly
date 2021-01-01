@@ -96,7 +96,7 @@ class NotificationsRecyclerViewAdapter(_notifications: MutableList<Notification>
      * Sets the UI for the buttons on the notifications and what actions to be taken when they're tapped
      */
     private fun setupNotificationButtons(holder: ViewHolder, notification: Notification) {
-        if (notification.type == NotificationType.GIVING_COINS) {
+        if (notification.type == NotificationType.GIVING_COINS || notification.type == NotificationType.CLAIMING_PRIZE) {
             setupCoinsGivenNotification(holder, notification)
         } else {
             setupNonCoinsGivenNotification(holder, notification)

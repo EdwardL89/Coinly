@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.classes.helpers.PrizeDialogCreator
+import com.eightnineapps.coinly.classes.objects.Notification
 import com.eightnineapps.coinly.classes.objects.Prize
 import com.eightnineapps.coinly.classes.objects.User
+import com.eightnineapps.coinly.enums.NotificationType
 import com.eightnineapps.coinly.enums.PrizeTapLocation
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
@@ -25,6 +27,7 @@ import kotlinx.android.synthetic.main.fragment_big_profile.*
 import kotlinx.android.synthetic.main.fragment_prizes_to_claim.view.*
 import kotlinx.android.synthetic.main.fragment_your_set_prizes.view.*
 import kotlinx.android.synthetic.main.prize_list_view_layout.view.*
+import kotlin.random.Random
 
 class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTapLocation, _observedUser: User, view: View):
     RecyclerView.Adapter<PrizesRecyclerViewAdapter.ViewHolder>() {
@@ -39,6 +42,7 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
 
         val singlePrizePictureImageView: ImageView = _view.prize_picture
         val singlePrizePrice: TextView = _view.price
+        private val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         private val dialogCreator = PrizeDialogCreator()
         private val context = _view.context
 
@@ -127,9 +131,31 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
                     relocateImageInStorage(prize.id)
                     spendCoins(prize.price)
                     updateUIAfterClaimingPrize(prize)
+                    notifyBigOfPrizeClaimed(prize)
                     Toast.makeText(context, "Congratulations! You claimed a prize!", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+
+        /**
+         * Construct and send a notification to the big to let them know one of their prizes was claimed
+         */
+        private fun notifyBigOfPrizeClaimed(prize: Prize) {
+            val notification = constructClaimNotification(prize)
+            Firestore.addNotification(observedUser.email!!, notification)
+        }
+
+        /**
+         * Creates a notification for a big that one of their prizes was claimed
+         */
+        private fun constructClaimNotification(prize: Prize): Notification {
+            val notification = Notification()
+            notification.id = generateId()
+            notification.type = NotificationType.CLAIMING_PRIZE
+            notification.profilePictureUri = CurrentUser.profilePictureUri.toString()
+            notification.message = "${CurrentUser.displayName.value} claimed a prize from you"
+            notification.moreInformation = "${CurrentUser.displayName.value} claimed prize '${prize.name}' from you. You've earned ${prize.price} coins."
+            return notification
         }
 
         /**
@@ -197,6 +223,13 @@ class PrizesRecyclerViewAdapter(_items: List<Prize>, _prizeTapLocation: PrizeTap
             CurrentUser.updateAveragePriceOfPrizesClaimed(newAverage)
             Firestore.update(CurrentUser.getEmail()!!, "avgPriceOfPrizesClaimed", CurrentUser.avgPriceOfPrizesClaimed.value.toString())
             Firestore.update(CurrentUser.getEmail()!!, "numOfPrizesClaimed", CurrentUser.numOfPrizesClaimed.value.toString())
+        }
+
+        /**
+         * Generates a random 30 character, alphanumerical id for each user
+         */
+        private fun generateId(): String {
+            return (1..30).map { Random.nextInt(0, charPool.size) }.map(charPool::get).joinToString("")
         }
     }
 

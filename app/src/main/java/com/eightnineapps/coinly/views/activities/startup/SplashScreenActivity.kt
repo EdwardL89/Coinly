@@ -36,7 +36,7 @@ class SplashScreenActivity : AppCompatActivity() {
             if (it.isSuccessful) {
                 handleUserQuery(it)
             } else {
-                startActivity(Intent(this, LoginActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+                startActivity(Intent(this, LoginOrRegisterActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
             }
         }
     }
