@@ -284,15 +284,17 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_marginTop="5dp"
+                android:paddingTop="5dp"
                 android:id="@+id/notificationsRecyclerView"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 tools:context=".views.fragments.tablayout.AllBigsFragment"
                 app:layout_constraintTop_toBottomOf="@id/notifications_title"
-                app:layout_constraintStart_toStartOf="@id/notifications_title"
-                app:layout_constraintEnd_toEndOf="@id/top_stats"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:listitem="@layout/notification_layout"/>
 
             <ImageView
                 android:id="@+id/no_notifications_image"

@@ -1,14 +1,16 @@
 package com.eightnineapps.coinly.views.fragments.tablayout
 
 import android.animation.ValueAnimator
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.bumptech.glide.Glide
 import com.eightnineapps.coinly.R
 import com.eightnineapps.coinly.databinding.FragmentMyProfileBinding
@@ -40,7 +42,7 @@ class MyProfileFragment : Fragment() {
     /**
      * Inflates the my profile fragment
      */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_profile, container, false)
         binding.currentUser = CurrentUser
         fragmentView = binding.root
@@ -90,22 +92,22 @@ class MyProfileFragment : Fragment() {
      * Attaches observers to the User live data to update the fragment UI
      */
     private fun setUpObservers() {
-        CurrentUser.bio.observe(viewLifecycleOwner, Observer {
+        CurrentUser.bio.observe(viewLifecycleOwner, {
             if (it != null) binding.bioTextView.text = it
         })
-        CurrentUser.coins.observe(viewLifecycleOwner, Observer {
+        CurrentUser.coins.observe(viewLifecycleOwner, {
             if (it != null) binding.coinCount.text = it.toString()
         })
-        CurrentUser.displayName.observe(viewLifecycleOwner, Observer {
+        CurrentUser.displayName.observe(viewLifecycleOwner, {
             if (it != null) binding.myDisplayNameTextView.text = it
         })
-        CurrentUser.numOfBigs.observe(viewLifecycleOwner, Observer {
+        CurrentUser.numOfBigs.observe(viewLifecycleOwner, {
             if (it != null) binding.bigsCount.text = it.toString()
         })
-        CurrentUser.numOfLittles.observe(viewLifecycleOwner, Observer {
+        CurrentUser.numOfLittles.observe(viewLifecycleOwner, {
             if (it != null) binding.littlesCount.text = it.toString()
         })
-        CurrentUser.profilePictureUri.observe(viewLifecycleOwner, Observer {
+        CurrentUser.profilePictureUri.observe(viewLifecycleOwner, {
             if (it != null) loadProfilePicture()
         })
     }
@@ -146,7 +148,17 @@ class MyProfileFragment : Fragment() {
             view.no_notifications_image.visibility = View.VISIBLE
         } else {
             view.no_notifications_image.visibility = View.INVISIBLE
+            addSpaceBetweenItemsInRecycler(context, view)
         }
+    }
+
+    /**
+     * Adds space between notification recycler view list items
+     */
+    private fun addSpaceBetweenItemsInRecycler(context: Context?, view: View) {
+        val itemDecorator = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        itemDecorator.setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.space_between_list_items)!!)
+        view.notificationsRecyclerView.addItemDecoration(itemDecorator)
     }
 
     /**
