@@ -16,7 +16,8 @@ exports.notificationListener = functions.firestore
             const message = {
                 data: {
                     title: createNotificationTitle(notificationDoc.type),
-                    body: notificationDoc.message
+                    body: notificationDoc.message,
+                    receiver: context.params.userEmail
                 },
                 token: doc.data().token
             };

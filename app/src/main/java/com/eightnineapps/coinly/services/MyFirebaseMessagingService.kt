@@ -6,9 +6,9 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.eightnineapps.coinly.R
+import com.eightnineapps.coinly.classes.helpers.AuthHelper
 import com.eightnineapps.coinly.models.CurrentUser
 import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.views.activities.startup.SplashScreenActivity
@@ -18,25 +18,17 @@ import com.google.firebase.messaging.RemoteMessage
 @SuppressLint("MissingFirebaseInstanceTokenRefresh")
 class MyFirebaseMessagingService: FirebaseMessagingService() {
 
+    private val authHelper = AuthHelper()
+
     /**
      * Creates and sends an Android notification to the local device when an FCM message is received
      */
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-        val notificationIntent = Intent(this, SplashScreenActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+        if (authHelper.getAuthUser() != null && authHelper.getAuthUserEmail() == remoteMessage.data["receiver"]) {
+            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+                .notify(0, constructAndroidNotification(remoteMessage).build())
         }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT )
-        val notificationBuilder: NotificationCompat.Builder = NotificationCompat.Builder(this, "123")
-            .setContentTitle(remoteMessage.data["title"])
-            .setContentText(remoteMessage.data["body"])
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-            .setSmallIcon(R.drawable.coinly_logo)
-            .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(0, notificationBuilder.build())
     }
 
     /**
@@ -45,5 +37,23 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         if (CurrentUser.getEmail() != null) Firestore.update(CurrentUser.getEmail()!!, "token", token)
+    }
+
+    /**
+     * Constructs an Android notification and returns the builder
+     */
+    private fun constructAndroidNotification(remoteMessage: RemoteMessage): NotificationCompat.Builder {
+        val notificationIntent = Intent(this, SplashScreenActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT )
+        return NotificationCompat.Builder(this, "123")
+            .setContentTitle(remoteMessage.data["title"])
+            .setContentText(remoteMessage.data["body"])
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+            .setSmallIcon(R.drawable.coinly_logo)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
     }
 }
