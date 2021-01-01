@@ -21,7 +21,8 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
     private val authHelper = AuthHelper()
 
     /**
-     * Creates and sends an Android notification to the local device when an FCM message is received
+     * Creates and sends an Android notification to the local device only if the intended receiver
+     * of the FCM is currently logged in
      */
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
