@@ -161,7 +161,7 @@ object Firestore {
             .collection("Prizes")
     }
 
-    fun getPrizesClaimed(littleEmail: String, bigEmail: String): CollectionReference {
+    fun getPrizesClaimedFromBig(littleEmail: String, bigEmail: String): CollectionReference {
         return database
             .collection("users")
             .document(littleEmail)
@@ -170,8 +170,15 @@ object Firestore {
             .collection("Prizes")
     }
 
+    fun getAllBigsYouClaimedFrom(littleEmail: String): CollectionReference {
+        return database
+            .collection("users")
+            .document(littleEmail)
+            .collection("BigsYouClaimedFrom")
+    }
+
     fun claimNewPrize(littleEmail: String, bigEmail: String, prize: Prize): Task<Void> {
-        return getPrizesClaimed(littleEmail, bigEmail)
+        return getPrizesClaimedFromBig(littleEmail, bigEmail)
             .document(prize.id)
             .set(prize)
     }

@@ -79,7 +79,7 @@ class LittleProfileViewModel: ViewModel() {
      * Launches the query to get the prizes claimed
      */
     fun startQueryForPrizesClaimed() {
-        prizesClaimedQuery = Firestore.getPrizesClaimed(observedUserInstance.email!!, CurrentUser.getEmail()!!).get()
+        prizesClaimedQuery = Firestore.getPrizesClaimedFromBig(observedUserInstance.email!!, CurrentUser.getEmail()!!).get()
     }
 
     /**

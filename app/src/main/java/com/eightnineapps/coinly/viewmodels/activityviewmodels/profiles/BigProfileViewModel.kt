@@ -97,7 +97,7 @@ class BigProfileViewModel: ViewModel() {
      * Launches the query to get the prizes claimed
      */
     fun startQueryForClaimedPrizes() {
-        prizesClaimedQuery = Firestore.getPrizesClaimed(CurrentUser.getEmail()!!, observedUserInstance.email!!).get()
+        prizesClaimedQuery = Firestore.getPrizesClaimedFromBig(CurrentUser.getEmail()!!, observedUserInstance.email!!).get()
     }
 
     /**

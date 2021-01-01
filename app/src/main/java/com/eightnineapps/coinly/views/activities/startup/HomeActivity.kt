@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -24,6 +25,7 @@ import com.eightnineapps.coinly.adapters.ViewPagerAdapter
 import com.eightnineapps.coinly.classes.helpers.AuthHelper
 import com.eightnineapps.coinly.models.Firestore
 import com.eightnineapps.coinly.viewmodels.activityviewmodels.startup.HomeViewModel
+import com.eightnineapps.coinly.views.activities.sidebar.AllPrizesClaimedActivity
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_home.*
@@ -66,6 +68,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
      */
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
+            R.id.prizes_claimed -> {
+                startActivity(Intent(this, AllPrizesClaimedActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+            }
             R.id.settings -> {
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
             }
